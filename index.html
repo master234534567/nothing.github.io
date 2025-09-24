@@ -1,1 +1,232 @@
-<script src="main.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTHING - Single Page Game Hub</title>
+    
+    
+    <script>
+        // Theme Logic: Checks local storage and applies the saved theme class to the HTML element
+        const savedTheme = localStorage.getItem('hubTheme');
+        
+        // If a theme is saved, apply it. Otherwise, default to rainbow.
+        const currentTheme = savedTheme ? savedTheme : 'rainbow';
+        document.documentElement.className = `theme-${currentTheme}`;
+    </script>
+
+    <style>
+        /* CSS Keyframes for the Never-Ending Rainbow Background */
+        @keyframes rainbow-glow {
+            0% { background-color: #ff0000; } /* Red */
+            16% { background-color: #ff7f00; } /* Orange */
+            33% { background-color: #ffff00; } /* Yellow */
+            50% { background-color: #00ff00; } /* Green */
+            66% { background-color: #0000ff; } /* Blue */
+            83% { background-color: #4b0082; } /* Indigo */
+            100% { background-color: #ff0000; } /* Back to Red */
+        }
+        
+        /* Variables for Solid Colors */
+        :root {
+            --dark-bg: #1a1a1a;
+            --blue-bg: #007bff;
+            --purple-bg: #6f42c1;
+        }
+
+        /* General Styles: Base setup for body */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            color: #fff;
+            min-height: 100vh; 
+            background-color: var(--dark-bg); /* Default fallback */
+        }
+
+        /* THEME CLASSES: Applied to the <html> tag */
+        .theme-rainbow body {
+            background-color: #1a1a1a;
+            animation: rainbow-glow 10s infinite linear; 
+        }
+        .theme-dark body {
+            background-color: var(--dark-bg);
+            animation: none;
+        }
+        .theme-blue body {
+            background-color: var(--blue-bg);
+            animation: none;
+        }
+        .theme-purple body {
+            background-color: var(--purple-bg);
+            animation: none;
+        }
+
+        header {
+            padding: 30px 20px 20px; 
+            background-color: rgba(44, 44, 44, 0.9); 
+            text-align: center;
+            backdrop-filter: blur(5px); 
+            position: relative; 
+        }
+        
+        /* SETTINGS BUTTON STYLES */
+        .settings-button {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .settings-button a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #555;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .settings-button a:hover {
+            background-color: #ff5722;
+        }
+
+        h1 {
+            margin: 0;
+            color: #ff5722
+        }
+        main {
+            padding: 30px;
+            min-height: 500px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(26, 26, 26, 0.9); 
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); 
+        }
+        h2 {
+            color: #ff5722;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px
+        }
+        
+        /* Featured Games List */
+        .game-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px
+        }
+        .game-item {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform .2s
+        }
+        .game-item:hover {
+            transform: translateY(-5px);
+            background-color: #444
+        }
+        
+        /* Specific Style for Nitro Racer button to ensure the link covers the button area */
+        #nitro-racer-main-link a {
+            text-decoration: none;
+            color: #fff;
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(44, 44, 44, 0.9);
+            margin-top: 30px;
+        }
+
+        /* New Games List Styles (Standardized appearance) */
+        .new-game-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px
+        }
+        .new-game-item {
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .4);
+            transition: transform .2s, box-shadow .2s
+        }
+        .new-game-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(255, 87, 34, .3)
+        }
+        .new-game-item a {
+            text-decoration: none;
+            color: #fff;
+            display: block
+        }
+        .game-info {
+            padding: 15px;
+            text-align: center;
+        }
+        .game-info strong {
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        .game-image-placeholder {
+            width: 100%;
+            height: 150px;
+            background-color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="settings-button">
+            <a href="settings.html">⚙️ SETTINGS</a>
+        </div>
+        <h1>NOTHING</h1>
+        <p>Your portal to endless gaming fun.</p>
+    </header>
+    <main>
+        <h2>Welcome to NOTHING!</h2>
+        <p>Discover thousands of free online games, from action-packed adventures to brain-teasing puzzles. Start exploring the top picks below!</p>
+        
+        <h3>Featured Games</h3>
+        <ul class="game-list">
+            <li class="game-item">🎮 Super Jumper</li>
+            <li class="game-item">🧩 Ancient Puzzle</li>
+            
+            <li class="game-item" id="nitro-racer-main-link">
+                <a href="nitro-racer-page.html">
+                    🏎️ Nitro Racer
+                </a>
+            </li>
+            
+            <li class="game-item">⚔️ Dungeon Master</li>
+            <li class="game-item">🚀 Rocket Shooter</li>
+            <li class="game-item">🧠 Quiz Master</li>
+        </ul>
+        
+        <h2 style="margin-top: 50px;">New Games - Freshly Added!</h2>
+        <ul class="new-game-list">
+            <li class="new-game-item"><a href="https://duckpreptest.com" target="_blank"><div class="game-image-placeholder">Duck Prep Test</div><div class="game-info"><strong>Duck Prep Test</strong><small>Quiz / Strategy</small></div></a></li>
+            <li class="new-game-item"><a href="https://discord.gg" target="_blank"><div class="game-image-placeholder">Discord Community</div><div class="game-info"><strong>NOTHING Community</strong><small>Social / Hub</small></div></a></li>
+            <li class="new-game-item"><a href="https://growden.io" target="_blank"><div class="game-image-placeholder">Growden.io</div><div class="game-info"><strong>Growden.io</strong><small>Multiplayer / Survival</small></div></a></li>
+            <li class="new-game-item"><a href="https://armedforces.io/" target="_blank"><div class="game-image-placeholder">ArmedForces.io</div><div class="game-info"><strong>ArmedForces.io</strong><small>Action / Shooter</small></div></a></li>
+        </ul>
+    </main>
+    <footer>
+        <p>© 2025 NOTHING Gaming</p>
+    </footer>
+</body>
+</html>
