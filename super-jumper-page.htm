@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTHING - Super Jumper Games</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>">
+    
+    <script>
+        const savedTheme = localStorage.getItem('hubTheme');
+        const currentTheme = savedTheme ? savedTheme : 'rainbow';
+        document.documentElement.className = `theme-${currentTheme}`;
+    </script>
+
+    <style>
+        /* CSS Keyframes for the Never-Ending Rainbow Background */
+        @keyframes rainbow-glow {
+            0% { background-color: #ff0000; } 
+            16% { background-color: #ff7f00; } 
+            33% { background-color: #ffff00; } 
+            50% { background-color: #00ff00; } 
+            66% { background-color: #0000ff; } 
+            83% { background-color: #4b0082; } 
+            100% { background-color: #ff0000; } 
+        }
+        
+        /* Variables for Solid Colors */
+        :root {
+            --dark-bg: #1a1a1a;
+            --blue-bg: #007bff;
+            --purple-bg: #6f42c1;
+        }
+
+        /* General Styles: Base setup for body */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+
+        /* THEME CLASSES: Applied to the <html> tag */
+        .theme-rainbow body {
+            background-color: #1a1a1a;
+            animation: rainbow-glow 10s infinite linear; 
+        }
+        .theme-dark body {
+            background-color: var(--dark-bg);
+            animation: none;
+        }
+        .theme-blue body {
+            background-color: var(--blue-bg);
+            animation: none;
+        }
+        .theme-purple body {
+            background-color: var(--purple-bg);
+            animation: none;
+        }
+
+        h1 {
+            color: #ff5722;
+            margin-bottom: 30px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #ff5722;
+            text-decoration: none;
+            border: 1px solid #ff5722;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .back-link:hover {
+            background-color: rgba(255, 87, 34, 0.1);
+        }
+        
+        /* New Game List Styles (Same as main hub for consistency) */
+        .game-list-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(26, 26, 26, 0.9); 
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .new-game-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        .new-game-item {
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .4);
+            transition: transform .2s, box-shadow .2s;
+        }
+        .new-game-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(255, 87, 34, .3);
+        }
+        .new-game-item a {
+            text-decoration: none;
+            color: #fff;
+            display: block;
+        }
+        .game-info {
+            padding: 15px;
+            text-align: center;
+        }
+        .game-info strong {
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        .game-image-placeholder {
+            width: 100%;
+            height: 150px;
+            background-color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-link">← Back to NOTHING Hub</a>
+    <h1>🎮 Super Jumper Games (IO Hub)</h1>
+    <p>Dive into the best fast-paced action and shooter .io games!</p>
+
+    <div class="game-list-container">
+        <ul class="new-game-list">
+            <li class="new-game-item"><a href="https://deadshot.io" target="_blank"><div class="game-image-placeholder">DeadShot.io</div><div class="game-info"><strong>DeadShot.io</strong><small>3D Shooter</small></div></a></li>
+            <li class="new-game-item"><a href="https://sandstrick.io" target="_blank"><div class="game-image-placeholder">Sandstrick.io</div><div class="game-info"><strong>Sandstrick.io</strong><small>Platformer</small></div></a></li>
+            <li class="new-game-item"><a href="https://voxiom.io" target="_blank"><div class="game-image-placeholder">Voxiom.io</div><div class="game-info"><strong>Voxiom.io</strong><small>Voxel Shooter/Building</small></div></a></li>
+            <li class="new-game-item"><a href="https://ninja.io" target="_blank"><div class="game-image-placeholder">Ninja.io</div><div class="game-info"><strong>Ninja.io</strong><small>2D Multiplayer Action</small></div></a></li>
+            <li class="new-game-item"><a href="https://battleboats.io" target="_blank"><div class="game-image-placeholder">Battleboats.io</div><div class="game-info"><strong>Battleboats.io</strong><small>Naval Combat</small></div></a></li>
+            <li class="new-game-item"><a href="https://repuls.io" target="_blank"><div class="game-image-placeholder">Repuls.io</div><div class="game-info"><strong>Repuls.io</strong><small>Sci-Fi Shooter</small></div></a></li>
+            <li class="new-game-item"><a href="https://astroe.io" target="_blank"><div class="game-image-placeholder">AstroE.io</div><div class="game-info"><strong>AstroE.io</strong><small>Space/Survival</small></div></a></li>
+            <li class="new-game-item"><a href="https://kour.io" target="_blank"><div class="game-image-placeholder">Kour.io</div><div class="game-info"><strong>Kour.io</strong><small>Fast-Paced Shooter</small></div></a></li>
+            <li class="new-game-item"><a href="https://slowroads.io" target="_blank"><div class="game-image-placeholder">Slowroads.io</div><div class="game-info"><strong>Slowroads.io</strong><small>Relaxing Driving Simulator</small></div></a></li>
+        </ul>
+    </div>
+
+</body>
+</html>
