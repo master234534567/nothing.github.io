@@ -158,28 +158,10 @@
             alert(`Theme set to ${themeName}! Return to the hub to see the change.`);
         }
 
-        // Panic Hide function (Safe Cloak)
+        // Panic Hide function (Simplified Safe Cloak)
         function panicHide() {
-            const targetURL = 'index.html'; 
-
-            // 1. Open the hub in a new blank window to mask the history.
-            const newWindow = window.open('about:blank', '_blank');
-            
-            // Redirect the new tab to the game hub
-            newWindow.document.write(`
-                <html>
-                <head>
-                    <title>NOTHING</title>
-                </head>
-                <body>
-                    <script>
-                        window.location.replace('${targetURL}'); 
-                    <\/script>
-                </body>
-                </html>
-            `);
-
-            // 2. Replace the current tab with a minimal white screen.
+            // This function redirects the current tab to a generic white screen
+            // to instantly hide the game hub content.
             window.location.replace("data:text/html;charset=utf-8," + encodeURI('<body style="background-color: #fff; margin: 0; padding: 0;"></body>'));
         }
     </script>
