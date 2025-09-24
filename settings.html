@@ -197,4 +197,41 @@
                 // Cloak settings: Google Docs
                 const iconText = '📄'; 
                 newTitle = 'Google Docs';
-                iconUrl = `data:image/svg+
+                iconUrl = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${iconText}</text></svg>`;
+
+            } else {
+                // Default settings: Bear/NOTHING
+                const iconText = '🐻'; 
+                // Using 'NOTHING - Settings' here since this is the settings page
+                newTitle = 'NOTHING - Settings'; 
+                iconUrl = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${iconText}</text></svg>`;
+            }
+
+            // 1. Update and save the Favicon
+            let link = document.querySelector("link[rel~='icon']");
+            if (!link) {
+                link = document.createElement('link');
+                link.rel = 'icon';
+                document.getElementsByTagName('head')[0].appendChild(link);
+            }
+            link.href = iconUrl;
+            localStorage.setItem('hubFavicon', iconUrl);
+
+            // 2. Update and save the Tab Title
+            document.title = newTitle;
+            // The saved title for the main hub page must be different, but we'll use this as the master saved title
+            // Note: The index.html needs to handle the title logic for its own default
+            localStorage.setItem('hubTitle', newTitle);
+
+
+            alert(`Cloak set to ${newTitle}! Refresh the page or check the hub to see the change.`);
+        }
+
+        // Panic Hide function (Redirects to a neutral external site)
+        function panicHide() {
+            // Redirects the current tab to Wikipedia for an instant cloak effect.
+            window.location.replace("https://www.wikipedia.org/");
+        }
+    </script>
+</body>
+</html>
