@@ -165,3 +165,59 @@
 
     <h3 style="margin-top: 50px;">Background Color Theme</h3>
     <p>Select a permanent background for all hub pages.</p>
+    
+    <div class="setting-section">
+        <button class="color-button" onclick="setTheme('rainbow')">Rainbow 🌈</button>
+        <button class="color-button" onclick="setTheme('dark')">Dark ⚫</button>
+        <button class="color-button" onclick="setTheme('blue')">Blue 🔷</button>
+        <button class="color-button" onclick="setTheme('purple')">Purple 💜</button>
+    </div>
+    
+    <p style="margin-top: 50px;">Other settings will be added here soon!</p>
+
+    <script>
+        // Function to save the user's theme preference to local storage
+        function setTheme(themeName) {
+            localStorage.setItem('hubTheme', themeName);
+            alert(`Theme set to ${themeName}! Return to the hub to see the change.`);
+        }
+
+        // Function to change and save the favicon preference
+        function setFavicon(iconName) {
+            let iconUrl;
+            let iconText;
+
+            if (iconName === 'docs') {
+                // Generic Document icon for "Google Docs" disguise
+                iconText = '📄'; 
+            } else {
+                // Default Bear Emoji
+                iconText = '🐻'; 
+            }
+
+            // Create the SVG data URL
+            iconUrl = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${iconText}</text></svg>`;
+
+            // Update the live favicon element
+            let link = document.querySelector("link[rel~='icon']");
+            if (!link) {
+                link = document.createElement('link');
+                link.rel = 'icon';
+                document.getElementsByTagName('head')[0].appendChild(link);
+            }
+            link.href = iconUrl;
+
+            // Save the new favicon URL to local storage
+            localStorage.setItem('hubFavicon', iconUrl);
+
+            alert(`Favicon changed to ${iconText}! Refresh the page or check the hub to see the change.`);
+        }
+
+        // Panic Hide function (Redirects to a neutral external site)
+        function panicHide() {
+            // Redirects the current tab to Wikipedia for an instant cloak effect.
+            window.location.replace("https://www.wikipedia.org/");
+        }
+    </script>
+</body>
+</html>
