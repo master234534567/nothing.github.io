@@ -11,12 +11,18 @@
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
         document.documentElement.className = `theme-${currentTheme}`;
 
-        // Check for saved favicon and apply it (defaults to bear)
+        // Check for saved cloak settings (defaults to Bear/NOTHING)
         const savedFavicon = localStorage.getItem('hubFavicon');
+        const savedTitle = localStorage.getItem('hubTitle');
+        
+        const defaultTitle = 'NOTHING - Settings';
         const faviconUrl = savedFavicon 
             ? savedFavicon 
             : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
         
+        // Dynamically set the page title
+        document.title = savedTitle ? savedTitle : defaultTitle;
+
         // Dynamically create or update the favicon link
         let link = document.querySelector("link[rel~='icon']");
         if (!link) {
@@ -155,12 +161,12 @@
         🚨 PANIC BUTTON 🚨
     </button>
     
-    <h3 style="margin-top: 50px;">Cloak Tab Icon</h3>
-    <p>Change the browser tab icon to look less like a game site.</p>
+    <h3 style="margin-top: 50px;">Cloak Tab Icon & Title</h3>
+    <p>Change the browser tab icon and name to look less like a game site.</p>
     
     <div class="setting-section">
-        <button class="cloak-button" onclick="setFavicon('default')">🐻 Default</button>
-        <button class="cloak-button" onclick="setFavicon('docs')">📄 Google Docs</button>
+        <button class="cloak-button" onclick="setCloak('default')">🐻 Default</button>
+        <button class="cloak-button" onclick="setCloak('docs')">📄 Google Docs</button>
     </div>
 
     <h3 style="margin-top: 50px;">Background Color Theme</h3>
@@ -182,42 +188,13 @@
             alert(`Theme set to ${themeName}! Return to the hub to see the change.`);
         }
 
-        // Function to change and save the favicon preference
-        function setFavicon(iconName) {
+        // Function to change and save the cloak (favicon and title) preference
+        function setCloak(cloakName) {
             let iconUrl;
-            let iconText;
+            let newTitle;
 
-            if (iconName === 'docs') {
-                // Generic Document icon for "Google Docs" disguise
-                iconText = '📄'; 
-            } else {
-                // Default Bear Emoji
-                iconText = '🐻'; 
-            }
-
-            // Create the SVG data URL
-            iconUrl = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${iconText}</text></svg>`;
-
-            // Update the live favicon element
-            let link = document.querySelector("link[rel~='icon']");
-            if (!link) {
-                link = document.createElement('link');
-                link.rel = 'icon';
-                document.getElementsByTagName('head')[0].appendChild(link);
-            }
-            link.href = iconUrl;
-
-            // Save the new favicon URL to local storage
-            localStorage.setItem('hubFavicon', iconUrl);
-
-            alert(`Favicon changed to ${iconText}! Refresh the page or check the hub to see the change.`);
-        }
-
-        // Panic Hide function (Redirects to a neutral external site)
-        function panicHide() {
-            // Redirects the current tab to Wikipedia for an instant cloak effect.
-            window.location.replace("https://www.wikipedia.org/");
-        }
-    </script>
-</body>
-</html>
+            if (cloakName === 'docs') {
+                // Cloak settings: Google Docs
+                const iconText = '📄'; 
+                newTitle = 'Google Docs';
+                iconUrl = `data:image/svg+
