@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOTHING - Single Page Game Hub</title>
     
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>">
     
     <script>
         // Theme Logic: Checks local storage and applies the saved theme class to the HTML element
@@ -107,7 +108,7 @@
             padding-bottom: 10px
         }
         
-        /* Featured Games List */
+        /* Featured Games List (Used for smaller/older links) */
         .game-list {
             list-style: none;
             padding: 0;
@@ -143,29 +144,29 @@
             margin-top: 30px;
         }
 
-        /* New Games List Styles (Standardized appearance) */
+        /* Game List Styles (Standardized appearance for New and Category Games) */
         .new-game-list {
             list-style: none;
             padding: 0;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px
+            gap: 25px;
         }
         .new-game-item {
             background-color: #333;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 10px rgba(0, 0, 0, .4);
-            transition: transform .2s, box-shadow .2s
+            transition: transform .2s, box-shadow .2s;
         }
         .new-game-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(255, 87, 34, .3)
+            box-shadow: 0 8px 15px rgba(255, 87, 34, .3);
         }
         .new-game-item a {
             text-decoration: none;
             color: #fff;
-            display: block
+            display: block;
         }
         .game-info {
             padding: 15px;
@@ -187,6 +188,13 @@
             font-weight: 700;
             color: #ccc;
         }
+        /* Specific styling for category headers to differentiate sections */
+        .category-header {
+            color: #00ffcc; /* Cyan/Teal color for new categories */
+            margin-top: 50px;
+            border-bottom: 1px solid #00ffcc;
+            padding-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -203,7 +211,6 @@
         
         <h3>Featured Games</h3>
         <ul class="game-list">
-            <li class="game-item">🎮 Super Jumper</li>
             <li class="game-item">🧩 Ancient Puzzle</li>
             
             <li class="game-item" id="nitro-racer-main-link">
@@ -216,7 +223,19 @@
             <li class="game-item">🚀 Rocket Shooter</li>
             <li class="game-item">🧠 Quiz Master</li>
         </ul>
-        
+
+        <h2 class="category-header">🎮 Super Jumper Category Games (Action/IO)</h2>
+        <ul class="new-game-list">
+            <li class="new-game-item"><a href="https://deadshot.io" target="_blank"><div class="game-image-placeholder">DeadShot.io</div><div class="game-info"><strong>DeadShot.io</strong><small>3D Shooter</small></div></a></li>
+            <li class="new-game-item"><a href="https://sandstrick.io" target="_blank"><div class="game-image-placeholder">Sandstrick.io</div><div class="game-info"><strong>Sandstrick.io</strong><small>Platformer</small></div></a></li>
+            <li class="new-game-item"><a href="https://voxiom.io" target="_blank"><div class="game-image-placeholder">Voxiom.io</div><div class="game-info"><strong>Voxiom.io</strong><small>Voxel Shooter/Building</small></div></a></li>
+            <li class="new-game-item"><a href="https://ninja.io" target="_blank"><div class="game-image-placeholder">Ninja.io</div><div class="game-info"><strong>Ninja.io</strong><small>2D Multiplayer Action</small></div></a></li>
+            <li class="new-game-item"><a href="https://battleboats.io" target="_blank"><div class="game-image-placeholder">Battleboats.io</div><div class="game-info"><strong>Battleboats.io</strong><small>Naval Combat</small></div></a></li>
+            <li class="new-game-item"><a href="https://repuls.io" target="_blank"><div class="game-image-placeholder">Repuls.io</div><div class="game-info"><strong>Repuls.io</strong><small>Sci-Fi Shooter</small></div></a></li>
+            <li class="new-game-item"><a href="https://astroe.io" target="_blank"><div class="game-image-placeholder">AstroE.io</div><div class="game-info"><strong>AstroE.io</strong><small>Space/Survival</small></div></a></li>
+            <li class="new-game-item"><a href="https://kour.io" target="_blank"><div class="game-image-placeholder">Kour.io</div><div class="game-info"><strong>Kour.io</strong><small>Fast-Paced Shooter</small></div></a></li>
+            <li class="new-game-item"><a href="https://slowroads.io" target="_blank"><div class="game-image-placeholder">Slowroads.io</div><div class="game-info"><strong>Slowroads.io</strong><small>Relaxing Driving Simulator</small></div></a></li>
+        </ul>
         <h2 style="margin-top: 50px;">New Games - Freshly Added!</h2>
         <ul class="new-game-list">
             <li class="new-game-item"><a href="https://duckpreptest.com" target="_blank"><div class="game-image-placeholder">Duck Prep Test</div><div class="game-info"><strong>Duck Prep Test</strong><small>Quiz / Strategy</small></div></a></li>
