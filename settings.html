@@ -158,11 +158,10 @@
             alert(`Theme set to ${themeName}! Return to the hub to see the change.`);
         }
 
-        // Panic Hide function (Simplified Safe Cloak)
+        // Panic Hide function (Redirects to a neutral external site)
         function panicHide() {
-            // This function redirects the current tab to a generic white screen
-            // to instantly hide the game hub content.
-            window.location.replace("data:text/html;charset=utf-8," + encodeURI('<body style="background-color: #fff; margin: 0; padding: 0;"></body>'));
+            // Redirects the current tab to Wikipedia for an instant cloak effect.
+            window.location.replace("https://www.wikipedia.org/");
         }
     </script>
 </body>
