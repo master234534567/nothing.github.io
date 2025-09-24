@@ -185,7 +185,8 @@
         // Function to save the user's theme preference to local storage
         function setTheme(themeName) {
             localStorage.setItem('hubTheme', themeName);
-            alert(`Theme set to ${themeName}! Return to the hub to see the change.`);
+            // Reload the current page to apply the theme instantly.
+            window.location.reload(); 
         }
 
         // Function to change and save the cloak (favicon and title) preference
@@ -194,15 +195,15 @@
             let newTitle;
 
             if (cloakName === 'docs') {
-                // Cloak settings: Google Docs
-                const iconText = '📄'; 
+                // 📄 Official-looking Google Docs Favicon (Embedded Base64 PNG)
+                const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRU5ErkJggg==';
+                
                 newTitle = 'Google Docs';
-                iconUrl = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${iconText}</text></svg>`;
+                iconUrl = GOOGLE_DOCS_FAVICON_BASE64;
 
             } else {
-                // Default settings: Bear/NOTHING
+                // Default settings: Bear/NOTHING (SVG Emoji)
                 const iconText = '🐻'; 
-                // Using 'NOTHING - Settings' here since this is the settings page
                 newTitle = 'NOTHING - Settings'; 
                 iconUrl = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${iconText}</text></svg>`;
             }
@@ -219,12 +220,10 @@
 
             // 2. Update and save the Tab Title
             document.title = newTitle;
-            // The saved title for the main hub page must be different, but we'll use this as the master saved title
-            // Note: The index.html needs to handle the title logic for its own default
             localStorage.setItem('hubTitle', newTitle);
 
-
-            alert(`Cloak set to ${newTitle}! Refresh the page or check the hub to see the change.`);
+            // Reload to apply changes instantly
+            window.location.reload();
         }
 
         // Panic Hide function (Redirects to a neutral external site)
