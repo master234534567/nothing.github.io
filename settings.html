@@ -6,9 +6,25 @@
     <title>NOTHING - Settings</title>
     
     <script>
+        // Check for saved theme
         const savedTheme = localStorage.getItem('hubTheme');
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
         document.documentElement.className = `theme-${currentTheme}`;
+
+        // Check for saved favicon and apply it (defaults to bear)
+        const savedFavicon = localStorage.getItem('hubFavicon');
+        const faviconUrl = savedFavicon 
+            ? savedFavicon 
+            : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
+        
+        // Dynamically create or update the favicon link
+        let link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }
+        link.href = faviconUrl;
     </script>
 
     <style>
@@ -91,7 +107,7 @@
             padding: 20px;
             border-radius: 10px;
         }
-        .color-button {
+        .color-button, .cloak-button {
             display: inline-block;
             width: 100px;
             height: 40px;
@@ -104,7 +120,7 @@
             transition: border-color 0.2s, transform 0.1s;
             line-height: 28px; 
         }
-        .color-button:hover {
+        .color-button:hover, .cloak-button:hover {
             border-color: #ff5722;
             transform: scale(1.05);
         }
@@ -139,42 +155,13 @@
         🚨 PANIC BUTTON 🚨
     </button>
     
-    <h3 style="margin-top: 50px;">Background Color Theme</h3>
-    <p>Select a permanent background for all hub pages.</p>
+    <h3 style="margin-top: 50px;">Cloak Tab Icon</h3>
+    <p>Change the browser tab icon to look less like a game site.</p>
     
     <div class="setting-section">
-        <button class="color-button" onclick="setTheme('rainbow')">Rainbow 🌈</button>
-        <button class="color-button" onclick="setTheme('dark')">Dark ⚫</button>
-        <button class="color-button" onclick="setTheme('blue')">Blue 🔷</button>
-        <button class="color-button" onclick="setTheme('purple')">Purple 💜</button>
+        <button class="cloak-button" onclick="setFavicon('default')">🐻 Default</button>
+        <button class="cloak-button" onclick="setFavicon('docs')">📄 Google Docs</button>
     </div>
-    
-    <p style="margin-top: 50px;">Other settings will be added here soon!</p>
 
-    <script>
-        // Function to save the user's theme preference to local storage
-        function setTheme(themeName) {
-            localStorage.setItem('hubTheme', themeName);
-            alert(`Theme set to ${themeName}! Return to the hub to see the change.`);
-        }
-
-        // Panic Hide function (Redirects to a neutral external site)
-        function panicHide() {
-            // Redirects the current tab to Wikipedia for an instant cloak effect.
-            window.location.replace("https://www.wikipedia.org/");
-        }
-        
-        // Function to save the user's theme preference to local storage
-        function setTheme(themeName) {
-            localStorage.setItem('hubTheme', themeName);
-            alert(`Theme set to ${themeName}! Return to the hub to see the change.`);
-        }
-
-        // Panic Hide function (Redirects to a neutral external site)
-        function panicHide() {
-            // Redirects the current tab to Wikipedia for an instant cloak effect.
-            window.location.replace("https://www.wikipedia.org/");
-        }
-    </script>
-</body>
-</html>
+    <h3 style="margin-top: 50px;">Background Color Theme</h3>
+    <p>Select a permanent background for all hub pages.</p>
