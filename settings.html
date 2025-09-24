@@ -163,6 +163,18 @@
             // Redirects the current tab to Wikipedia for an instant cloak effect.
             window.location.replace("https://www.wikipedia.org/");
         }
+        
+        // Function to save the user's theme preference to local storage
+        function setTheme(themeName) {
+            localStorage.setItem('hubTheme', themeName);
+            alert(`Theme set to ${themeName}! Return to the hub to see the change.`);
+        }
+
+        // Panic Hide function (Redirects to a neutral external site)
+        function panicHide() {
+            // Redirects the current tab to Wikipedia for an instant cloak effect.
+            window.location.replace("https://www.wikipedia.org/");
+        }
     </script>
 </body>
 </html>
