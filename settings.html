@@ -166,7 +166,7 @@
     
     <div class="setting-section">
         <button class="cloak-button" onclick="setCloak('default')">🐻 Default</button>
-        <button class="cloak-button" onclick="setCloak('docs')">📂 Google Docs</button>
+        <button class="cloak-button" onclick="setCloak('docs')">📄 Google Docs</button>
     </div>
 
     <h3 style="margin-top: 50px;">Background Color Theme</h3>
@@ -193,11 +193,11 @@
         function setCloak(cloakName) {
             let iconUrl;
             let newTitle;
+            
+            // Embedded Base64 PNG for the official-looking Google Docs icon
+            const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRU5ErkJggg==';
 
             if (cloakName === 'docs') {
-                // 📄 Official-looking Google Docs Favicon (Embedded Base64 PNG)
-                const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRU5ErkJggg==';
-                
                 newTitle = 'Google Docs';
                 iconUrl = GOOGLE_DOCS_FAVICON_BASE64;
 
