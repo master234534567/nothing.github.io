@@ -5,15 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOTHING - Single Page Game Hub</title>
     
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>">
-    
     <script>
-        // Theme Logic: Checks local storage and applies the saved theme class to the HTML element
+        // Check for saved theme (color selector)
         const savedTheme = localStorage.getItem('hubTheme');
-        
-        // If a theme is saved, apply it. Otherwise, default to rainbow.
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
         document.documentElement.className = `theme-${currentTheme}`;
+
+        // Check for saved favicon (logo)
+        const savedFavicon = localStorage.getItem('hubFavicon');
+        const faviconUrl = savedFavicon 
+            ? savedFavicon 
+            : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
+        
+        // Dynamically create or update the favicon link
+        let link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }
+        link.href = faviconUrl;
     </script>
 
     <style>
