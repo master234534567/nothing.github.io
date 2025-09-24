@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTHING - Nitro Racer</title>
+    
+   
+    
+    <script>
+        const savedTheme = localStorage.getItem('hubTheme');
+        const currentTheme = savedTheme ? savedTheme : 'rainbow';
+        document.documentElement.className = `theme-${currentTheme}`;
+    </script>
+
+    <style>
+        /* CSS Keyframes for the Never-Ending Rainbow Background */
+        @keyframes rainbow-glow {
+            0% { background-color: #ff0000; } 
+            16% { background-color: #ff7f00; } 
+            33% { background-color: #ffff00; } 
+            50% { background-color: #00ff00; } 
+            66% { background-color: #0000ff; } 
+            83% { background-color: #4b0082; } 
+            100% { background-color: #ff0000; } 
+        }
+        
+        /* Variables for Solid Colors */
+        :root {
+            --dark-bg: #1a1a1a;
+            --blue-bg: #007bff;
+            --purple-bg: #6f42c1;
+        }
+
+        /* General Styles: Base setup for body */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+
+        /* THEME CLASSES: Applied to the <html> tag */
+        .theme-rainbow body {
+            background-color: #1a1a1a;
+            animation: rainbow-glow 10s infinite linear; 
+        }
+        .theme-dark body {
+            background-color: var(--dark-bg);
+            animation: none;
+        }
+        .theme-blue body {
+            background-color: var(--blue-bg);
+            animation: none;
+        }
+        .theme-purple body {
+            background-color: var(--purple-bg);
+            animation: none;
+        }
+
+        h1 {
+            color: #ff5722;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #ff5722;
+            text-decoration: none;
+            border: 1px solid #ff5722;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .back-link:hover {
+            background-color: rgba(255, 87, 34, 0.1);
+        }
+
+        /* Nitro Racer Button Styles (The External Link) */
+        .game-button-container {
+            display: inline-block;
+            background-color: #333;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .game-button-container:hover {
+            transform: scale(1.03);
+        }
+        .game-button-container a {
+            text-decoration: none;
+            color: #fff;
+            display: block;
+        }
+        .nitro-image-container {
+            width: 300px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #555; 
+            font-size: 1.5em;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+        }
+        .nitro-info {
+            padding: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+            background-color: #ff5722;
+            border-radius: 0 0 10px 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-link">← Back to NOTHING Hub</a>
+    <h1>Play Nitro Racer!</h1>
+    <p>Get ready to race and type your way to victory. Click the button below to start the external game.</p>
+
+    <div class="game-button-container">
+        <a href="https://nitrotyper.com" target="_blank">
+            <div class="nitro-image-container" role="button">
+                🚗 Nitro Racer Image
+            </div>
+            <div class="nitro-info">
+                🏎️ Go to NitroTyper.com
+            </div>
+        </a>
+    </div>
+
+</body>
+</html>
