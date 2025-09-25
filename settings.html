@@ -6,6 +6,39 @@
     <title>NOTHING - Settings</title>
     
     <script>
+        // ... existing script code ...
+
+    // Function to highlight the currently active theme and cloak buttons
+    function highlightActiveSettings() {
+        // Highlight Theme Button
+        const currentTheme = localStorage.getItem('hubTheme') || 'rainbow'; // Default to rainbow
+        const themeButton = document.querySelector(`.color-button[onclick*="setTheme('${currentTheme}')"]`);
+        if (themeButton) {
+            themeButton.classList.add('is-active');
+        }
+
+        // Highlight Cloak Button
+        const currentFavicon = localStorage.getItem('hubFavicon');
+        
+        // Logic to determine which cloak button matches the saved favicon URL
+        if (!currentFavicon || currentFavicon.includes('🐻')) {
+            // No cloak or default bear cloak
+            const defaultCloakButton = document.querySelector(`.cloak-button[onclick*="setCloak('default')"]`);
+            if (defaultCloakButton) {
+                defaultCloakButton.classList.add('is-active');
+            }
+        } else if (currentFavicon.includes('iVBORw0KGgoAAAANSUII')) {
+            // The Google Docs favicon (check for a unique part of the Base64 string)
+            const docsCloakButton = document.querySelector(`.cloak-button[onclick*="setCloak('docs')"]`);
+            if (docsCloakButton) {
+                docsCloakButton.classList.add('is-active');
+            }
+        }
+    }
+
+    // Run the function immediately when the page loads
+    highlightActiveSettings(); 
+        
         // Check for saved theme
         const savedTheme = localStorage.getItem('hubTheme');
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
