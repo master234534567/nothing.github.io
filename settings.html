@@ -6,25 +6,24 @@
     <title>NOTHING</title>
     
     <script>
+        // Embedded Base64 PNG for the official-looking Google Docs icon (Used for setCloak and toggleNotificationCloak)
+        const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRU5ErkJggg==';
+        
+        // Define the default icon and title
+        const DEFAULT_BEAR_FAVICON = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
+        const DEFAULT_TITLE = 'NOTHING';
+
         // Load Theme Preference
         const savedTheme = localStorage.getItem('hubTheme');
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
         document.documentElement.className = `theme-${currentTheme}`;
 
-        // Load Static Cloak (Favicon & Title)
+        // Load Saved Cloak Settings
         const savedFavicon = localStorage.getItem('hubFavicon');
         const savedTitle = localStorage.getItem('hubTitle');
         
-        // !!! CRITICAL: Default title is just 'NOTHING' !!!
-        const defaultTitle = 'NOTHING'; 
-        // ----------------------------------
-        
-        const faviconUrl = savedFavicon 
-            ? savedFavicon 
-            : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
-        
         // Set the current tab title
-        document.title = savedTitle ? savedTitle : defaultTitle;
+        document.title = savedTitle ? savedTitle : DEFAULT_TITLE;
 
         // Set the current favicon
         let link = document.querySelector("link[rel~='icon']");
@@ -33,9 +32,9 @@
             link.rel = 'icon';
             document.getElementsByTagName('head')[0].appendChild(link);
         }
-        link.href = faviconUrl;
+        link.href = savedFavicon ? savedFavicon : DEFAULT_BEAR_FAVICON;
 
-        // Panic Hide function (Redirects to a neutral external site)
+        // Panic Hide function
         function panicHide() {
             window.location.replace("https://www.wikipedia.org/");
         }
@@ -54,11 +53,28 @@
             }
         }
 
-        // 2. Toggles the setting and reloads the page
+        // 2. Toggles the setting and manages the title/favicon status
         function toggleNotificationCloak() {
             const isEnabled = localStorage.getItem('notificationCloakEnabled') === 'true';
-            localStorage.setItem('notificationCloakEnabled', !isEnabled);
-            updateToggleButton();
+            const newState = !isEnabled;
+            
+            // 1. Save the new state
+            localStorage.setItem('notificationCloakEnabled', newState);
+            
+            // 2. If ENABLED, set the static cloak to the 'New Message' state
+            if (newState) {
+                const messageTitle = '(1) New Message / Student Portal';
+                const messageFavicon = GOOGLE_DOCS_FAVICON_BASE64; // Use a generic icon for stealth
+                
+                localStorage.setItem('hubTitle', messageTitle);
+                localStorage.setItem('hubFavicon', messageFavicon);
+            } else {
+                // If DISABLED, revert the static cloak to the default/bear icon and NOTHING title
+                localStorage.setItem('hubTitle', DEFAULT_TITLE);
+                localStorage.setItem('hubFavicon', DEFAULT_BEAR_FAVICON);
+            }
+            
+            // 3. Reload to apply all changes across the site
             window.location.reload(); 
         }
 
@@ -95,6 +111,9 @@
 
         .panic-button { background-color: #a80000; color: #fff; font-size: 1.5em; font-weight: bold; padding: 15px 30px; border: 2px solid #ff0000; border-radius: 10px; cursor: pointer; transition: background-color 0.3s; margin-bottom: 30px; }
         .panic-button:hover { background-color: #ff0000; animation: red-pulse 1.5s infinite; }
+        
+        .panic-btn-fixed { position: fixed; bottom: 20px; right: 20px; background-color: #a80000; color: #fff; padding: 10px 15px; border: 2px solid #ff0000; border-radius: 8px; cursor: pointer; font-weight: bold; z-index: 1000; transition: background-color 0.3s; }
+        .panic-btn-fixed:hover { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
     </style>
 </head>
 <body>
@@ -139,37 +158,28 @@
             window.location.reload(); 
         }
 
-        // Function to change and save the cloak (favicon and title) preference
+        // Function to change and save the static cloak (favicon and title) preference
         function setCloak(cloakName) {
             let iconUrl;
             let newTitle;
             
-            // Embedded Base64 PNG for the official-looking Google Docs icon
-            const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRU5ErkJggg==';
-
             if (cloakName === 'docs') {
                 newTitle = 'Google Docs';
                 iconUrl = GOOGLE_DOCS_FAVICON_BASE64;
-
             } else {
-                // Default settings: Bear/NOTHING (SVG Emoji)
-                const iconText = '🐻'; 
-                newTitle = 'NOTHING'; 
-                iconUrl = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${iconText}</text></svg>`;
+                // Default settings: Bear/NOTHING
+                newTitle = DEFAULT_TITLE; 
+                iconUrl = DEFAULT_BEAR_FAVICON;
             }
 
-            // Save and apply changes
-            let link = document.querySelector("link[rel~='icon']");
-            if (!link) {
-                link = document.createElement('link');
-                link.rel = 'icon';
-                document.getElementsByTagName('head')[0].appendChild(link);
-            }
-            link.href = iconUrl;
+            // Save changes
             localStorage.setItem('hubFavicon', iconUrl);
-            document.title = newTitle;
             localStorage.setItem('hubTitle', newTitle);
 
+            // Turn OFF Notification Cloak if Static Cloak is set
+            localStorage.setItem('notificationCloakEnabled', 'false');
+
+            // Reload to apply changes instantly
             window.location.reload();
         }
     </script>
