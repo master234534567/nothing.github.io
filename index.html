@@ -6,20 +6,6 @@
     <title>NOTHING - Single Page Game Hub</title>
     
     <script>
-        
-    // Check for saved theme (color selector)
-    const savedTheme = localStorage.getItem('hubTheme');
-    const currentTheme = savedTheme ? savedTheme : 'rainbow';
-    document.documentElement.className = `theme-${currentTheme}`;
-
-    // Check for saved cloak settings (defaults to Bear/NOTHING)
-    const savedFavicon = localStorage.getItem('hubFavicon');
-    const savedTitle = localStorage.getItem('hubTitle');
-    
-    // --- CHANGE IS HERE ---
-    // The default title for the main page is now just "NOTHING"
-    const defaultTitle = 'NOTHING'; 
-    // --- END CHANGE ---
     
     const faviconUrl = savedFavicon 
         ? savedFavicon 
@@ -72,6 +58,41 @@
         function panicHide() {
             window.location.replace("https://www.wikipedia.org/");
         }
+        <script>
+    // Check for saved theme (color selector)
+    const savedTheme = localStorage.getItem('hubTheme');
+    const currentTheme = savedTheme ? savedTheme : 'rainbow';
+    document.documentElement.className = `theme-${currentTheme}`;
+
+    // Check for saved cloak settings (defaults to Bear/NOTHING)
+    const savedFavicon = localStorage.getItem('hubFavicon');
+    const savedTitle = localStorage.getItem('hubTitle');
+    
+    // --- CHANGE IS HERE ---
+    // The default title for the main page is now just "NOTHING"
+    const defaultTitle = 'NOTHING'; 
+    // --- END CHANGE ---
+    
+    const faviconUrl = savedFavicon 
+        ? savedFavicon 
+        : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
+    
+    // Dynamically set the page title
+    document.title = savedTitle ? savedTitle : defaultTitle;
+    
+    // Dynamically create or update the favicon link
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    }
+    link.href = faviconUrl;
+    
+    // Panic Hide function (Redirects to a neutral external site)
+    function panicHide() {
+        window.location.replace("https://www.wikipedia.org/");
+    }
     </script>
 
     <style>
