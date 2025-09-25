@@ -3,208 +3,303 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOTHING</title>
+    <title>SETTINGS - NOTHING Hub</title>
     
     <script>
-        // Embedded Base64 PNG for the official-looking Google Docs icon
-        const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRU5ErkJggg==';
+        // --- START: CLOAK & THEME SETUP (Copied from index.html for consistency) ---
         
-        // Define the default icon and title
-        const DEFAULT_BEAR_FAVICON = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
-        const DEFAULT_TITLE = 'NOTHING';
-
-        // Load Theme Preference
+        // 1. Theme Loading (ensures the settings page matches the index theme)
         const savedTheme = localStorage.getItem('hubTheme');
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
         document.documentElement.className = `theme-${currentTheme}`;
 
-        // Load Saved Cloak Settings
+        // 2. Static Cloak Loading
         const savedFavicon = localStorage.getItem('hubFavicon');
         const savedTitle = localStorage.getItem('hubTitle');
+        const defaultTitle = 'NOTHING - Single Page Game Hub';
         
-        // Set the current tab title
-        document.title = savedTitle ? savedTitle : DEFAULT_TITLE;
-
-        // Set the current favicon
+        const faviconUrl = savedFavicon 
+            ? savedFavicon 
+            : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
+        
+        const ORIGINAL_TITLE = savedTitle ? savedTitle : defaultTitle;
+        document.title = ORIGINAL_TITLE;
+        
         let link = document.querySelector("link[rel~='icon']");
         if (!link) {
             link = document.createElement('link');
             link.rel = 'icon';
             document.getElementsByTagName('head')[0].appendChild(link);
         }
-        link.href = savedFavicon ? savedFavicon : DEFAULT_BEAR_FAVICON;
-
-        // Panic Hide function
+        link.href = faviconUrl;
+        
+        // 3. Panic Hide function (Redirects to a neutral external site)
         function panicHide() {
             window.location.replace("https://www.wikipedia.org/");
         }
 
-        // --- NOTIFICATION CLOAK TOGGLE FUNCTIONS ---
-
-        // 1. Updates the button text/color on page load/click
-        function updateToggleButton() {
-            const isEnabled = localStorage.getItem('notificationCloakEnabled') === 'true';
-            const button = document.getElementById('toggleCloakButton');
-            
-            if (button) {
-                button.textContent = isEnabled ? 'Status: ENABLED ✅' : 'Status: DISABLED ❌';
-                button.style.backgroundColor = isEnabled ? '#4CAF50' : '#f44336'; 
-                button.style.width = '200px'; 
+        // --- NEW FUNCTION: Open current page inside an about:blank iframe ---
+        function openAboutBlank() {
+            const currentUrl = window.location.href;
+            const blank = window.open('about:blank', '_blank');
+            if (blank) {
+                // Write an HTML page to the blank tab that contains an iframe pointing to our site
+                blank.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>${document.title}</title>
+                        <style>
+                            body { margin: 0; overflow: hidden; }
+                            iframe { border: none; width: 100vw; height: 100vh; }
+                        </style>
+                    </head>
+                    <body>
+                        <iframe src="${currentUrl}"></iframe>
+                    </body>
+                    </html>
+                `);
+                blank.document.close();
             }
         }
 
-        // 2. Toggles the setting and manages the title/favicon status
-        function toggleNotificationCloak() {
-            const isEnabled = localStorage.getItem('notificationCloakEnabled') === 'true';
-            const newState = !isEnabled;
+        // --- END: CLOAK & THEME SETUP ---
+
+        // --- START: SETTINGS LOGIC ---
+        
+        // Settings elements (IDs are assumed for this logic to work)
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeSelector = document.getElementById('theme-selector');
+            const titleInput = document.getElementById('title-input');
+            const faviconInput = document.getElementById('favicon-input');
+            const notificationToggle = document.getElementById('notification-cloak-toggle');
+
+            // Load saved settings on page load
+            themeSelector.value = localStorage.getItem('hubTheme') || 'rainbow';
+            titleInput.value = localStorage.getItem('hubTitle') || defaultTitle;
+            faviconInput.value = localStorage.getItem('hubFavicon') || '';
+            notificationToggle.checked = localStorage.getItem('notificationCloakEnabled') === 'true';
+
+            // Save Theme setting
+            themeSelector.addEventListener('change', (e) => {
+                localStorage.setItem('hubTheme', e.target.value);
+                // Apply theme immediately
+                document.documentElement.className = `theme-${e.target.value}`;
+            });
+
+            // Save Title setting
+            titleInput.addEventListener('input', (e) => {
+                const newTitle = e.target.value.trim() || defaultTitle;
+                localStorage.setItem('hubTitle', newTitle);
+                document.title = newTitle; // Apply immediately
+            });
             
-            // 1. Save the new state
-            localStorage.setItem('notificationCloakEnabled', newState);
-            
-            // 2. If ENABLED, set the static cloak to the 'New Message' state
-            if (newState) {
-                const messageTitle = '(1) New Message / Student Portal';
-                const messageFavicon = GOOGLE_DOCS_FAVICON_BASE64; // Use a generic icon for stealth
+            // Save Favicon setting
+            faviconInput.addEventListener('input', (e) => {
+                const newFavicon = e.target.value.trim();
+                localStorage.setItem('hubFavicon', newFavicon);
                 
-                localStorage.setItem('hubTitle', messageTitle);
-                localStorage.setItem('hubFavicon', messageFavicon);
-            } else {
-                // If DISABLED, revert the static cloak to the default/bear icon and NOTHING title
-                localStorage.setItem('hubTitle', DEFAULT_TITLE);
-                localStorage.setItem('hubFavicon', DEFAULT_BEAR_FAVICON);
-            }
-            
-            // 3. Reload to apply all changes across the site
-            window.location.reload(); 
-        }
+                // Dynamically update the favicon
+                let favLink = document.querySelector("link[rel~='icon']");
+                if (favLink) {
+                   favLink.href = newFavicon || "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
+                }
+            });
 
-        // Run the status update when the content is ready
-        document.addEventListener('DOMContentLoaded', updateToggleButton);
+            // Save Notification Cloak setting
+            notificationToggle.addEventListener('change', (e) => {
+                localStorage.setItem('notificationCloakEnabled', e.target.checked);
+                alert(`Notification Cloak is now ${e.target.checked ? 'Enabled' : 'Disabled'}. (Applies on next tab switch)`);
+            });
+        });
+
+        // --- END: SETTINGS LOGIC ---
     </script>
 
     <style>
-        /* CSS Keyframes and Theme Definitions */
+        /* CSS Keyframes for the Never-Ending Rainbow Background */
         @keyframes rainbow-glow {
             0% { background-color: #ff0000; } 16% { background-color: #ff7f00; } 
             33% { background-color: #ffff00; } 50% { background-color: #00ff00; } 
             66% { background-color: #0000ff; } 83% { background-color: #4b0082; } 
             100% { background-color: #ff0000; } 
         }
-        @keyframes red-pulse {
-            0% { box-shadow: 0 0 5px #ff0000; } 50% { box-shadow: 0 0 20px #ff0000, 0 0 30px #ff5722; }
-            100% { box-shadow: 0 0 5px #ff0000; }
-        }
-        :root { --dark-bg: #1a1a1a; --blue-bg: #007bff; --purple-bg: #6f42c1; }
         
-        body { 
-            font-family: sans-serif; 
-            margin: 0; 
-            color: #fff; 
-            text-align: center; 
-            padding: 50px; 
-            
-            /* FIX FOR SCROLLING DUPLICATION */
-            min-height: 100vh; /* Ensures content area is tall enough */
-            background-repeat: no-repeat; /* Prevents background tiling/duplication */
-            background-size: cover; /* Ensures background covers the entire page */
+        /* Variables for Solid Colors */
+        :root {
+            --dark-bg: #1a1a1a;
+            --blue-bg: #007bff;
+            --purple-bg: #6f42c1;
+            --main-text: #fff;
+            --accent-color: #ff5722;
         }
 
-        /* THEME CLASSES */
-        .theme-rainbow body { background-color: #1a1a1a; animation: rainbow-glow 10s infinite linear; }
+        /* --- FIXES FOR SCROLLING & THEMES --- */
+        html { height: 100%; }
+        
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            color: var(--main-text);
+            min-height: 100%; 
+            background-color: var(--dark-bg); /* Default fallback */
+            background-repeat: no-repeat;
+            background-attachment: fixed; 
+        }
+
+        /* THEME CLASSES: Applied to the <html> tag */
+        .theme-rainbow body {
+            background-color: #1a1a1a;
+            animation: rainbow-glow 10s infinite linear; 
+        }
         .theme-dark body { background-color: var(--dark-bg); animation: none; }
         .theme-blue body { background-color: var(--blue-bg); animation: none; }
         .theme-purple body { background-color: var(--purple-bg); animation: none; }
 
-        h1 { color: #ff5722; margin-bottom: 40px; }
-        .back-link { display: inline-block; margin-bottom: 30px; color: #ff5722; text-decoration: none; border: 1px solid #ff5722; padding: 10px 20px; border-radius: 5px; transition: background-color 0.2s; }
-        .back-link:hover { background-color: rgba(255, 87, 34, 0.1); }
-        .setting-section { 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: center; 
-            gap: 15px; 
-            margin-bottom: 40px; 
-            border: 1px solid #444; 
-            padding: 20px; 
-            border-radius: 10px; 
+        /* --- Layout & Component Styles --- */
+        header {
+            padding: 30px 20px 20px; 
+            background-color: rgba(44, 44, 44, 0.9); 
+            text-align: center;
+            backdrop-filter: blur(5px); 
+            position: relative; 
         }
-        .color-button, .cloak-button { display: inline-block; width: 100px; height: 40px; padding: 5px 15px; color: #fff; border: 2px solid #555; border-radius: 8px; font-size: 1em; cursor: pointer; transition: border-color 0.2s, transform 0.1s; line-height: 28px; }
-        .color-button:hover, .cloak-button:hover { border-color: #ff5722; transform: scale(1.05); }
-
-        .panic-button { background-color: #a80000; color: #fff; font-size: 1.5em; font-weight: bold; padding: 15px 30px; border: 2px solid #ff0000; border-radius: 10px; cursor: pointer; transition: background-color 0.3s; margin-bottom: 30px; }
-        .panic-button:hover { background-color: #ff0000; animation: red-pulse 1.5s infinite; }
         
-        .panic-btn-fixed { position: fixed; bottom: 20px; right: 20px; background-color: #a80000; color: #fff; padding: 10px 15px; border: 2px solid #ff0000; border-radius: 8px; cursor: pointer; font-weight: bold; z-index: 1000; transition: background-color 0.3s; }
-        .panic-btn-fixed:hover { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+        .utility-buttons {
+            position: absolute;
+            top: 10px;
+            width: 95%; 
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+
+        .utility-buttons a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #555;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            margin: 0 5px; /* Added margin for separation */
+        }
+        .utility-buttons a:hover { background-color: var(--accent-color); }
+
+        h1 { margin: 0; color: var(--accent-color); }
+        h2 { color: var(--accent-color); border-bottom: 1px solid #444; padding-bottom: 10px }
+        
+        main {
+            padding: 30px;
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: rgba(26, 26, 26, 0.9); 
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); 
+        }
+
+        /* Settings Form Styles */
+        .setting-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #444;
+            border-radius: 6px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            background-color: #333;
+            border: 1px solid #555;
+            color: var(--main-text);
+            border-radius: 4px;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Panic Button fixed to corner */
+        .panic-btn-fixed {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #a80000;
+            color: #fff;
+            padding: 10px 15px;
+            border: 2px solid #ff0000;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+        .panic-btn-fixed:hover {
+            background-color: #ff0000;
+            box-shadow: 0 0 15px #ff0000;
+        }
     </style>
 </head>
 <body>
+    <header>
+        <div class="utility-buttons">
+            <a href="javascript:void(0)" onclick="openAboutBlank()">🔒 OPEN IN BLANK</a>
 
-    <a href="index.html" class="back-link">← Back to NOTHING Hub</a>
-    <h1>Game Hub Settings</h1>
+            <a href="index.html">🏠 HOME</a>
+            <a href="bookmarklets.html">📚 BOOKMARKLETS</a>
+        </div>
+        <h1>SETTINGS</h1>
+        <p>Customize your hub's appearance and stealth features.</p>
+    </header>
+    <main>
+        <h2>Theme & Appearance</h2>
 
-    <button class="panic-button" onclick="panicHide()">
-        🚨 PANIC BUTTON 🚨
-    </button>
-    
-    <h3 style="margin-top: 50px;">Static Cloak Tab Icon & Title</h3>
-    <p>Set a permanent title/icon (e.g., Google Docs) for the entire site.</p>
-    
-    <div class="setting-section">
-        <button class="cloak-button" onclick="setCloak('default')">🐻 Default</button>
-        <button class="cloak-button" onclick="setCloak('docs')">📄 Google Docs</button>
-    </div>
+        <div class="setting-group">
+            <label for="theme-selector">Select Background Theme:</label>
+            <select id="theme-selector">
+                <option value="rainbow">Rainbow Glow (Default)</option>
+                <option value="dark">Dark Mode</option>
+                <option value="blue">Deep Blue</option>
+                <option value="purple">Vibrant Purple</option>
+            </select>
+        </div>
 
-    <h3 style="margin-top: 50px;">Notification Cloaking (Active Stealth)</h3>
-    <p>The tab title changes when you switch away, making it look like a message/email inbox.</p>
-    <div class="setting-section">
-        <button class="color-button" id="toggleCloakButton" onclick="toggleNotificationCloak()">Toggle Cloak</button>
-    </div>
+        <h2>Cloaking & Stealth</h2>
 
-    <h3 style="margin-top: 50px;">Background Color Theme</h3>
-    <p>Select a permanent background for all hub pages.</p>
-    
-    <div class="setting-section">
-        <button class="color-button" onclick="setTheme('rainbow')">Rainbow 🌈</button>
-        <button class="color-button" onclick="setTheme('dark')">Dark ⚫</button>
-        <button class="color-button" onclick="setTheme('blue')">Blue 🔷</button>
-        <button class="color-button" onclick="setTheme('purple')">Purple 💜</button>
-    </div>
-    
-    <p style="margin-top: 50px;">Other settings will be added here soon!</p>
+        <div class="setting-group">
+            <label for="title-input">Set Custom Page Title (Static Cloak):</label>
+            <input type="text" id="title-input" placeholder="e.g., Google Drive, Math Homework">
+            <small style="color: #ccc;">Leave blank to use default.</small>
+        </div>
+        
+        <div class="setting-group">
+            <label for="favicon-input">Set Custom Favicon URL (Emoji or Image URL):</label>
+            <input type="text" id="favicon-input" placeholder="e.g., 📝 or https://example.com/favicon.png">
+            <small style="color: #ccc;">Paste an emoji or a full image URL. Leave blank for default (🐻).</small>
+        </div>
 
-    <script>
-        // Function to save the user's theme preference to local storage
-        function setTheme(themeName) {
-            localStorage.setItem('hubTheme', themeName);
-            window.location.reload(); 
-        }
-
-        // Function to change and save the static cloak (favicon and title) preference
-        function setCloak(cloakName) {
-            let iconUrl;
-            let newTitle;
-            
-            if (cloakName === 'docs') {
-                newTitle = 'Google Docs';
-                iconUrl = GOOGLE_DOCS_FAVICON_BASE64;
-            } else {
-                // Default settings: Bear/NOTHING
-                newTitle = DEFAULT_TITLE; 
-                iconUrl = DEFAULT_BEAR_FAVICON;
-            }
-
-            // Save changes
-            localStorage.setItem('hubFavicon', iconUrl);
-            localStorage.setItem('hubTitle', newTitle);
-
-            // Turn OFF Notification Cloak if Static Cloak is set
-            localStorage.setItem('notificationCloakEnabled', 'false');
-
-            // Reload to apply changes instantly
-            window.location.reload();
-        }
-    </script>
+        <div class="setting-group toggle-container">
+            <label for="notification-cloak-toggle" style="margin-bottom: 0;">
+                Active Cloak (Title Switch on Blur)
+                <small style="display: block; font-weight: normal; color: #aaa;">Changes title to 'New Message' when you switch tabs.</small>
+            </label>
+            <input type="checkbox" id="notification-cloak-toggle" style="width: auto;">
+        </div>
+    </main>
+    <footer>
+        <p>© 2025 NOTHING Gaming</p>
+    </footer>
     
     <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
 </body>
