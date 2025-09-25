@@ -300,4 +300,27 @@
         <div class="setting-group">
             <label for="title-input">Set Custom Page Title (Static Cloak):</label>
             <input type="text" id="title-input" placeholder="e.g., Google Drive, Math Homework">
-            <small style="color: #ccc;">Leave blank
+            <small style="color: #ccc;">Leave blank to use default.</small>
+        </div>
+        
+        <div class="setting-group">
+            <label for="favicon-input">Set Custom Favicon URL (Emoji or Image URL):</label>
+            <input type="text" id="favicon-input" placeholder="e.g., 📝 or https://example.com/favicon.png">
+            <small style="color: #ccc;">Paste an emoji or a full image URL. Leave blank for default (🐻).</small>
+        </div>
+
+        <div class="setting-group toggle-container">
+            <label for="notification-cloak-toggle" style="margin-bottom: 0;">
+                Active Cloak (Title Switch on Blur)
+                <small style="display: block; font-weight: normal; color: #aaa;">Changes title to 'New Message' when you switch tabs.</small>
+            </label>
+            <input type="checkbox" id="notification-cloak-toggle" style="width: auto;">
+        </div>
+    </main>
+    <footer>
+        <p>© 2025 NOTHING Gaming</p>
+    </footer>
+    
+    <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
+</body>
+</html>
