@@ -38,12 +38,11 @@
             window.location.replace("https://www.wikipedia.org/");
         }
 
-        // --- NEW FUNCTION: Open current page inside an about:blank iframe ---
+        // 4. About:Blank Cloak function
         function openAboutBlank() {
             const currentUrl = window.location.href;
             const blank = window.open('about:blank', '_blank');
             if (blank) {
-                // Write an HTML page to the blank tab that contains an iframe pointing to our site
                 blank.document.write(`
                     <!DOCTYPE html>
                     <html>
@@ -89,7 +88,10 @@
             titleInput.addEventListener('input', (e) => {
                 const newTitle = e.target.value.trim() || defaultTitle;
                 localStorage.setItem('hubTitle', newTitle);
-                document.title = newTitle; // Apply immediately
+                // ONLY update if notification cloak is currently OFF
+                if (!notificationToggle.checked) {
+                    document.title = newTitle; 
+                }
             });
             
             // Save Favicon setting
@@ -103,11 +105,21 @@
                 }
             });
 
-            // Save Notification Cloak setting
+            // --- UPDATED LOGIC FOR INSTANT PREVIEW ---
             notificationToggle.addEventListener('change', (e) => {
                 localStorage.setItem('notificationCloakEnabled', e.target.checked);
-                alert(`Notification Cloak is now ${e.target.checked ? 'Enabled' : 'Disabled'}. (Applies on next tab switch)`);
+                
+                if (e.target.checked) {
+                    // If checked, show the cloaked title immediately
+                    document.title = '(1) New Message / School Portal';
+                    alert('Notification Cloak is now Enabled. Look at the tab title!');
+                } else {
+                    // If unchecked, revert to the original/custom title immediately
+                    document.title = ORIGINAL_TITLE; 
+                    alert('Notification Cloak is now Disabled. Tab title reverted.');
+                }
             });
+            // --- END UPDATED LOGIC ---
         });
 
         // --- END: SETTINGS LOGIC ---
@@ -131,7 +143,7 @@
             --accent-color: #ff5722;
         }
 
-        /* --- FIXES FOR SCROLLING & THEMES (IMPORTANT) --- */
+        /* --- FIXES FOR SCROLLING & THEMES --- */
         html { height: 100%; }
         
         body {
@@ -139,9 +151,9 @@
             margin: 0;
             color: var(--main-text);
             min-height: 100%; 
-            background-color: var(--dark-bg); /* Default fallback */
+            background-color: var(--dark-bg); 
             background-repeat: no-repeat;
-            background-attachment: fixed; /* Fixes background duplication on scroll */
+            background-attachment: fixed; 
         }
 
         /* THEME CLASSES */
@@ -172,7 +184,7 @@
         }
 
         .utility-buttons div {
-            display: flex; /* To group the right-side buttons */
+            display: flex;
         }
         
         .utility-buttons a {
@@ -183,10 +195,9 @@
             border-radius: 5px;
             font-weight: bold;
             transition: background-color 0.2s;
-            margin-left: 10px; /* Space between buttons */
+            margin-left: 10px;
         }
 
-        /* Adjusting for the left-most button (new About:Blank) */
         .utility-buttons a:first-child { 
             margin-left: 0;
         }
@@ -289,27 +300,4 @@
         <div class="setting-group">
             <label for="title-input">Set Custom Page Title (Static Cloak):</label>
             <input type="text" id="title-input" placeholder="e.g., Google Drive, Math Homework">
-            <small style="color: #ccc;">Leave blank to use default.</small>
-        </div>
-        
-        <div class="setting-group">
-            <label for="favicon-input">Set Custom Favicon URL (Emoji or Image URL):</label>
-            <input type="text" id="favicon-input" placeholder="e.g., 📝 or https://example.com/favicon.png">
-            <small style="color: #ccc;">Paste an emoji or a full image URL. Leave blank for default (🐻).</small>
-        </div>
-
-        <div class="setting-group toggle-container">
-            <label for="notification-cloak-toggle" style="margin-bottom: 0;">
-                Active Cloak (Title Switch on Blur)
-                <small style="display: block; font-weight: normal; color: #aaa;">Changes title to 'New Message' when you switch tabs.</small>
-            </label>
-            <input type="checkbox" id="notification-cloak-toggle" style="width: auto;">
-        </div>
-    </main>
-    <footer>
-        <p>© 2025 NOTHING Gaming</p>
-    </footer>
-    
-    <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
-</body>
-</html>
+            <small style="color: #ccc;">Leave blank
