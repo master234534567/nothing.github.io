@@ -7,7 +7,7 @@
     
     <script>
         // Embedded Base64 PNG for the official-looking Google Docs icon
-        const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRU5ErkJggg==';
+        const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRUxRKisgqKKdCggAAAABJRU5ErkJggg==';
         
         // Define the default icon and title
         const DEFAULT_BEAR_FAVICON = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
@@ -81,7 +81,7 @@
         // Run the status update when the content is ready
         document.addEventListener('DOMContentLoaded', updateToggleButton);
         
-        // --- NEW: ABOUT:BLANK LAUNCHER FUNCTION ---
+        // --- ABOUT:BLANK LAUNCHER FUNCTION ---
         function openAboutBlank() {
             // Open a new, clean tab
             const newWindow = window.open('about:blank', '_blank');
@@ -139,7 +139,16 @@
         h1 { color: #ff5722; margin-bottom: 40px; }
         .back-link { display: inline-block; margin-bottom: 30px; color: #ff5722; text-decoration: none; border: 1px solid #ff5722; padding: 10px 20px; border-radius: 5px; transition: background-color 0.2s; }
         .back-link:hover { background-color: rgba(255, 87, 34, 0.1); }
-        .setting-section { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 40px; border: 1px solid #444; padding: 20px; border-radius: 10px; }
+        .setting-section { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 15px; 
+            margin-bottom: 40px; 
+            border: 1px solid #444; 
+            padding: 20px; 
+            border-radius: 10px; 
+        }
         .color-button, .cloak-button { display: inline-block; width: 100px; height: 40px; padding: 5px 15px; color: #fff; border: 2px solid #555; border-radius: 8px; font-size: 1em; cursor: pointer; transition: border-color 0.2s, transform 0.1s; line-height: 28px; }
         .color-button:hover, .cloak-button:hover { border-color: #ff5722; transform: scale(1.05); }
 
