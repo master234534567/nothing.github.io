@@ -92,13 +92,18 @@
             position: relative; 
         }
         
-        /* SETTINGS BUTTON STYLES */
-        .settings-button {
+        /* HEADER UTILITY BUTTONS CONTAINER */
+        .utility-buttons {
             position: absolute;
             top: 10px;
-            right: 20px;
+            width: 95%; /* To hold both buttons */
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
         }
-        .settings-button a {
+
+        /* GENERAL BUTTON STYLES */
+        .utility-buttons a {
             text-decoration: none;
             color: #fff;
             background-color: #555;
@@ -107,9 +112,10 @@
             font-weight: bold;
             transition: background-color 0.2s;
         }
-        .settings-button a:hover {
+        .utility-buttons a:hover {
             background-color: #ff5722;
         }
+
 
         h1 {
             margin: 0;
@@ -227,7 +233,8 @@
 </head>
 <body>
     <header>
-        <div class="settings-button">
+        <div class="utility-buttons">
+            <a href="bookmarklets.html">📚 BOOKMARKLETS</a>
             <a href="settings.html">⚙️ SETTINGS</a>
         </div>
         <h1>NOTHING</h1>
