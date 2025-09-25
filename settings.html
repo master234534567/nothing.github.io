@@ -34,6 +34,29 @@
     </script>
 
     <style>
+       /* --- NEW GLOW EFFECT --- */
+
+/* Keyframes for the Neon Pulse */
+@keyframes neon-pulse {
+    0% { box-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color); }
+    50% { box-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color); }
+    100% { box-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color); }
+}
+
+/* Base Variable for Consistent Glow Color */
+:root {
+    --dark-bg: #1a1a1a;
+    --blue-bg: #007bff;
+    --purple-bg: #6f42c1;
+    --accent-color: #ff5722; /* Define a consistent accent color */
+}
+
+/* The active class applied by JavaScript */
+.color-button.is-active, .cloak-button.is-active {
+    border-color: var(--accent-color);
+    transform: scale(1.05); /* Slightly enlarge the active button */
+    animation: neon-pulse 1.5s infinite alternate;
+}
         /* CSS Keyframes for the Never-Ending Rainbow Background */
         @keyframes rainbow-glow {
             0% { background-color: #ff0000; } 
