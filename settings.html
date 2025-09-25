@@ -7,7 +7,7 @@
     
     <script>
         // Embedded Base64 PNG for the official-looking Google Docs icon
-        const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRUxRKisgqKKdCggAAAABJRU5ErkJggg==';
+        const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRU5ErkJggg==';
         
         // Define the default icon and title
         const DEFAULT_BEAR_FAVICON = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
@@ -80,40 +80,6 @@
 
         // Run the status update when the content is ready
         document.addEventListener('DOMContentLoaded', updateToggleButton);
-        
-        // --- ABOUT:BLANK LAUNCHER FUNCTION ---
-        function openAboutBlank() {
-            // Open a new, clean tab
-            const newWindow = window.open('about:blank', '_blank');
-            
-            // Inject the user's provided HTML code into the new window
-            if (newWindow) {
-                // Use setTimeout to ensure the new window context is ready for document.write
-                setTimeout(() => {
-                    newWindow.document.write(`
-                        <!DOCTYPE html>
-                        <html>
-                        <head>
-                        <title>Open About:Blank</title>
-                        </head>
-                        <body>
-                        
-                        <button onclick="openAboutBlank()">Open About:Blank</button>
-                        
-                        <script>
-                        // Self-perpetuating function to open a new about:blank when clicked
-                        function openAboutBlank() {
-                          window.open('about:blank', '_blank');
-                        }
-                        </script>
-                        
-                        </body>
-                        </html>
-                    `);
-                    newWindow.document.close();
-                }, 100); // 100ms delay to ensure the window object is ready
-            }
-        }
     </script>
 
     <style>
@@ -158,21 +124,7 @@
         .panic-btn-fixed { position: fixed; bottom: 20px; right: 20px; background-color: #a80000; color: #fff; padding: 10px 15px; border: 2px solid #ff0000; border-radius: 8px; cursor: pointer; font-weight: bold; z-index: 1000; transition: background-color 0.3s; }
         .panic-btn-fixed:hover { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
         
-        /* New button style for the about:blank launcher */
-        .launcher-button {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-        .launcher-button:hover {
-            background-color: #0056b3;
-        }
+        /* The .launcher-button CSS is no longer needed but kept for completeness */
     </style>
 </head>
 <body>
@@ -184,71 +136,4 @@
         🚨 PANIC BUTTON 🚨
     </button>
     
-    <h3 style="margin-top: 50px;">About:Blank Launcher</h3>
-    <p>Launches a new, cloaked window using the 'about:blank' method.</p>
-    <div class="setting-section">
-        <button class="launcher-button" onclick="openAboutBlank()">Launch About:Blank 🚀</button>
-    </div>
-
-    <h3 style="margin-top: 50px;">Static Cloak Tab Icon & Title</h3>
-    <p>Set a permanent title/icon (e.g., Google Docs) for the entire site.</p>
-    
-    <div class="setting-section">
-        <button class="cloak-button" onclick="setCloak('default')">🐻 Default</button>
-        <button class="cloak-button" onclick="setCloak('docs')">📄 Google Docs</button>
-    </div>
-
-    <h3 style="margin-top: 50px;">Notification Cloaking (Active Stealth)</h3>
-    <p>The tab title changes when you switch away, making it look like a message/email inbox.</p>
-    <div class="setting-section">
-        <button class="color-button" id="toggleCloakButton" onclick="toggleNotificationCloak()">Toggle Cloak</button>
-    </div>
-
-    <h3 style="margin-top: 50px;">Background Color Theme</h3>
-    <p>Select a permanent background for all hub pages.</p>
-    
-    <div class="setting-section">
-        <button class="color-button" onclick="setTheme('rainbow')">Rainbow 🌈</button>
-        <button class="color-button" onclick="setTheme('dark')">Dark ⚫</button>
-        <button class="color-button" onclick="setTheme('blue')">Blue 🔷</button>
-        <button class="color-button" onclick="setTheme('purple')">Purple 💜</button>
-    </div>
-    
-    <p style="margin-top: 50px;">Other settings will be added here soon!</p>
-
-    <script>
-        // Function to save the user's theme preference to local storage
-        function setTheme(themeName) {
-            localStorage.setItem('hubTheme', themeName);
-            window.location.reload(); 
-        }
-
-        // Function to change and save the static cloak (favicon and title) preference
-        function setCloak(cloakName) {
-            let iconUrl;
-            let newTitle;
-            
-            if (cloakName === 'docs') {
-                newTitle = 'Google Docs';
-                iconUrl = GOOGLE_DOCS_FAVICON_BASE64;
-            } else {
-                // Default settings: Bear/NOTHING
-                newTitle = DEFAULT_TITLE; 
-                iconUrl = DEFAULT_BEAR_FAVICON;
-            }
-
-            // Save changes
-            localStorage.setItem('hubFavicon', iconUrl);
-            localStorage.setItem('hubTitle', newTitle);
-
-            // Turn OFF Notification Cloak if Static Cloak is set
-            localStorage.setItem('notificationCloakEnabled', 'false');
-
-            // Reload to apply changes instantly
-            window.location.reload();
-        }
-    </script>
-    
-    <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
-</body>
-</html>
+    <h3 style="margin-top: 50px;">Static Cloak Tab Icon
