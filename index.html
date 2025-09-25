@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOTHING</title> 
+    <title>NOTHING - Single Page Game Hub</title>
     
     <script>
         // Check for saved theme (color selector)
@@ -15,18 +15,14 @@
         const savedFavicon = localStorage.getItem('hubFavicon');
         const savedTitle = localStorage.getItem('hubTitle');
         
-        // --- CORRECTED BROWSER TITLE CHANGE ---
-        // The default title for the main page is now just "NOTHING"
-        const defaultTitle = 'NOTHING'; 
-        // --------------------------------------
-        
-        // The default favicon (Bear) for when no cloak is active
+        const defaultTitle = 'NOTHING - Single Page Game Hub';
         const faviconUrl = savedFavicon 
             ? savedFavicon 
             : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
         
-        // Dynamically set the page title (browser tab title)
-        document.title = savedTitle ? savedTitle : defaultTitle;
+        // Dynamically set the page title
+        const ORIGINAL_TITLE = savedTitle ? savedTitle : defaultTitle;
+        document.title = ORIGINAL_TITLE;
         
         // Dynamically create or update the favicon link
         let link = document.querySelector("link[rel~='icon']");
@@ -41,6 +37,31 @@
         function panicHide() {
             window.location.replace("https://www.wikipedia.org/");
         }
+
+        // --- START: NOTIFICATION CLOAK LOGIC ---
+        const NOTIFICATION_CLOAK_ENABLED = localStorage.getItem('notificationCloakEnabled') === 'true';
+        
+        // Function to apply the cloak (when tab loses focus)
+        function applyCloak() {
+            if (NOTIFICATION_CLOAK_ENABLED) {
+                document.title = '(1) New Message'; 
+                // You could also change the favicon here if you have an image for it
+            }
+        }
+
+        // Function to uncloak (when tab gains focus)
+        function removeCloak() {
+            if (NOTIFICATION_CLOAK_ENABLED) {
+                document.title = ORIGINAL_TITLE;
+            }
+        }
+
+        // Apply event listeners only if the feature is enabled
+        if (NOTIFICATION_CLOAK_ENABLED) {
+            window.addEventListener('blur', applyCloak);  // User leaves tab
+            window.addEventListener('focus', removeCloak); // User returns to tab
+        }
+        // --- END: NOTIFICATION CLOAK LOGIC ---
     </script>
 
     <style>
@@ -97,13 +118,13 @@
             position: relative; 
         }
         
-        /* HEADER UTILITY BUTTONS CONTAINER (Bookmarklets on left, Settings on right) */
+        /* HEADER UTILITY BUTTONS CONTAINER */
         .utility-buttons {
             position: absolute;
             top: 10px;
-            width: 95%; 
+            width: 95%; /* To hold both buttons */
             display: flex;
-            justify-content: space-between; 
+            justify-content: space-between;
             padding: 0 10px;
         }
 
@@ -240,7 +261,6 @@
     <header>
         <div class="utility-buttons">
             <a href="bookmarklets.html">📚 BOOKMARKLETS</a>
-            
             <a href="settings.html">⚙️ SETTINGS</a>
         </div>
         <h1>NOTHING</h1>
