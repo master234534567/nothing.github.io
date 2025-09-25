@@ -16,7 +16,6 @@
         const savedTitle = localStorage.getItem('hubTitle');
         
         // --- UPDATED DEFAULT TITLE HERE ---
-        // The default title for the settings page is now just 'NOTHING'
         const defaultTitle = 'NOTHING'; 
         // ----------------------------------
         
@@ -41,15 +40,19 @@
             window.location.replace("https://www.wikipedia.org/");
         }
 
-        // --- NEW CLOAKING LOGIC ---
+        // --- NEW CLOAKING TOGGLE LOGIC (for settings page only) ---
 
         // 1. Function to manage the state button on the settings page
         function updateToggleButton() {
             const isEnabled = localStorage.getItem('notificationCloakEnabled') === 'true';
             const button = document.getElementById('toggleCloakButton');
             
-            button.textContent = isEnabled ? 'Status: ENABLED ✅' : 'Status: DISABLED ❌';
-            button.style.backgroundColor = isEnabled ? '#4CAF50' : '#f44336'; /* Green or Red */
+            // Safety check: ensure the button exists before trying to modify it
+            if (button) {
+                button.textContent = isEnabled ? 'Status: ENABLED ✅' : 'Status: DISABLED ❌';
+                button.style.backgroundColor = isEnabled ? '#4CAF50' : '#f44336'; /* Green or Red */
+                button.style.width = '200px'; /* Make it wider to fit text */
+            }
         }
 
         // 2. Function to toggle the setting
@@ -57,7 +60,8 @@
             const isEnabled = localStorage.getItem('notificationCloakEnabled') === 'true';
             localStorage.setItem('notificationCloakEnabled', !isEnabled);
             updateToggleButton();
-            window.location.reload(); // Reload to apply the change globally
+            // Reload to ensure the window.addEventListener logic is re-run on all pages
+            window.location.reload(); 
         }
 
         // Call this on page load to set the initial button state
@@ -192,16 +196,16 @@
         🚨 PANIC BUTTON 🚨
     </button>
     
-    <h3 style="margin-top: 50px;">Cloak Tab Icon & Title</h3>
-    <p>Change the browser tab icon and name to look less like a game site.</p>
+    <h3 style="margin-top: 50px;">Static Cloak Tab Icon & Title</h3>
+    <p>Set a permanent title/icon (e.g., Google Docs) for the entire site.</p>
     
     <div class="setting-section">
         <button class="cloak-button" onclick="setCloak('default')">🐻 Default</button>
         <button class="cloak-button" onclick="setCloak('docs')">📄 Google Docs</button>
     </div>
 
-    <h3 style="margin-top: 50px;">Notification Cloaking</h3>
-    <p>When enabled, the tab title changes to "(1) New Message" when you switch tabs.</p>
+    <h3 style="margin-top: 50px;">Notification Cloaking (Active Stealth)</h3>
+    <p>The tab title changes when you switch away, making it look like a message/email inbox.</p>
     <div class="setting-section">
         <button class="color-button" id="toggleCloakButton" onclick="toggleNotificationCloak()">Toggle Cloak</button>
     </div>
@@ -241,7 +245,6 @@
             } else {
                 // Default settings: Bear/NOTHING (SVG Emoji)
                 const iconText = '🐻'; 
-                // Title should match the defaultTitle set in the head script if not cloaked
                 newTitle = 'NOTHING'; 
                 iconUrl = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${iconText}</text></svg>`;
             }
@@ -264,8 +267,8 @@
             window.location.reload();
         }
 
-        // Note: panicHide, updateToggleButton, and toggleNotificationCloak are defined in the head script block
-        // to ensure they are available when the page loads.
+        // Note: updateToggleButton and toggleNotificationCloak are defined in the head script block
+        // and are called automatically.
     </script>
     
     <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
