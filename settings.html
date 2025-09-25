@@ -40,31 +40,26 @@
             window.location.replace("https://www.wikipedia.org/");
         }
 
-        // --- NEW CLOAKING TOGGLE LOGIC (for settings page only) ---
+        // --- CLOAKING TOGGLE LOGIC (for settings page only) ---
 
-        // 1. Function to manage the state button on the settings page
         function updateToggleButton() {
             const isEnabled = localStorage.getItem('notificationCloakEnabled') === 'true';
             const button = document.getElementById('toggleCloakButton');
             
-            // Safety check: ensure the button exists before trying to modify it
             if (button) {
                 button.textContent = isEnabled ? 'Status: ENABLED ✅' : 'Status: DISABLED ❌';
-                button.style.backgroundColor = isEnabled ? '#4CAF50' : '#f44336'; /* Green or Red */
-                button.style.width = '200px'; /* Make it wider to fit text */
+                button.style.backgroundColor = isEnabled ? '#4CAF50' : '#f44336'; 
+                button.style.width = '200px'; 
             }
         }
 
-        // 2. Function to toggle the setting
         function toggleNotificationCloak() {
             const isEnabled = localStorage.getItem('notificationCloakEnabled') === 'true';
             localStorage.setItem('notificationCloakEnabled', !isEnabled);
             updateToggleButton();
-            // Reload to ensure the window.addEventListener logic is re-run on all pages
             window.location.reload(); 
         }
-
-        // Call this on page load to set the initial button state
+        
         document.addEventListener('DOMContentLoaded', updateToggleButton);
     </script>
 
@@ -205,7 +200,7 @@
     </div>
 
     <h3 style="margin-top: 50px;">Notification Cloaking (Active Stealth)</h3>
-    <p>The tab title changes when you switch away, making it look like a message/email inbox.</p>
+    <p>The tab title changes to a generic message when you switch away.</p>
     <div class="setting-section">
         <button class="color-button" id="toggleCloakButton" onclick="toggleNotificationCloak()">Toggle Cloak</button>
     </div>
@@ -226,7 +221,6 @@
         // Function to save the user's theme preference to local storage
         function setTheme(themeName) {
             localStorage.setItem('hubTheme', themeName);
-            // Reload the current page to apply the theme instantly.
             window.location.reload(); 
         }
 
@@ -235,21 +229,17 @@
             let iconUrl;
             let newTitle;
             
-            // Embedded Base64 PNG for the official-looking Google Docs icon
             const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRU5ErkJggg==';
 
             if (cloakName === 'docs') {
                 newTitle = 'Google Docs';
                 iconUrl = GOOGLE_DOCS_FAVICON_BASE64;
-
             } else {
-                // Default settings: Bear/NOTHING (SVG Emoji)
                 const iconText = '🐻'; 
                 newTitle = 'NOTHING'; 
                 iconUrl = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${iconText}</text></svg>`;
             }
 
-            // 1. Update and save the Favicon
             let link = document.querySelector("link[rel~='icon']");
             if (!link) {
                 link = document.createElement('link');
@@ -258,17 +248,11 @@
             }
             link.href = iconUrl;
             localStorage.setItem('hubFavicon', iconUrl);
-
-            // 2. Update and save the Tab Title
             document.title = newTitle;
             localStorage.setItem('hubTitle', newTitle);
 
-            // Reload to apply changes instantly
             window.location.reload();
         }
-
-        // Note: updateToggleButton and toggleNotificationCloak are defined in the head script block
-        // and are called automatically.
     </script>
     
     <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
