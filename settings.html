@@ -96,7 +96,20 @@
         }
         :root { --dark-bg: #1a1a1a; --blue-bg: #007bff; --purple-bg: #6f42c1; }
         
-        body { font-family: sans-serif; margin: 0; color: #fff; text-align: center; padding: 50px; }
+        body { 
+            font-family: sans-serif; 
+            margin: 0; 
+            color: #fff; 
+            text-align: center; 
+            padding: 50px; 
+            
+            /* FIX FOR SCROLLING DUPLICATION */
+            min-height: 100vh; /* Ensures content area is tall enough */
+            background-repeat: no-repeat; /* Prevents background tiling/duplication */
+            background-size: cover; /* Ensures background covers the entire page */
+        }
+
+        /* THEME CLASSES */
         .theme-rainbow body { background-color: #1a1a1a; animation: rainbow-glow 10s infinite linear; }
         .theme-dark body { background-color: var(--dark-bg); animation: none; }
         .theme-blue body { background-color: var(--blue-bg); animation: none; }
@@ -123,8 +136,6 @@
         
         .panic-btn-fixed { position: fixed; bottom: 20px; right: 20px; background-color: #a80000; color: #fff; padding: 10px 15px; border: 2px solid #ff0000; border-radius: 8px; cursor: pointer; font-weight: bold; z-index: 1000; transition: background-color 0.3s; }
         .panic-btn-fixed:hover { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
-        
-        /* The .launcher-button CSS is no longer needed but kept for completeness */
     </style>
 </head>
 <body>
