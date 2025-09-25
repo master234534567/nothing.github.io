@@ -71,6 +71,9 @@
             const titleInput = document.getElementById('title-input');
             const faviconInput = document.getElementById('favicon-input');
             const notificationToggle = document.getElementById('notification-cloak-toggle');
+            
+            // --- CONSTANT FOR CLOAK TITLE ---
+            const CLOAKED_TITLE = '(1) Message Student/Portal';
 
             // Load saved settings on page load
             themeSelector.value = localStorage.getItem('hubTheme') || 'rainbow';
@@ -105,13 +108,13 @@
                 }
             });
 
-            // --- UPDATED LOGIC FOR INSTANT PREVIEW ---
+            // --- UPDATED LOGIC FOR INSTANT PREVIEW AND CORRECT TITLE ---
             notificationToggle.addEventListener('change', (e) => {
                 localStorage.setItem('notificationCloakEnabled', e.target.checked);
                 
                 if (e.target.checked) {
-                    // If checked, show the cloaked title immediately
-                    document.title = '(1) New Message / School Portal';
+                    // If checked, show the CORRECT cloaked title immediately
+                    document.title = CLOAKED_TITLE;
                     alert('Notification Cloak is now Enabled. Look at the tab title!');
                 } else {
                     // If unchecked, revert to the original/custom title immediately
@@ -312,7 +315,7 @@
         <div class="setting-group toggle-container">
             <label for="notification-cloak-toggle" style="margin-bottom: 0;">
                 Active Cloak (Title Switch on Blur)
-                <small style="display: block; font-weight: normal; color: #aaa;">Changes title to 'New Message' when you switch tabs.</small>
+                <small style="display: block; font-weight: normal; color: #aaa;">Changes title to '(1) Message Student/Portal' when you switch tabs.</small>
             </label>
             <input type="checkbox" id="notification-cloak-toggle" style="width: auto;">
         </div>
