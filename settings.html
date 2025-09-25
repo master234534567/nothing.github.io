@@ -15,9 +15,8 @@
         const savedFavicon = localStorage.getItem('hubFavicon');
         const savedTitle = localStorage.getItem('hubTitle');
         
-        // --- UPDATED DEFAULT TITLE HERE ---
+        // Default title for settings page (now just 'NOTHING')
         const defaultTitle = 'NOTHING'; 
-        // ----------------------------------
         
         const faviconUrl = savedFavicon 
             ? savedFavicon 
@@ -40,8 +39,9 @@
             window.location.replace("https://www.wikipedia.org/");
         }
 
-        // --- CLOAKING TOGGLE LOGIC (for settings page only) ---
+        // --- START: NOTIFICATION CLOAK TOGGLE LOGIC ---
 
+        // 1. Function to manage the state button on the settings page
         function updateToggleButton() {
             const isEnabled = localStorage.getItem('notificationCloakEnabled') === 'true';
             const button = document.getElementById('toggleCloakButton');
@@ -53,14 +53,19 @@
             }
         }
 
+        // 2. Function to toggle the setting
         function toggleNotificationCloak() {
             const isEnabled = localStorage.getItem('notificationCloakEnabled') === 'true';
             localStorage.setItem('notificationCloakEnabled', !isEnabled);
             updateToggleButton();
+            // Reload to apply the change instantly to listeners on other pages
             window.location.reload(); 
         }
-        
+
+        // Call this on page load to set the initial button state
         document.addEventListener('DOMContentLoaded', updateToggleButton);
+
+        // --- END: NOTIFICATION CLOAK TOGGLE LOGIC ---
     </script>
 
     <style>
@@ -200,7 +205,7 @@
     </div>
 
     <h3 style="margin-top: 50px;">Notification Cloaking (Active Stealth)</h3>
-    <p>The tab title changes to a generic message when you switch away.</p>
+    <p>The tab title changes when you switch away, making it look like a message/email inbox.</p>
     <div class="setting-section">
         <button class="color-button" id="toggleCloakButton" onclick="toggleNotificationCloak()">Toggle Cloak</button>
     </div>
@@ -240,6 +245,7 @@
                 iconUrl = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${iconText}</text></svg>`;
             }
 
+            // Save and apply changes
             let link = document.querySelector("link[rel~='icon']");
             if (!link) {
                 link = document.createElement('link');
@@ -253,6 +259,7 @@
 
             window.location.reload();
         }
+
     </script>
     
     <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
