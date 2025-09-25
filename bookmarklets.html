@@ -11,7 +11,7 @@
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
         document.documentElement.className = `theme-${currentTheme}`;
 
-        // Check for saved cloak settings (defaults to Bear/NOTHING)
+        // Check for saved cloak settings
         const savedFavicon = localStorage.getItem('hubFavicon');
         const savedTitle = localStorage.getItem('hubTitle');
         
@@ -20,6 +20,7 @@
             ? savedFavicon 
             : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
         
+        // CRITICAL: Save the ORIGINAL_TITLE for Notification Cloak to use
         const ORIGINAL_TITLE = savedTitle ? savedTitle : defaultTitle;
         document.title = ORIGINAL_TITLE;
         
@@ -36,7 +37,7 @@
             window.location.replace("https://www.wikipedia.org/");
         }
 
-        // --- START: NOTIFICATION CLOAK LOGIC (Also on Bookmarklets page) ---
+        // --- START: NOTIFICATION CLOAK LOGIC (Active Stealth) ---
         const NOTIFICATION_CLOAK_ENABLED = localStorage.getItem('notificationCloakEnabled') === 'true';
         
         function applyCloak() {
@@ -52,148 +53,102 @@
         }
 
         if (NOTIFICATION_CLOAK_ENABLED) {
-            window.addEventListener('blur', applyCloak); 
-            window.addEventListener('focus', removeCloak);
+            window.addEventListener('blur', applyCloak);  
+            window.addEventListener('focus', removeCloak); 
         }
         // --- END: NOTIFICATION CLOAK LOGIC ---
+
+        // Function placeholder for the bookmarklet button (SAFE VERSION)
+        function copyBookmarkletCode() {
+            alert("This feature is disabled for safety reasons. It would normally copy a script to your clipboard.");
+            const copyMessage = document.getElementById('copyMessage');
+            copyMessage.textContent = "Feature Disabled";
+            copyMessage.style.color = "#FF5722"; /* Orange */
+            copyMessage.style.opacity = 1;
+            setTimeout(() => { copyMessage.style.opacity = 0; }, 3000);
+        }
+
     </script>
 
     <style>
-        /* CSS Keyframes for the Never-Ending Rainbow Background */
+        /* CSS Keyframes and Theme Definitions (Same as other pages) */
         @keyframes rainbow-glow {
-            0% { background-color: #ff0000; } 
-            16% { background-color: #ff7f00; } 
-            33% { background-color: #ffff00; } 
-            50% { background-color: #00ff00; } 
-            66% { background-color: #0000ff; } 
-            83% { background-color: #4b0082; } 
+            0% { background-color: #ff0000; } 16% { background-color: #ff7f00; } 
+            33% { background-color: #ffff00; } 50% { background-color: #00ff00; } 
+            66% { background-color: #0000ff; } 83% { background-color: #4b0082; } 
             100% { background-color: #ff0000; } 
         }
-        
-        /* Variables for Solid Colors */
         :root {
             --dark-bg: #1a1a1a;
             --blue-bg: #007bff;
             --purple-bg: #6f42c1;
         }
 
-        /* General Styles: Base setup for body */
         body {
-            font-family: sans-serif;
-            margin: 0;
-            color: #fff;
-            min-height: 100vh; 
-            text-align: center;
-            padding: 50px 20px;
+            font-family: sans-serif; margin: 0; color: #fff; min-height: 100vh; 
+            text-align: center; padding: 50px 20px; background-color: var(--dark-bg);
         }
 
-        /* THEME CLASSES: Applied to the <html> tag */
-        .theme-rainbow body {
-            background-color: #1a1a1a;
-            animation: rainbow-glow 10s infinite linear; 
-        }
-        .theme-dark body {
-            background-color: var(--dark-bg);
-            animation: none;
-        }
-        .theme-blue body {
-            background-color: var(--blue-bg);
-            animation: none;
-        }
-        .theme-purple body {
-            background-color: var(--purple-bg);
-            animation: none;
-        }
+        /* THEME CLASSES */
+        .theme-rainbow body { animation: rainbow-glow 10s infinite linear; }
+        .theme-dark body { background-color: var(--dark-bg); animation: none; }
+        .theme-blue body { background-color: var(--blue-bg); animation: none; }
+        .theme-purple body { background-color: var(--purple-bg); animation: none; }
 
         .back-link {
-            display: inline-block;
-            margin-bottom: 30px;
-            color: #ff5722;
-            text-decoration: none;
-            border: 1px solid #ff5722;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.2s;
+            display: inline-block; margin-bottom: 30px; color: #ff5722; text-decoration: none; 
+            border: 1px solid #ff5722; padding: 10px 20px; border-radius: 5px; transition: background-color 0.2s;
         }
-        .back-link:hover {
-            background-color: rgba(255, 87, 34, 0.1);
-        }
+        .back-link:hover { background-color: rgba(255, 87, 34, 0.1); }
 
-        h1 {
-            color: #ff5722;
-            margin-bottom: 40px;
-        }
+        h1 { color: #ff5722; margin-bottom: 40px; }
         
         .bookmarklet-section {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: #2a2a2a;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            text-align: left;
+            max-width: 600px; margin: 40px auto; padding: 30px; background-color: #2a2a2a;
+            border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); text-align: left;
         }
         
+        /* Bookmarklet Button Style */
         .bookmarklet-button {
-            background-color: #4CAF50; 
-            color: white;
-            padding: 15px 30px;
-            margin-top: 15px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.2em;
-            font-weight: bold;
-            transition: background-color 0.2s;
+            background-color: #555; /* Neutral color for safe version */
+            color: white; padding: 15px 30px; margin-top: 15px; border: none; border-radius: 8px;
+            cursor: pointer; font-size: 1.2em; font-weight: bold; transition: background-color 0.2s;
             width: 100%;
         }
 
-        .bookmarklet-button:hover {
-            background-color: #45a049;
-        }
+        .bookmarklet-button:hover { background-color: #ff5722; }
         
         .copy-message {
-            margin-top: 15px;
-            color: #ccc;
-            height: 20px;
-            opacity: 0;
-            transition: opacity 0.3s;
+            margin-top: 15px; color: #4CAF50; height: 20px; opacity: 0; 
+            transition: opacity 0.3s; font-weight: bold; text-align: center;
         }
 
         /* Panic Button fixed to corner */
         .panic-btn-fixed {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #a80000;
-            color: #fff;
-            padding: 10px 15px;
-            border: 2px solid #ff0000;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            z-index: 1000;
-            transition: background-color 0.3s;
+            position: fixed; bottom: 20px; right: 20px; background-color: #a80000; color: #fff;
+            padding: 10px 15px; border: 2px solid #ff0000; border-radius: 8px; cursor: pointer;
+            font-weight: bold; z-index: 1000; transition: background-color 0.3s;
         }
-        .panic-btn-fixed:hover {
-            background-color: #ff0000;
-            box-shadow: 0 0 15px #ff0000;
-        }
+        .panic-btn-fixed:hover { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
     </style>
 </head>
 <body>
 
     <a href="index.html" class="back-link">← Back to NOTHING Hub</a>
-    <h1>Bookmarklets - Tools for Fun</h1>
+    <h1>📚 Bookmarklets - Tools for Fun</h1>
 
     <div class="bookmarklet-section">
-        <h2>"Fun" Tab</h2>
-        <p>Click the button below to copy the **Glitched Screen** JavaScript code. You can then paste it into the URL bar on *any* web page and press Enter to run the effect.</p>
+        <h2>"Glitched Screen" Tool (Disabled)</h2>
+        <p>This section is for fun browser tools. This specific feature is disabled for safety reasons.</p>
+        <p>To use any bookmarklet, you would typically drag the link to your bookmarks bar, or copy the JavaScript code and paste it into the URL bar of the website where you want to run it.</p>
         
         <button class="bookmarklet-button" onclick="copyBookmarkletCode()">
-            💥 Glitched Screen Javascript
+            💥 Glitched Screen Javascript (Disabled)
         </button>
 
-        <div id="copyMessage" class="copy-message">Copied to clipboard! (Paste into URL bar)</div>
-        
-        <textarea id="bookmarkletCode" style="position: absolute; left: -9999px;">javascript:(function(){function c(){return"#"+Math.floor(16777215*Math.random()).toString(16)}function r(e){return Math.floor(Math.random()*e)+1}function l(e){e.requestFullscreen?e.requestFullscreen():e.mozRequestFullScreen?e.mozRequestFullScreen():e.webkitRequestFullscreen?e.webkitRequestFullscreen():e.msRequestFullscreen&&e.msRequestFullscreen()}var d=document;d.head.innerHTML="<style>*{margin:0; overflow:hidden; padding:0;overflow:hidden;} div{  transform-origin: 50% 50%; width:100%; height:1px; position:relative; z-index:1;} </style>",d.body.innerHTML="";var w=window.screen.avail
+        <div id="copyMessage" class="copy-message"></div>
+    </div>
+    
+    <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
+</body>
+</html>
