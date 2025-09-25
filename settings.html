@@ -80,10 +80,44 @@
 
         // Run the status update when the content is ready
         document.addEventListener('DOMContentLoaded', updateToggleButton);
+        
+        // --- NEW: ABOUT:BLANK LAUNCHER FUNCTION ---
+        function openAboutBlank() {
+            // Open a new, clean tab
+            const newWindow = window.open('about:blank', '_blank');
+            
+            // Wait a moment, then write your provided HTML content to the new window
+            if (newWindow) {
+                newWindow.onload = function() {
+                    newWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                        <title>Open About:Blank</title>
+                        </head>
+                        <body>
+                        
+                        <button onclick="openAboutBlank()">Open About:Blank</button>
+                        
+                        <script>
+                        function openAboutBlank() {
+                        // This function in the new window is designed to be self-perpetuating
+                        // but since the original window is closed, it will simply open another about:blank
+                          window.open('about:blank', '_blank');
+                        }
+                        </script>
+                        
+                        </body>
+                        </html>
+                    `);
+                    newWindow.document.close();
+                };
+            }
+        }
     </script>
 
     <style>
-        /* CSS Keyframes and Theme Definitions */
+        /* CSS Keyframes and Theme Definitions (Same as before) */
         @keyframes rainbow-glow {
             0% { background-color: #ff0000; } 16% { background-color: #ff7f00; } 
             33% { background-color: #ffff00; } 50% { background-color: #00ff00; } 
@@ -114,6 +148,22 @@
         
         .panic-btn-fixed { position: fixed; bottom: 20px; right: 20px; background-color: #a80000; color: #fff; padding: 10px 15px; border: 2px solid #ff0000; border-radius: 8px; cursor: pointer; font-weight: bold; z-index: 1000; transition: background-color 0.3s; }
         .panic-btn-fixed:hover { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+        
+        /* New button style for the about:blank launcher */
+        .launcher-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .launcher-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -125,6 +175,12 @@
         🚨 PANIC BUTTON 🚨
     </button>
     
+    <h3 style="margin-top: 50px;">About:Blank Launcher</h3>
+    <p>Launches a new window and injects the 'Open About:Blank' code.</p>
+    <div class="setting-section">
+        <button class="launcher-button" onclick="openAboutBlank()">Launch About:Blank 🚀</button>
+    </div>
+
     <h3 style="margin-top: 50px;">Static Cloak Tab Icon & Title</h3>
     <p>Set a permanent title/icon (e.g., Google Docs) for the entire site.</p>
     
