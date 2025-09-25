@@ -136,4 +136,65 @@
         🚨 PANIC BUTTON 🚨
     </button>
     
-    <h3 style="margin-top: 50px;">Static Cloak Tab Icon
+    <h3 style="margin-top: 50px;">Static Cloak Tab Icon & Title</h3>
+    <p>Set a permanent title/icon (e.g., Google Docs) for the entire site.</p>
+    
+    <div class="setting-section">
+        <button class="cloak-button" onclick="setCloak('default')">🐻 Default</button>
+        <button class="cloak-button" onclick="setCloak('docs')">📄 Google Docs</button>
+    </div>
+
+    <h3 style="margin-top: 50px;">Notification Cloaking (Active Stealth)</h3>
+    <p>The tab title changes when you switch away, making it look like a message/email inbox.</p>
+    <div class="setting-section">
+        <button class="color-button" id="toggleCloakButton" onclick="toggleNotificationCloak()">Toggle Cloak</button>
+    </div>
+
+    <h3 style="margin-top: 50px;">Background Color Theme</h3>
+    <p>Select a permanent background for all hub pages.</p>
+    
+    <div class="setting-section">
+        <button class="color-button" onclick="setTheme('rainbow')">Rainbow 🌈</button>
+        <button class="color-button" onclick="setTheme('dark')">Dark ⚫</button>
+        <button class="color-button" onclick="setTheme('blue')">Blue 🔷</button>
+        <button class="color-button" onclick="setTheme('purple')">Purple 💜</button>
+    </div>
+    
+    <p style="margin-top: 50px;">Other settings will be added here soon!</p>
+
+    <script>
+        // Function to save the user's theme preference to local storage
+        function setTheme(themeName) {
+            localStorage.setItem('hubTheme', themeName);
+            window.location.reload(); 
+        }
+
+        // Function to change and save the static cloak (favicon and title) preference
+        function setCloak(cloakName) {
+            let iconUrl;
+            let newTitle;
+            
+            if (cloakName === 'docs') {
+                newTitle = 'Google Docs';
+                iconUrl = GOOGLE_DOCS_FAVICON_BASE64;
+            } else {
+                // Default settings: Bear/NOTHING
+                newTitle = DEFAULT_TITLE; 
+                iconUrl = DEFAULT_BEAR_FAVICON;
+            }
+
+            // Save changes
+            localStorage.setItem('hubFavicon', iconUrl);
+            localStorage.setItem('hubTitle', newTitle);
+
+            // Turn OFF Notification Cloak if Static Cloak is set
+            localStorage.setItem('notificationCloakEnabled', 'false');
+
+            // Reload to apply changes instantly
+            window.location.reload();
+        }
+    </script>
+    
+    <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
+</body>
+</html>
