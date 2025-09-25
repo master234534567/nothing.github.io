@@ -6,26 +6,27 @@
     <title>NOTHING</title>
     
     <script>
-        // Check for saved theme
+        // Load Theme Preference
         const savedTheme = localStorage.getItem('hubTheme');
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
         document.documentElement.className = `theme-${currentTheme}`;
 
-        // Check for saved cloak settings (defaults to Bear/NOTHING)
+        // Load Static Cloak (Favicon & Title)
         const savedFavicon = localStorage.getItem('hubFavicon');
         const savedTitle = localStorage.getItem('hubTitle');
         
-        // Default title for settings page (now just 'NOTHING')
+        // !!! CRITICAL: Default title is just 'NOTHING' !!!
         const defaultTitle = 'NOTHING'; 
+        // ----------------------------------
         
         const faviconUrl = savedFavicon 
             ? savedFavicon 
             : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
         
-        // Dynamically set the page title
+        // Set the current tab title
         document.title = savedTitle ? savedTitle : defaultTitle;
 
-        // Dynamically create or update the favicon link
+        // Set the current favicon
         let link = document.querySelector("link[rel~='icon']");
         if (!link) {
             link = document.createElement('link');
@@ -39,9 +40,9 @@
             window.location.replace("https://www.wikipedia.org/");
         }
 
-        // --- START: NOTIFICATION CLOAK TOGGLE LOGIC ---
+        // --- NOTIFICATION CLOAK TOGGLE FUNCTIONS ---
 
-        // 1. Function to manage the state button on the settings page
+        // 1. Updates the button text/color on page load/click
         function updateToggleButton() {
             const isEnabled = localStorage.getItem('notificationCloakEnabled') === 'true';
             const button = document.getElementById('toggleCloakButton');
@@ -53,138 +54,47 @@
             }
         }
 
-        // 2. Function to toggle the setting
+        // 2. Toggles the setting and reloads the page
         function toggleNotificationCloak() {
             const isEnabled = localStorage.getItem('notificationCloakEnabled') === 'true';
             localStorage.setItem('notificationCloakEnabled', !isEnabled);
             updateToggleButton();
-            // Reload to apply the change instantly to listeners on other pages
             window.location.reload(); 
         }
 
-        // Call this on page load to set the initial button state
+        // Run the status update when the content is ready
         document.addEventListener('DOMContentLoaded', updateToggleButton);
-
-        // --- END: NOTIFICATION CLOAK TOGGLE LOGIC ---
     </script>
 
     <style>
-        /* CSS Keyframes for the Never-Ending Rainbow Background */
+        /* CSS Keyframes and Theme Definitions */
         @keyframes rainbow-glow {
-            0% { background-color: #ff0000; } 
-            16% { background-color: #ff7f00; } 
-            33% { background-color: #ffff00; } 
-            50% { background-color: #00ff00; } 
-            66% { background-color: #0000ff; } 
-            83% { background-color: #4b0082; } 
+            0% { background-color: #ff0000; } 16% { background-color: #ff7f00; } 
+            33% { background-color: #ffff00; } 50% { background-color: #00ff00; } 
+            66% { background-color: #0000ff; } 83% { background-color: #4b0082; } 
             100% { background-color: #ff0000; } 
         }
-
-        /* Keyframes for the Panic Button Glow */
         @keyframes red-pulse {
-            0% { box-shadow: 0 0 5px #ff0000; }
-            50% { box-shadow: 0 0 20px #ff0000, 0 0 30px #ff5722; }
+            0% { box-shadow: 0 0 5px #ff0000; } 50% { box-shadow: 0 0 20px #ff0000, 0 0 30px #ff5722; }
             100% { box-shadow: 0 0 5px #ff0000; }
         }
+        :root { --dark-bg: #1a1a1a; --blue-bg: #007bff; --purple-bg: #6f42c1; }
         
-        /* Variables for Solid Colors */
-        :root {
-            --dark-bg: #1a1a1a;
-            --blue-bg: #007bff;
-            --purple-bg: #6f42c1;
-        }
-        
-        /* General Styles: Base setup for body */
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            color: #fff;
-            text-align: center;
-            padding: 50px;
-        }
+        body { font-family: sans-serif; margin: 0; color: #fff; text-align: center; padding: 50px; }
+        .theme-rainbow body { background-color: #1a1a1a; animation: rainbow-glow 10s infinite linear; }
+        .theme-dark body { background-color: var(--dark-bg); animation: none; }
+        .theme-blue body { background-color: var(--blue-bg); animation: none; }
+        .theme-purple body { background-color: var(--purple-bg); animation: none; }
 
-        /* THEME CLASSES: Applied to the <html> tag */
-        .theme-rainbow body {
-            background-color: #1a1a1a;
-            animation: rainbow-glow 10s infinite linear; 
-        }
-        .theme-dark body {
-            background-color: var(--dark-bg);
-            animation: none;
-        }
-        .theme-blue body {
-            background-color: var(--blue-bg);
-            animation: none;
-        }
-        .theme-purple body {
-            background-color: var(--purple-bg);
-            animation: none;
-        }
+        h1 { color: #ff5722; margin-bottom: 40px; }
+        .back-link { display: inline-block; margin-bottom: 30px; color: #ff5722; text-decoration: none; border: 1px solid #ff5722; padding: 10px 20px; border-radius: 5px; transition: background-color 0.2s; }
+        .back-link:hover { background-color: rgba(255, 87, 34, 0.1); }
+        .setting-section { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 40px; border: 1px solid #444; padding: 20px; border-radius: 10px; }
+        .color-button, .cloak-button { display: inline-block; width: 100px; height: 40px; padding: 5px 15px; color: #fff; border: 2px solid #555; border-radius: 8px; font-size: 1em; cursor: pointer; transition: border-color 0.2s, transform 0.1s; line-height: 28px; }
+        .color-button:hover, .cloak-button:hover { border-color: #ff5722; transform: scale(1.05); }
 
-        h1 {
-            color: #ff5722;
-            margin-bottom: 40px;
-        }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 30px;
-            color: #ff5722;
-            text-decoration: none;
-            border: 1px solid #ff5722;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.2s;
-        }
-        .back-link:hover {
-            background-color: rgba(255, 87, 34, 0.1);
-        }
-        .setting-section {
-            display: flex;
-            flex-wrap: wrap; 
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 40px;
-            border: 1px solid #444;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .color-button, .cloak-button {
-            display: inline-block;
-            width: 100px;
-            height: 40px;
-            padding: 5px 15px;
-            color: #fff;
-            border: 2px solid #555;
-            border-radius: 8px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: border-color 0.2s, transform 0.1s;
-            line-height: 28px; 
-        }
-        .color-button:hover, .cloak-button:hover {
-            border-color: #ff5722;
-            transform: scale(1.05);
-        }
-
-        /* Panic Button Styles */
-        .panic-button {
-            background-color: #a80000;
-            color: #fff;
-            font-size: 1.5em;
-            font-weight: bold;
-            padding: 15px 30px;
-            border: 2px solid #ff0000;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-bottom: 30px;
-        }
-
-        /* Panic Button Hover Effect */
-        .panic-button:hover {
-            background-color: #ff0000;
-            animation: red-pulse 1.5s infinite;
-        }
+        .panic-button { background-color: #a80000; color: #fff; font-size: 1.5em; font-weight: bold; padding: 15px 30px; border: 2px solid #ff0000; border-radius: 10px; cursor: pointer; transition: background-color 0.3s; margin-bottom: 30px; }
+        .panic-button:hover { background-color: #ff0000; animation: red-pulse 1.5s infinite; }
     </style>
 </head>
 <body>
@@ -234,12 +144,15 @@
             let iconUrl;
             let newTitle;
             
+            // Embedded Base64 PNG for the official-looking Google Docs icon
             const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRU5ErkJggg==';
 
             if (cloakName === 'docs') {
                 newTitle = 'Google Docs';
                 iconUrl = GOOGLE_DOCS_FAVICON_BASE64;
+
             } else {
+                // Default settings: Bear/NOTHING (SVG Emoji)
                 const iconText = '🐻'; 
                 newTitle = 'NOTHING'; 
                 iconUrl = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${iconText}</text></svg>`;
@@ -259,7 +172,6 @@
 
             window.location.reload();
         }
-
     </script>
     
     <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
