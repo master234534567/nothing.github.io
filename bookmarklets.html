@@ -11,7 +11,7 @@
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
         document.documentElement.className = `theme-${currentTheme}`;
 
-        // Check for saved cloak settings
+        // Check for saved cloak settings (defaults to Bear/NOTHING)
         const savedFavicon = localStorage.getItem('hubFavicon');
         const savedTitle = localStorage.getItem('hubTitle');
         
@@ -20,7 +20,8 @@
             ? savedFavicon 
             : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
         
-        document.title = savedTitle ? savedTitle : defaultTitle;
+        const ORIGINAL_TITLE = savedTitle ? savedTitle : defaultTitle;
+        document.title = ORIGINAL_TITLE;
         
         let link = document.querySelector("link[rel~='icon']");
         if (!link) {
@@ -34,10 +35,31 @@
         function panicHide() {
             window.location.replace("https://www.wikipedia.org/");
         }
+
+        // --- START: NOTIFICATION CLOAK LOGIC (Also on Bookmarklets page) ---
+        const NOTIFICATION_CLOAK_ENABLED = localStorage.getItem('notificationCloakEnabled') === 'true';
+        
+        function applyCloak() {
+            if (NOTIFICATION_CLOAK_ENABLED) {
+                document.title = '(1) New Message / Student Portal'; 
+            }
+        }
+
+        function removeCloak() {
+            if (NOTIFICATION_CLOAK_ENABLED) {
+                document.title = ORIGINAL_TITLE;
+            }
+        }
+
+        if (NOTIFICATION_CLOAK_ENABLED) {
+            window.addEventListener('blur', applyCloak); 
+            window.addEventListener('focus', removeCloak);
+        }
+        // --- END: NOTIFICATION CLOAK LOGIC ---
     </script>
 
     <style>
-        /* CSS Keyframes for the Never-Ending Rainbow Background (Same as index.html) */
+        /* CSS Keyframes for the Never-Ending Rainbow Background */
         @keyframes rainbow-glow {
             0% { background-color: #ff0000; } 
             16% { background-color: #ff7f00; } 
@@ -48,7 +70,7 @@
             100% { background-color: #ff0000; } 
         }
         
-        /* Variables for Solid Colors (Same as index.html) */
+        /* Variables for Solid Colors */
         :root {
             --dark-bg: #1a1a1a;
             --blue-bg: #007bff;
@@ -113,7 +135,7 @@
         }
         
         .bookmarklet-button {
-            background-color: #4CAF50; /* Green */
+            background-color: #4CAF50; 
             color: white;
             padding: 15px 30px;
             margin-top: 15px;
