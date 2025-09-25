@@ -6,7 +6,7 @@
     <title>NOTHING</title>
     
     <script>
-        // Embedded Base64 PNG for the official-looking Google Docs icon (Used for setCloak and toggleNotificationCloak)
+        // Embedded Base64 PNG for the official-looking Google Docs icon
         const GOOGLE_DOCS_FAVICON_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVQ4T2NkoBAwA/pA/19c7h+T0zMABmYwMTBwF4g5JpCYQGwXq7Kk+c2g7p+BvRjW/43G/xU0kC2QzSAaQTSCaAQR+H8jVv+f8f/nF4P9Gz8d/v/4+P3/wM8fJzFh+GfE7r9R2/+G2h5AAMtE/8fQzB8GAAAp+E0YF4dY3wAAAABJRU5ErkJggg==';
         
         // Define the default icon and title
@@ -86,9 +86,10 @@
             // Open a new, clean tab
             const newWindow = window.open('about:blank', '_blank');
             
-            // Wait a moment, then write your provided HTML content to the new window
+            // Inject the user's provided HTML code into the new window
             if (newWindow) {
-                newWindow.onload = function() {
+                // Use setTimeout to ensure the new window context is ready for document.write
+                setTimeout(() => {
                     newWindow.document.write(`
                         <!DOCTYPE html>
                         <html>
@@ -100,9 +101,8 @@
                         <button onclick="openAboutBlank()">Open About:Blank</button>
                         
                         <script>
+                        // Self-perpetuating function to open a new about:blank when clicked
                         function openAboutBlank() {
-                        // This function in the new window is designed to be self-perpetuating
-                        // but since the original window is closed, it will simply open another about:blank
                           window.open('about:blank', '_blank');
                         }
                         </script>
@@ -111,7 +111,7 @@
                         </html>
                     `);
                     newWindow.document.close();
-                };
+                }, 100); // 100ms delay to ensure the window object is ready
             }
         }
     </script>
@@ -176,7 +176,7 @@
     </button>
     
     <h3 style="margin-top: 50px;">About:Blank Launcher</h3>
-    <p>Launches a new window and injects the 'Open About:Blank' code.</p>
+    <p>Launches a new, cloaked window using the 'about:blank' method.</p>
     <div class="setting-section">
         <button class="launcher-button" onclick="openAboutBlank()">Launch About:Blank 🚀</button>
     </div>
