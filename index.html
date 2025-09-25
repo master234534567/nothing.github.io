@@ -21,6 +21,7 @@
             : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
         
         // Dynamically set the page title
+        // --- CRITICAL: Storing the original title globally ---
         const ORIGINAL_TITLE = savedTitle ? savedTitle : defaultTitle;
         document.title = ORIGINAL_TITLE;
         
@@ -41,22 +42,23 @@
         // --- START: NOTIFICATION CLOAK LOGIC ---
         const NOTIFICATION_CLOAK_ENABLED = localStorage.getItem('notificationCloakEnabled') === 'true';
         
-        // Function to apply the cloak (when tab loses focus)
+        // Function to apply the cloak (when tab loses focus/blur)
         function applyCloak() {
             if (NOTIFICATION_CLOAK_ENABLED) {
-                document.title = '(1) New Message'; 
-                // You could also change the favicon here if you have an image for it
+                // Change title to something generic when user leaves the tab
+                document.title = '(1) New Message / School Portal'; 
             }
         }
 
-        // Function to uncloak (when tab gains focus)
+        // Function to remove cloak (when tab gains focus)
         function removeCloak() {
             if (NOTIFICATION_CLOAK_ENABLED) {
+                // Change title back to the original saved title
                 document.title = ORIGINAL_TITLE;
             }
         }
 
-        // Apply event listeners only if the feature is enabled
+        // Apply event listeners only if the feature is enabled in settings
         if (NOTIFICATION_CLOAK_ENABLED) {
             window.addEventListener('blur', applyCloak);  // User leaves tab
             window.addEventListener('focus', removeCloak); // User returns to tab
