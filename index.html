@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOTHING - Live Community Chat</title>
+    <title>NOTHING - Single Page Game Hub</title>
     
     <script>
-        // --- START: INITIAL SETUP & CLOAKING (Copied from index.html) ---
-        // This ensures the theme and cloaking settings are preserved on the chat page.
+        // --- START: INITIAL SETUP & CLOAKING ---
         const savedTheme = localStorage.getItem('hubTheme');
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
         document.documentElement.className = `theme-${currentTheme}`;
@@ -72,7 +71,47 @@
         // --- END: INITIAL SETUP & CLOAKING ---
 
 
-        // --- START: SPOTLIGHT LOADER LOGIC (Copied from index.html for visual consistency) ---
+        // --- START: LOADER MESSAGE AND COUNTDOWN LOGIC ---
+        function initializeLoader() {
+            const loaderScreen = document.getElementById('loading-screen');
+            const loaderText = document.getElementById('loader-text');
+            const countdownSpan = document.getElementById('countdown-span');
+            const shouldShowLoader = localStorage.getItem('showCustomLoader') === 'true';
+
+            if (!shouldShowLoader || !loaderScreen) {
+                if (loaderScreen) {
+                    loaderScreen.style.display = 'none';
+                }
+                return; 
+            }
+
+            localStorage.removeItem('showCustomLoader');
+            const customMessage = localStorage.getItem('hubLoaderMessage') || 'Loading Game Hub';
+            loaderText.textContent = customMessage;
+            
+            let count = 3; 
+            countdownSpan.textContent = count; 
+
+            const timer = setInterval(() => {
+                count--;
+                countdownSpan.textContent = count;
+
+                if (count <= 0) {
+                    clearInterval(timer);
+                    countdownSpan.style.display = 'none'; 
+                    loaderText.textContent = 'Launching!';
+
+                    setTimeout(() => {
+                        if (loaderScreen) {
+                            loaderScreen.classList.add('loader-hidden');
+                        }
+                    }, 500); 
+                }
+            }, 1000);
+        }
+        // --- END: LOADER MESSAGE AND COUNTDOWN LOGIC ---
+
+        // --- START: SPOTLIGHT LOADER LOGIC ---
         function initializeSpotlight() {
             const spotlightTitle = localStorage.getItem('hubSpotlightTitle');
             const spotlightLink = localStorage.getItem('hubSpotlightLink');
@@ -96,12 +135,14 @@
         // --- END: SPOTLIGHT LOADER LOGIC ---
         
         document.addEventListener('DOMContentLoaded', () => {
+            initializeLoader();
             initializeSpotlight();
         });
 
     </script>
 
     <style>
+        /* CSS Keyframes for the Never-Ending Rainbow Background */
         @keyframes rainbow-glow {
             0% { background-color: #ff0000; } 16% { background-color: #ff7f00; } 
             33% { background-color: #ffff00; } 50% { background-color: #00ff00; } 
@@ -116,6 +157,7 @@
             --accent-color: #ff5722;
         }
 
+        /* --- CORE STYLES & FIXES --- */
         html { height: 100%; }
         
         body {
@@ -133,6 +175,18 @@
         .theme-blue body { background-color: var(--blue-bg); animation: none; }
         .theme-purple body { background-color: var(--purple-bg); animation: none; }
 
+        /* --- LOADER SCREEN STYLES --- */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--dark-bg); z-index: 9999; display: flex;
+            flex-direction: column; justify-content: center; align-items: center;
+            opacity: 1; transition: opacity 1s ease-out; 
+        }
+        #loader-text { font-size: 3em; font-weight: bold; color: var(--accent-color); margin-bottom: 20px; }
+        #countdown-span { font-size: 5em; font-weight: bold; color: #ccc; }
+        .loader-hidden { opacity: 0 !important; pointer-events: none; }
+        
+        /* --- DAILY SPOTLIGHT STYLES --- */
         #daily-spotlight {
             width: 90%; max-width: 1000px; margin: 20px auto 0; height: 180px; 
             border-radius: 12px; background-color: #333; background-size: cover;
@@ -153,6 +207,7 @@
         }
         #spotlight-button:hover { background-color: #ff9800; }
         
+        /* --- HUB GENERAL STYLES --- */
         header { padding: 30px 20px 20px; background-color: rgba(44, 44, 44, 0.9); text-align: center; backdrop-filter: blur(5px); position: relative; }
         .utility-buttons { position: absolute; top: 10px; width: 95%; display: flex; justify-content: space-between; padding: 0 10px; }
         .utility-buttons div { display: flex; }
@@ -162,36 +217,32 @@
         h1 { margin: 0; color: var(--accent-color); }
         main { padding: 30px; min-height: 500px; max-width: 1200px; margin: 0 auto; background-color: rgba(26, 26, 26, 0.9); border-radius: 10px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); }
         h2 { color: var(--accent-color); border-bottom: 1px solid #444; padding-bottom: 10px }
-        
+        .game-list, .new-game-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
         .new-game-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; } 
+        .game-item { background-color: #333; padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; transition: transform .2s; transform: translateY(0); }
+        .game-item:hover { transform: translateY(-5px); background-color: #444 }
+        .game-item a { text-decoration: none; color: #fff; display: block; }
         .new-game-item { background-color: #333; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, .4); transition: transform .2s, box-shadow .2s; }
         .new-game-item:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(255, 87, 34, .3) }
         .game-info { padding: 15px; text-align: center; }
         .game-info strong { display: block; font-size: 1.1em; margin-bottom: 5px; }
         .game-image-placeholder { width: 100%; height: 150px; background-color: #555; display: flex; align-items: center; justify-content: center; font-size: 1.2em; font-weight: 700; color: #ccc; }
-        
-        /* Specific Chat styles for this page */
-        .chat-embed-container {
-            width: 100%;
-            height: 600px; /* Adjust height as needed */
-            background-color: #333;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-
         footer { text-align: center; padding: 20px; background-color: rgba(44, 44, 44, 0.9); margin-top: 30px; }
         .panic-btn-fixed { position: fixed; bottom: 20px; right: 20px; background-color: #a80000; color: #fff; padding: 10px 15px; border: 2px solid #ff0000; border-radius: 8px; cursor: pointer; font-weight: bold; z-index: 1000; transition: background-color 0.3s; }
         .panic-btn-fixed:hover { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
     </style>
 </head>
 <body>
+    <div id="loading-screen">
+        <span id="loader-text">Loading...</span>
+        <span id="countdown-span"></span>
+    </div>
     <header>
         <div class="utility-buttons">
             <a href="javascript:void(0)" onclick="openAboutBlank()">🔒 OPEN IN BLANK</a>
             <div>
                 <a href="bookmarklets.html">📚 BOOKMARKLETS</a> 
-                <a href="index.html">🏠 HUB</a> 
+                <a href="chat.html">💬 CHAT</a> 
                 <a href="settings.html">⚙️ SETTINGS</a>
             </div>
         </div>
@@ -206,12 +257,17 @@
         </div>
         </header>
     <main>
-        <p style="margin-top: 0;">Welcome to the Live Community Chat! Connect and converse with other gamers here.</p>
+        <p style="margin-top: 0;">Discover thousands of free online games, from action-packed adventures to brain-teasing puzzles. Start exploring the top picks below!</p>
         
-        <h2>Live Chat Room</h2>
-        <div class="chat-embed-container">
-             </div>
-
+        <h3>Featured Games</h3>
+        <ul class="game-list">
+            <li class="game-item"><a href="super-jumper-page.html" class="game-item-content">🎮 Super Jumper</a></li>
+            <li class="game-item"><a href="nitro-racer-page.html" class="game-item-content">🏎️ Nitro Racer</a></li>
+            <li class="game-item">⚔️ Dungeon Master</li>
+            <li class="game-item">🚀 Rocket Shooter</li>
+            <li class="game-item">🧠 Quiz Master</li>
+        </ul>
+        
         <h2 style="margin-top: 50px;">New Games & Communities - Freshly Added!</h2>
         <ul class="new-game-list">
             <li class="new-game-item"><a href="https://quackprep.com" target="_blank"><div class="game-image-placeholder">Quack Prep Test</div><div class="game-info"><strong>Quack Prep Test</strong><small>Quiz / Strategy</small></div></a></li>
@@ -225,17 +281,5 @@
     </footer>
     
     <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
-
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/68d6887e0a2eb2192787a72d/1j630ab82';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-    </script>
-    </body>
+</body>
 </html>
