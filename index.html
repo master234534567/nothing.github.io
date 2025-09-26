@@ -78,7 +78,6 @@
             const countdownSpan = document.getElementById('countdown-span');
             const shouldShowLoader = localStorage.getItem('showCustomLoader') === 'true';
 
-            // 1. Hide the loader immediately if the flag is not set
             if (!shouldShowLoader || !loaderScreen) {
                 if (loaderScreen) {
                     loaderScreen.style.display = 'none';
@@ -86,12 +85,7 @@
                 return; 
             }
 
-            // --- LOADER IS ACTIVE: RUN COUNTDOWN ---
-
-            // 2. Clear the flag immediately so it only runs once per button press
             localStorage.removeItem('showCustomLoader');
-
-            // 3. Set the custom message
             const customMessage = localStorage.getItem('hubLoaderMessage') || 'Loading Game Hub';
             loaderText.textContent = customMessage;
             
@@ -104,18 +98,16 @@
 
                 if (count <= 0) {
                     clearInterval(timer);
-                    // 4. Hide the countdown text and show launch message
                     countdownSpan.style.display = 'none'; 
                     loaderText.textContent = 'Launching!';
 
-                    // 5. Fade out the whole screen after a short delay
                     setTimeout(() => {
                         if (loaderScreen) {
                             loaderScreen.classList.add('loader-hidden');
                         }
                     }, 500); 
                 }
-            }, 1000); // Update every 1 second
+            }, 1000);
         }
         // --- END: LOADER MESSAGE AND COUNTDOWN LOGIC ---
 
@@ -130,15 +122,12 @@
             const buttonElement = document.getElementById('spotlight-button');
 
             if (spotlightElement) {
-                // Apply image if URL exists, with a dark gradient overlay
                 if (spotlightImage) {
                     spotlightElement.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('${spotlightImage}')`;
                 } else {
-                    // Fallback to accent color if no image is set
                     spotlightElement.style.backgroundColor = 'var(--accent-color)';
                 }
 
-                // Apply title and link (use defaults if nothing is saved)
                 titleElement.textContent = spotlightTitle || 'Featured Game of the Day!';
                 buttonElement.href = spotlightLink || '#';
             }
@@ -147,7 +136,7 @@
         
         
         // ====================================================================
-        // --- START: SESSION TIMER / BREAK REMINDER LOGIC (NEW) ---
+        // --- START: SESSION TIMER / BREAK REMINDER LOGIC ---
         // ====================================================================
 
         // --- VARIABLES ---
@@ -157,10 +146,9 @@
         const WARNING_THRESHOLD = 300; // 5 minutes (300 seconds)
         let countdownInterval;
 
-        // Elements will be set after DOMContentLoaded
-        let displayEl, startPauseBtn, notificationEl;
+        let displayEl, startPauseBtn, notificationEl, widgetEl;
 
-        /** Updates the display text (MM:SS format) and applies the warning color. */
+
         function updateDisplay() {
             if (!displayEl) return;
             
@@ -170,7 +158,6 @@
             const timeString = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
             displayEl.textContent = timeString;
 
-            // Apply warning color
             if (TIME_REMAINING <= WARNING_THRESHOLD && TIME_REMAINING > 0) {
                 displayEl.classList.add('warning');
             } else {
@@ -178,15 +165,12 @@
             }
         }
 
-        /** The main countdown logic, run every second. */
         function countdown() {
             if (TIME_REMAINING <= 0) {
-                // Stop the timer
                 clearInterval(countdownInterval);
                 IS_RUNNING = false;
                 if (startPauseBtn) startPauseBtn.textContent = '✅ Done';
                 
-                // Trigger the non-intrusive notification
                 triggerBreakNotification();
                 return;
             }
@@ -195,7 +179,6 @@
             updateDisplay();
         }
 
-        /** Handles Start/Pause button clicks. */
         window.toggleTimer = function() {
             if (IS_RUNNING) {
                 // PAUSE
@@ -212,7 +195,6 @@
             }
         }
         
-        /** Resets the timer to the current preset duration. */
         window.resetTimer = function() {
             clearInterval(countdownInterval);
             IS_RUNNING = false;
@@ -222,24 +204,20 @@
             updateDisplay();
         }
 
-        /** Sets the timer to a new preset duration. */
         window.setPreset = function(durationSeconds) {
             SESSION_DURATION_SECONDS = durationSeconds;
-            resetTimer(); // Reset and apply the new duration
+            resetTimer(); 
         }
 
         function triggerBreakNotification() {
-            // Note: Replace console.log with a real sound function if needed
             console.log("DING! Break Reminder Triggered.");
 
-            // Show the notification with a fade-in effect
             if (notificationEl) {
                 notificationEl.style.display = 'block';
                 setTimeout(() => {
                     notificationEl.style.opacity = 1;
                 }, 10);
 
-                // Auto-dismiss the notification after 5 seconds
                 setTimeout(() => {
                     notificationEl.style.opacity = 0;
                     setTimeout(() => {
@@ -248,26 +226,50 @@
                 }, 5000);
             }
         }
+
+        // --- NEW CLOSE/SHOW FUNCTIONS ---
         
-        /** Initialization function for the timer */
+        /** Closes the widget and pauses the timer if it was running. */
+        window.closeTimer = function() {
+            clearInterval(countdownInterval); // Pause the countdown
+            IS_RUNNING = false;
+            if (startPauseBtn) startPauseBtn.textContent = '▶️ Start'; // Set button to 'Start'
+            if (widgetEl) widgetEl.style.display = 'none'; // Hide the entire widget
+            
+            // Show the button in the header to re-open it
+            document.getElementById('show-timer-btn').style.display = 'block';
+        }
+
+        /** Shows the widget and hides the utility button. */
+        window.showTimer = function() {
+            if (widgetEl) widgetEl.style.display = 'block';
+            
+            // Hide the button from the header utility area
+            document.getElementById('show-timer-btn').style.display = 'none';
+            // Note: The user will have to click 'Start' if they want the countdown to resume.
+        }
+
         function initializeTimer() {
+            widgetEl = document.getElementById('timer-widget');
             displayEl = document.getElementById('timer-display');
             startPauseBtn = document.getElementById('start-pause-btn');
             notificationEl = document.getElementById('break-notification');
             
-            // Set initial display
             updateDisplay(); 
+            
+            // Ensure the show button is hidden on initial load since the widget is visible
+            document.getElementById('show-timer-btn').style.display = 'none';
         }
 
         // ====================================================================
-        // --- END: SESSION TIMER / BREAK REMINDER LOGIC (NEW) ---
+        // --- END: SESSION TIMER / BREAK REMINDER LOGIC ---
         // ====================================================================
 
 
         document.addEventListener('DOMContentLoaded', () => {
             initializeLoader();
             initializeSpotlight();
-            initializeTimer(); // <-- New Timer initialization
+            initializeTimer(); 
         });
 
     </script>
@@ -300,6 +302,7 @@
             background-repeat: no-repeat; 
             background-attachment: fixed; 
         }
+        
         /* ... existing theme styles ... */
         .theme-rainbow body { animation: rainbow-glow 10s infinite linear; }
         .theme-dark body { background-color: var(--dark-bg); animation: none; }
@@ -339,7 +342,6 @@
         #spotlight-button:hover { background-color: #ff9800; }
         
         /* --- HUB GENERAL STYLES (Existing) --- */
-        /* ... existing header, utility-buttons, h1, main, h2, game-list, etc. styles ... */
         header { padding: 30px 20px 20px; background-color: rgba(44, 44, 44, 0.9); text-align: center; backdrop-filter: blur(5px); position: relative; }
         .utility-buttons { position: absolute; top: 10px; width: 95%; display: flex; justify-content: space-between; padding: 0 10px; }
         .utility-buttons div { display: flex; }
@@ -364,20 +366,42 @@
         .panic-btn-fixed:hover { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
 
         /* ====================================================================
-           --- SESSION TIMER STYLES (NEW) --- 
+           --- SESSION TIMER STYLES (UPDATED) --- 
            ==================================================================== */
         #timer-widget {
             position: fixed;
             top: 20px;
             right: 20px;
-            /* Added padding to avoid the utility buttons area */
             background-color: rgba(255, 255, 255, 0.95);
             border: 2px solid var(--accent-color);
             border-radius: 8px;
             padding: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 990; /* Below loader, above game content */
+            z-index: 990;
             text-align: center;
+            /* Added position: relative to allow positioning of the close button */
+            position: relative; 
+        }
+
+        /* NEW: Close Button Styling */
+        .close-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #a80000;
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            line-height: 1;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .close-btn:hover {
+            background-color: #ff0000;
         }
 
         #timer-display {
@@ -389,7 +413,7 @@
         }
         
         .warning {
-            color: #ff4444 !important; /* Bright Red */
+            color: #ff4444 !important; 
         }
 
         .controls button {
@@ -411,7 +435,7 @@
         /* --- Notification Popup --- */
         #break-notification {
             position: fixed;
-            top: 150px; /* Positioned to be clearly visible */
+            top: 150px; 
             right: 20px;
             background-color: #28a745;
             color: white;
@@ -434,6 +458,7 @@
         <div class="utility-buttons">
             <a href="javascript:void(0)" onclick="openAboutBlank()">🔒 OPEN IN BLANK</a>
             <div>
+                <a href="javascript:void(0)" id="show-timer-btn" onclick="showTimer()">⏱️ SHOW TIMER</a> 
                 <a href="bookmarklets.html">📚 BOOKMARKLETS</a>
                 <a href="chat.html">💬 CHAT</a> 
                 <a href="settings.html">⚙️ SETTINGS</a>
@@ -474,6 +499,8 @@
     </footer>
     
     <div id="timer-widget">
+        <button class="close-btn" onclick="closeTimer()">X</button>
+        
         <div id="timer-display">30:00</div>
         
         <div class="controls">
