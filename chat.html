@@ -68,7 +68,7 @@
     </script>
 
     <style>
-        /* Base styles for a clean, full-screen chat container */
+        /* Base styles for a clean, full-screen container */
         body, html {
             margin: 0;
             padding: 0;
@@ -76,24 +76,19 @@
             height: 100%;
             background-color: #1a1a1a;
             font-family: sans-serif;
-            overflow: hidden; /* Hide scrollbar for clean look */
+            /* We need to allow overflow or the floating widget might be cut off */
         }
         
         .chat-wrapper {
             position: relative;
             width: 100%;
             height: 100%;
+            /* Add padding to the top so the back button is visible over the chat */
+            padding-top: 60px; 
+            box-sizing: border-box;
         }
 
-        /* Full-screen iframe for the chat */
-        #chat-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
-
-        /* Style for the back button (fixed over the chat) and Panic Button */
+        /* Style for the utility buttons (fixed over the chat) and Panic Button */
         .utility-buttons {
             position: fixed; 
             top: 15px; 
@@ -131,6 +126,17 @@
             background-color: #ff0000;
             box-shadow: 0 0 10px #ff0000;
         }
+        
+        /* Message to display since the page will otherwise be blank */
+        #tidi-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ccc;
+            font-size: 1.5em;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -144,11 +150,12 @@
             <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
         </div>
 
-        <iframe id="chat-iframe" 
-            src="https://digitaljoy.media/chat/" 
-            title="Digital Joy Live Chat"
-            allow="microphone; camera; display-capture">
-        </iframe>
+        <div id="tidi-message">
+            Loading Tidio Chat... <br>
+            (Look for the chat icon in the corner!)
+        </div>
+
+        <script src="//code.tidio.co/f4zl3w8hrxqw8kwxklob0otrxd6xuytp.js" async></script>
     </div>
 </body>
 </html>
