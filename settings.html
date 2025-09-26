@@ -7,17 +7,13 @@
     
     <script>
         // --- START: CLOAK & THEME SETUP ---
-        
-        // 1. Theme Loading
         const savedTheme = localStorage.getItem('hubTheme');
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
         document.documentElement.className = `theme-${currentTheme}`;
-
-        // 2. Static Cloak Loading
+        
         const savedFavicon = localStorage.getItem('hubFavicon');
         const savedTitle = localStorage.getItem('hubTitle');
         const defaultTitle = 'NOTHING - Single Page Game Hub';
-        
         const faviconUrl = savedFavicon 
             ? savedFavicon 
             : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
@@ -33,12 +29,10 @@
         }
         link.href = faviconUrl;
         
-        // 3. Panic Hide function (Redirects to a neutral external site)
         function panicHide() {
             window.location.replace("https://www.wikipedia.org/");
         }
 
-        // 4. About:Blank Cloak function
         function openAboutBlank() {
             const currentUrl = window.location.href;
             const blank = window.open('about:blank', '_blank');
@@ -48,10 +42,7 @@
                     <html>
                     <head>
                         <title>${document.title}</title>
-                        <style>
-                            body { margin: 0; overflow: hidden; }
-                            iframe { border: none; width: 100vw; height: 100vh; }
-                        </style>
+                        <style>body { margin: 0; overflow: hidden; } iframe { border: none; width: 100vw; height: 100vh; }</style>
                     </head>
                     <body>
                         <iframe src="${currentUrl}"></iframe>
@@ -61,7 +52,6 @@
                 blank.document.close();
             }
         }
-
         // --- END: CLOAK & THEME SETUP ---
 
         // --- START: SETTINGS LOGIC ---
@@ -71,26 +61,24 @@
             const titleInput = document.getElementById('title-input');
             const faviconInput = document.getElementById('favicon-input');
             const notificationToggle = document.getElementById('notification-cloak-toggle');
-            const loaderMessageInput = document.getElementById('loader-message-input'); // New Element
+            const loaderMessageInput = document.getElementById('loader-message-input');
+            const activateLoaderBtn = document.getElementById('activate-loader-btn');
             
-            // --- CONSTANTS ---
             const CLOAKED_TITLE = '(1) Message Student/Portal';
-            const defaultLoaderMessage = 'Loading...';
-
+            
             // Load saved settings on page load
             themeSelector.value = localStorage.getItem('hubTheme') || 'rainbow';
             titleInput.value = localStorage.getItem('hubTitle') || defaultTitle;
             faviconInput.value = localStorage.getItem('hubFavicon') || '';
             notificationToggle.checked = localStorage.getItem('notificationCloakEnabled') === 'true';
-            loaderMessageInput.value = localStorage.getItem('hubLoaderMessage') || ''; // Load New Setting
+            loaderMessageInput.value = localStorage.getItem('hubLoaderMessage') || '';
 
-            // Save Theme setting
+            // Theme/Title/Favicon Logic (Unchanged)
             themeSelector.addEventListener('change', (e) => {
                 localStorage.setItem('hubTheme', e.target.value);
                 document.documentElement.className = `theme-${e.target.value}`;
             });
 
-            // Save Title setting
             titleInput.addEventListener('input', (e) => {
                 const newTitle = e.target.value.trim() || defaultTitle;
                 localStorage.setItem('hubTitle', newTitle);
@@ -99,28 +87,18 @@
                 }
             });
             
-            // Save Favicon setting
             faviconInput.addEventListener('input', (e) => {
                 const newFavicon = e.target.value.trim();
                 localStorage.setItem('hubFavicon', newFavicon);
-                
                 let favLink = document.querySelector("link[rel~='icon']");
                 if (favLink) {
                    favLink.href = newFavicon || "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
                 }
             });
-            
-            // Save Loader Message setting (NEW)
-            loaderMessageInput.addEventListener('input', (e) => {
-                const newMessage = e.target.value.trim() || '';
-                localStorage.setItem('hubLoaderMessage', newMessage);
-            });
 
-
-            // Notification Cloak Logic
+            // Notification Cloak Logic (Unchanged)
             notificationToggle.addEventListener('change', (e) => {
                 localStorage.setItem('notificationCloakEnabled', e.target.checked);
-                
                 if (e.target.checked) {
                     document.title = CLOAKED_TITLE;
                     alert('Notification Cloak is now Enabled. Look at the tab title!');
@@ -129,13 +107,30 @@
                     alert('Notification Cloak is now Disabled. Tab title reverted.');
                 }
             });
+
+            // Loader Message Input Logic
+            loaderMessageInput.addEventListener('input', (e) => {
+                const newMessage = e.target.value.trim() || '';
+                localStorage.setItem('hubLoaderMessage', newMessage);
+            });
+
+            // --- NEW: ACTIVATE LOADER BUTTON LOGIC ---
+            activateLoaderBtn.addEventListener('click', () => {
+                // Set the flag in localStorage to trigger the loader on the next page load
+                localStorage.setItem('showCustomLoader', 'true');
+                
+                // Alert the user and then redirect to the index page to show the loader
+                alert('Loader activated! Redirecting to home page now.');
+                window.location.href = 'index.html';
+            });
+            // --- END NEW LOGIC ---
         });
 
         // --- END: SETTINGS LOGIC ---
     </script>
 
     <style>
-        /* CSS Keyframes for the Never-Ending Rainbow Background */
+        /* CSS styles (Unchanged for design consistency) */
         @keyframes rainbow-glow {
             0% { background-color: #ff0000; } 16% { background-color: #ff7f00; } 
             33% { background-color: #ffff00; } 50% { background-color: #00ff00; } 
@@ -143,7 +138,6 @@
             100% { background-color: #ff0000; } 
         }
         
-        /* Variables for Solid Colors */
         :root {
             --dark-bg: #1a1a1a;
             --blue-bg: #007bff;
@@ -152,7 +146,6 @@
             --accent-color: #ff5722;
         }
 
-        /* --- FIXES FOR SCROLLING & THEMES --- */
         html { height: 100%; }
         
         body {
@@ -165,16 +158,11 @@
             background-attachment: fixed; 
         }
 
-        /* THEME CLASSES */
-        .theme-rainbow body {
-            background-color: #1a1a1a;
-            animation: rainbow-glow 10s infinite linear; 
-        }
+        .theme-rainbow body { animation: rainbow-glow 10s infinite linear; }
         .theme-dark body { background-color: var(--dark-bg); animation: none; }
         .theme-blue body { background-color: var(--blue-bg); animation: none; }
         .theme-purple body { background-color: var(--purple-bg); animation: none; }
 
-        /* --- Layout & Component Styles --- */
         header {
             padding: 30px 20px 20px; 
             background-color: rgba(44, 44, 44, 0.9); 
@@ -192,9 +180,7 @@
             padding: 0 10px;
         }
 
-        .utility-buttons div {
-            display: flex;
-        }
+        .utility-buttons div { display: flex; }
         
         .utility-buttons a {
             text-decoration: none;
@@ -207,10 +193,7 @@
             margin-left: 10px;
         }
 
-        .utility-buttons a:first-child { 
-            margin-left: 0;
-        }
-
+        .utility-buttons a:first-child { margin-left: 0; }
         .utility-buttons a:hover { background-color: var(--accent-color); }
 
         h1 { margin: 0; color: var(--accent-color); }
@@ -225,7 +208,6 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); 
         }
 
-        /* Settings Form Styles */
         .setting-group {
             margin-bottom: 25px;
             padding: 15px;
@@ -257,7 +239,24 @@
             justify-content: space-between;
         }
 
-        /* Panic Button fixed to corner */
+        /* Styling for the new Activate button */
+        #activate-loader-btn {
+            background-color: #28a745; /* Green color for activation */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+        }
+        #activate-loader-btn:hover {
+            background-color: #218838;
+        }
+
         .panic-btn-fixed {
             position: fixed;
             bottom: 20px;
@@ -282,7 +281,6 @@
     <header>
         <div class="utility-buttons">
             <a href="javascript:void(0)" onclick="openAboutBlank()">🔒 OPEN IN BLANK</a>
-
             <div>
                 <a href="index.html">🏠 HOME</a>
                 <a href="bookmarklets.html">📚 BOOKMARKLETS</a>
@@ -293,7 +291,6 @@
     </header>
     <main>
         <h2>Theme & Appearance</h2>
-
         <div class="setting-group">
             <label for="theme-selector">Select Background Theme:</label>
             <select id="theme-selector">
@@ -305,7 +302,6 @@
         </div>
 
         <h2>Cloaking & Stealth</h2>
-
         <div class="setting-group">
             <label for="title-input">Set Custom Page Title (Static Cloak):</label>
             <input type="text" id="title-input" placeholder="e.g., Google Drive, Math Homework">
@@ -325,15 +321,15 @@
             </label>
             <input type="checkbox" id="notification-cloak-toggle" style="width: auto;">
         </div>
-        
-        <h2 style="margin-top: 50px;">User Experience & Fun</h2>
 
+        <h2 style="margin-top: 50px;">Custom Loading Screen</h2>
         <div class="setting-group">
             <label for="loader-message-input">Set Custom Loading Message:</label>
             <input type="text" id="loader-message-input" placeholder="e.g., Loading Fun..., Welcome Back!">
-            <small style="color: #ccc;">This message appears briefly when the page loads.</small>
+            <small style="color: #ccc;">This message appears briefly when the home page loads.</small>
+            <button id="activate-loader-btn">✨ ACTIVATE LOADER ON NEXT HOME PAGE VISIT</button>
         </div>
-    </main>
+        </main>
     <footer>
         <p>© 2025 NOTHING Gaming</p>
     </footer>
