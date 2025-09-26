@@ -4,6 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOTHING - Community Chat</title>
+    
+    <script>
+        // --- START: CLOAKING SCRIPT FOR PRIVACY (Copied from hub) ---
+        // Ensures the page title and favicon cloak settings are respected
+        const savedFavicon = localStorage.getItem('hubFavicon');
+        const savedTitle = localStorage.getItem('hubTitle');
+        const defaultTitle = 'NOTHING - Community Chat';
+        const faviconUrl = savedFavicon 
+            ? savedFavicon 
+            : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
+        
+        const ORIGINAL_TITLE = savedTitle ? savedTitle : defaultTitle;
+        document.title = ORIGINAL_TITLE;
+        
+        let link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }
+        link.href = faviconUrl;
+
+        const NOTIFICATION_CLOAK_ENABLED = localStorage.getItem('notificationCloakEnabled') === 'true';
+        const CLOAKED_TITLE = '(1) Message Student/Portal';
+        
+        function applyCloak() {
+            if (NOTIFICATION_CLOAK_ENABLED) { document.title = CLOAKED_TITLE; }
+        }
+
+        function removeCloak() {
+            if (NOTIFICATION_CLOAK_ENABLED) { document.title = ORIGINAL_TITLE; }
+        }
+
+        if (NOTIFICATION_CLOAK_ENABLED) {
+            window.addEventListener('blur', applyCloak); 
+            window.addEventListener('focus', removeCloak);
+        }
+
+        function panicHide() {
+            window.location.replace("https://www.wikipedia.org/");
+        }
+        
+        function openAboutBlank() {
+            const currentUrl = window.location.href;
+            const blank = window.open('about:blank', '_blank');
+            if (blank) {
+                blank.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>${document.title}</title>
+                        <style>body { margin: 0; overflow: hidden; } iframe { border: none; width: 100vw; height: 100vh; }</style>
+                    </head>
+                    <body>
+                        <iframe src="${currentUrl}"></iframe>
+                    </body>
+                    </html>
+                `);
+                blank.document.close();
+            }
+        }
+    </script>
+
     <style>
         /* Base styles for a clean, full-screen chat container */
         body, html {
@@ -30,31 +93,56 @@
             display: block;
         }
 
-        /* Style for the back button (fixed over the chat) */
-        .back-button {
+        /* Style for the back button (fixed over the chat) and Panic Button */
+        .utility-buttons {
             position: fixed; 
             top: 15px; 
             left: 15px; 
-            z-index: 9999; 
+            right: 15px;
+            z-index: 9999;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .utility-buttons a, .utility-buttons button {
             text-decoration: none; 
             color: white; 
-            background-color: #ff5722; 
             padding: 10px 15px; 
             border-radius: 5px; 
             font-weight: bold;
             transition: background-color 0.2s;
+            cursor: pointer;
+            border: none;
         }
+
+        .back-button {
+            background-color: #ff5722; 
+        }
+
         .back-button:hover {
             background-color: #ff9800;
+        }
+        
+        .panic-btn-fixed {
+            background-color: #a80000;
+            border: 2px solid #ff0000;
+        }
+        .panic-btn-fixed:hover {
+            background-color: #ff0000;
+            box-shadow: 0 0 10px #ff0000;
         }
     </style>
 </head>
 <body>
     <div class="chat-wrapper">
         
-        <a href="index.html" class="back-button">
-            ← Back to Hub
-        </a>
+        <div class="utility-buttons">
+            <a href="index.html" class="back-button">
+                ← Back to Hub
+            </a>
+            
+            <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
+        </div>
 
         <iframe id="chat-iframe" 
             src="https://digitaljoy.media/chat/" 
