@@ -20,11 +20,9 @@
             ? savedFavicon 
             : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
         
-        // --- CRITICAL: Storing the original title globally ---
         const ORIGINAL_TITLE = savedTitle ? savedTitle : defaultTitle;
         document.title = ORIGINAL_TITLE;
         
-        // Dynamically create or update the favicon link
         let link = document.querySelector("link[rel~='icon']");
         if (!link) {
             link = document.createElement('link');
@@ -33,17 +31,16 @@
         }
         link.href = faviconUrl;
         
-        // Panic Hide function (Redirects to a neutral external site)
+        // Panic Hide function
         function panicHide() {
             window.location.replace("https://www.wikipedia.org/");
         }
 
-        // --- NEW FUNCTION: Open current page inside an about:blank iframe ---
+        // About:Blank Cloak function
         function openAboutBlank() {
             const currentUrl = window.location.href;
             const blank = window.open('about:blank', '_blank');
             if (blank) {
-                // Write an HTML page to the blank tab that contains an iframe pointing to our site
                 blank.document.write(`
                     <!DOCTYPE html>
                     <html>
@@ -62,14 +59,14 @@
                 blank.document.close();
             }
         }
-        // --- END NEW FUNCTION ---
 
         // --- START: NOTIFICATION CLOAK LOGIC (Active Stealth) ---
         const NOTIFICATION_CLOAK_ENABLED = localStorage.getItem('notificationCloakEnabled') === 'true';
-        
+        const CLOAKED_TITLE_MAIN = '(1) Message Student/Portal';
+
         function applyCloak() {
             if (NOTIFICATION_CLOAK_ENABLED) {
-                document.title = '(1) New Message / School Portal'; 
+                document.title = CLOAKED_TITLE_MAIN; 
             }
         }
 
@@ -84,6 +81,26 @@
             window.addEventListener('focus', removeCloak);
         }
         // --- END: NOTIFICATION CLOAK LOGIC ---
+
+        // --- START: LOADER MESSAGE LOGIC (NEW) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const loaderScreen = document.getElementById('loading-screen');
+            const loaderText = document.getElementById('loader-text');
+            const customMessage = localStorage.getItem('hubLoaderMessage');
+            
+            // 1. Set the custom message if one exists
+            if (customMessage) {
+                loaderText.textContent = customMessage;
+            }
+            
+            // 2. Wait a moment, then hide the loader
+            setTimeout(() => {
+                if (loaderScreen) {
+                    loaderScreen.classList.add('loader-hidden');
+                }
+            }, 1000); // 1-second pause before the fade starts
+        });
+        // --- END: LOADER MESSAGE LOGIC ---
     </script>
 
     <style>
@@ -103,23 +120,47 @@
             --accent-color: #ff5722;
         }
 
-        /* --- FIXES FOR SCROLLING DUPLICATION --- */
-        html {
-            height: 100%; 
+        /* --- NEW LOADER SCREEN STYLES (REQUIRED) --- */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--dark-bg); /* Use dark theme for loader background */
+            z-index: 9999; /* Highest priority */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 1.5s ease-out; /* Fade out transition */
         }
+
+        #loader-text {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .loader-hidden {
+            opacity: 0 !important;
+            pointer-events: none; /* Allows clicks to go through after fade */
+        }
+
+        /* --- FIXES FOR SCROLLING DUPLICATION --- */
+        html { height: 100%; }
         
-        /* General Styles: Base setup for body */
         body {
             font-family: sans-serif;
             margin: 0;
             color: #fff;
             min-height: 100%; 
-            background-color: var(--dark-bg); /* Default fallback */
+            background-color: var(--dark-bg); 
             background-repeat: no-repeat; 
-            background-attachment: fixed; /* FIXES THE SCROLLING DUPLICATION */
+            background-attachment: fixed;
         }
 
-        /* THEME CLASSES: Applied to the <html> tag */
+        /* THEME CLASSES */
         .theme-rainbow body {
             background-color: #1a1a1a;
             animation: rainbow-glow 10s infinite linear; 
@@ -136,7 +177,6 @@
             position: relative; 
         }
         
-        /* HEADER UTILITY BUTTONS CONTAINER */
         .utility-buttons {
             position: absolute;
             top: 10px;
@@ -146,11 +186,8 @@
             padding: 0 10px;
         }
         
-        .utility-buttons div {
-            display: flex; /* To group the right-side buttons */
-        }
+        .utility-buttons div { display: flex; }
 
-        /* GENERAL BUTTON STYLES */
         .utility-buttons a {
             text-decoration: none;
             color: #fff;
@@ -159,22 +196,13 @@
             border-radius: 5px;
             font-weight: bold;
             transition: background-color 0.2s;
-            margin-left: 10px; /* Space between buttons */
+            margin-left: 10px;
         }
 
-        /* Adjusting for the left-most button (new About:Blank) */
-        .utility-buttons a:first-child { 
-            margin-left: 0;
-        }
+        .utility-buttons a:first-child { margin-left: 0; }
+        .utility-buttons a:hover { background-color: var(--accent-color); }
 
-        .utility-buttons a:hover {
-            background-color: var(--accent-color);
-        }
-
-        h1 {
-            margin: 0;
-            color: var(--accent-color);
-        }
+        h1 { margin: 0; color: var(--accent-color); }
         main {
             padding: 30px;
             min-height: 500px;
@@ -239,11 +267,6 @@
             padding: 15px;
             text-align: center;
         }
-        .game-info strong {
-            display: block;
-            font-size: 1.1em;
-            margin-bottom: 5px;
-        }
         .game-image-placeholder {
             width: 100%;
             height: 150px;
@@ -286,10 +309,13 @@
     </style>
 </head>
 <body>
+    <div id="loading-screen">
+        <span id="loader-text">Loading Fun...</span>
+    </div>
+    
     <header>
         <div class="utility-buttons">
             <a href="javascript:void(0)" onclick="openAboutBlank()">🔒 OPEN IN BLANK</a>
-
             <div>
                 <a href="bookmarklets.html">📚 BOOKMARKLETS</a>
                 <a href="settings.html">⚙️ SETTINGS</a>
