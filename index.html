@@ -71,7 +71,7 @@
         // --- END: INITIAL SETUP & CLOAKING ---
 
 
-        // --- START: LOADER MESSAGE AND COUNTDOWN LOGIC (Existing) ---
+        // --- START: LOADER MESSAGE AND COUNTDOWN LOGIC ---
         function initializeLoader() {
             const loaderScreen = document.getElementById('loading-screen');
             const loaderText = document.getElementById('loader-text');
@@ -111,7 +111,7 @@
         }
         // --- END: LOADER MESSAGE AND COUNTDOWN LOGIC ---
 
-        // --- START: SPOTLIGHT LOADER LOGIC (Existing) ---
+        // --- START: SPOTLIGHT LOADER LOGIC ---
         function initializeSpotlight() {
             const spotlightTitle = localStorage.getItem('hubSpotlightTitle');
             const spotlightLink = localStorage.getItem('hubSpotlightLink');
@@ -134,148 +134,15 @@
         }
         // --- END: SPOTLIGHT LOADER LOGIC ---
         
-        
-        // ====================================================================
-        // --- START: SESSION TIMER / BREAK REMINDER LOGIC ---
-        // ====================================================================
-
-        // --- VARIABLES ---
-        let SESSION_DURATION_SECONDS = 1800; // Default to 30 minutes
-        let TIME_REMAINING = SESSION_DURATION_SECONDS;
-        let IS_RUNNING = false;
-        const WARNING_THRESHOLD = 300; // 5 minutes (300 seconds)
-        let countdownInterval;
-
-        let displayEl, startPauseBtn, notificationEl, widgetEl;
-
-
-        function updateDisplay() {
-            if (!displayEl) return;
-            
-            const minutes = Math.floor(TIME_REMAINING / 60);
-            const seconds = Math.floor(TIME_REMAINING % 60);
-            
-            const timeString = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            displayEl.textContent = timeString;
-
-            if (TIME_REMAINING <= WARNING_THRESHOLD && TIME_REMAINING > 0) {
-                displayEl.classList.add('warning');
-            } else {
-                displayEl.classList.remove('warning');
-            }
-        }
-
-        function countdown() {
-            if (TIME_REMAINING <= 0) {
-                clearInterval(countdownInterval);
-                IS_RUNNING = false;
-                if (startPauseBtn) startPauseBtn.textContent = '✅ Done';
-                
-                triggerBreakNotification();
-                return;
-            }
-
-            TIME_REMAINING -= 1;
-            updateDisplay();
-        }
-
-        window.toggleTimer = function() {
-            if (IS_RUNNING) {
-                // PAUSE
-                clearInterval(countdownInterval);
-                IS_RUNNING = false;
-                startPauseBtn.textContent = '▶️ Start';
-            } else {
-                // START/RESUME
-                if (TIME_REMAINING > 0) {
-                    IS_RUNNING = true;
-                    startPauseBtn.textContent = '⏸️ Pause';
-                    countdownInterval = setInterval(countdown, 1000); 
-                }
-            }
-        }
-        
-        window.resetTimer = function() {
-            clearInterval(countdownInterval);
-            IS_RUNNING = false;
-            TIME_REMAINING = SESSION_DURATION_SECONDS;
-            if (startPauseBtn) startPauseBtn.textContent = '▶️ Start';
-            if (displayEl) displayEl.classList.remove('warning');
-            updateDisplay();
-        }
-
-        window.setPreset = function(durationSeconds) {
-            SESSION_DURATION_SECONDS = durationSeconds;
-            resetTimer(); 
-        }
-
-        function triggerBreakNotification() {
-            console.log("DING! Break Reminder Triggered.");
-
-            if (notificationEl) {
-                notificationEl.style.display = 'block';
-                setTimeout(() => {
-                    notificationEl.style.opacity = 1;
-                }, 10);
-
-                setTimeout(() => {
-                    notificationEl.style.opacity = 0;
-                    setTimeout(() => {
-                        notificationEl.style.display = 'none';
-                    }, 1000);
-                }, 5000);
-            }
-        }
-
-        // --- NEW CLOSE/SHOW FUNCTIONS ---
-        
-        /** Closes the widget and pauses the timer if it was running. */
-        window.closeTimer = function() {
-            clearInterval(countdownInterval); // Pause the countdown
-            IS_RUNNING = false;
-            if (startPauseBtn) startPauseBtn.textContent = '▶️ Start'; // Set button to 'Start'
-            if (widgetEl) widgetEl.style.display = 'none'; // Hide the entire widget
-            
-            // Show the button in the header to re-open it
-            document.getElementById('show-timer-btn').style.display = 'block';
-        }
-
-        /** Shows the widget and hides the utility button. */
-        window.showTimer = function() {
-            if (widgetEl) widgetEl.style.display = 'block';
-            
-            // Hide the button from the header utility area
-            document.getElementById('show-timer-btn').style.display = 'none';
-            // Note: The user will have to click 'Start' if they want the countdown to resume.
-        }
-
-        function initializeTimer() {
-            widgetEl = document.getElementById('timer-widget');
-            displayEl = document.getElementById('timer-display');
-            startPauseBtn = document.getElementById('start-pause-btn');
-            notificationEl = document.getElementById('break-notification');
-            
-            updateDisplay(); 
-            
-            // Ensure the show button is hidden on initial load since the widget is visible
-            document.getElementById('show-timer-btn').style.display = 'none';
-        }
-
-        // ====================================================================
-        // --- END: SESSION TIMER / BREAK REMINDER LOGIC ---
-        // ====================================================================
-
-
         document.addEventListener('DOMContentLoaded', () => {
             initializeLoader();
             initializeSpotlight();
-            initializeTimer(); 
         });
 
     </script>
 
     <style>
-        /* CSS Keyframes for the Never-Ending Rainbow Background (Existing) */
+        /* CSS Keyframes for the Never-Ending Rainbow Background */
         @keyframes rainbow-glow {
             0% { background-color: #ff0000; } 16% { background-color: #ff7f00; } 
             33% { background-color: #ffff00; } 50% { background-color: #00ff00; } 
@@ -290,7 +157,7 @@
             --accent-color: #ff5722;
         }
 
-        /* --- CORE STYLES & FIXES (Existing) --- */
+        /* --- CORE STYLES & FIXES --- */
         html { height: 100%; }
         
         body {
@@ -302,14 +169,13 @@
             background-repeat: no-repeat; 
             background-attachment: fixed; 
         }
-        
-        /* ... existing theme styles ... */
+
         .theme-rainbow body { animation: rainbow-glow 10s infinite linear; }
         .theme-dark body { background-color: var(--dark-bg); animation: none; }
         .theme-blue body { background-color: var(--blue-bg); animation: none; }
         .theme-purple body { background-color: var(--purple-bg); animation: none; }
 
-        /* --- LOADER SCREEN STYLES (Existing) --- */
+        /* --- LOADER SCREEN STYLES --- */
         #loading-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: var(--dark-bg); z-index: 9999; display: flex;
@@ -320,7 +186,7 @@
         #countdown-span { font-size: 5em; font-weight: bold; color: #ccc; }
         .loader-hidden { opacity: 0 !important; pointer-events: none; }
         
-        /* --- DAILY SPOTLIGHT STYLES (Existing) --- */
+        /* --- DAILY SPOTLIGHT STYLES --- */
         #daily-spotlight {
             width: 90%; max-width: 1000px; margin: 20px auto 0; height: 180px; 
             border-radius: 12px; background-color: #333; background-size: cover;
@@ -341,7 +207,7 @@
         }
         #spotlight-button:hover { background-color: #ff9800; }
         
-        /* --- HUB GENERAL STYLES (Existing) --- */
+        /* --- HUB GENERAL STYLES --- */
         header { padding: 30px 20px 20px; background-color: rgba(44, 44, 44, 0.9); text-align: center; backdrop-filter: blur(5px); position: relative; }
         .utility-buttons { position: absolute; top: 10px; width: 95%; display: flex; justify-content: space-between; padding: 0 10px; }
         .utility-buttons div { display: flex; }
@@ -364,89 +230,6 @@
         footer { text-align: center; padding: 20px; background-color: rgba(44, 44, 44, 0.9); margin-top: 30px; }
         .panic-btn-fixed { position: fixed; bottom: 20px; right: 20px; background-color: #a80000; color: #fff; padding: 10px 15px; border: 2px solid #ff0000; border-radius: 8px; cursor: pointer; font-weight: bold; z-index: 1000; transition: background-color 0.3s; }
         .panic-btn-fixed:hover { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
-
-        /* ====================================================================
-           --- SESSION TIMER STYLES (UPDATED) --- 
-           ==================================================================== */
-        #timer-widget {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: rgba(255, 255, 255, 0.95);
-            border: 2px solid var(--accent-color);
-            border-radius: 8px;
-            padding: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 990;
-            text-align: center;
-            /* Added position: relative to allow positioning of the close button */
-            position: relative; 
-        }
-
-        /* NEW: Close Button Styling */
-        .close-btn {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background-color: #a80000;
-            color: white;
-            border: 2px solid white;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            line-height: 1;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .close-btn:hover {
-            background-color: #ff0000;
-        }
-
-        #timer-display {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-            transition: color 0.5s;
-        }
-        
-        .warning {
-            color: #ff4444 !important; 
-        }
-
-        .controls button {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            margin: 2px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85em;
-            transition: background-color 0.2s;
-        }
-        
-        .controls button:hover {
-            background-color: #ff9800;
-        }
-        
-        /* --- Notification Popup --- */
-        #break-notification {
-            position: fixed;
-            top: 150px; 
-            right: 20px;
-            background-color: #28a745;
-            color: white;
-            padding: 15px;
-            border-radius: 6px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 991;
-            opacity: 0;
-            transition: opacity 1s;
-        }
     </style>
 </head>
 <body>
@@ -458,7 +241,6 @@
         <div class="utility-buttons">
             <a href="javascript:void(0)" onclick="openAboutBlank()">🔒 OPEN IN BLANK</a>
             <div>
-                <a href="javascript:void(0)" id="show-timer-btn" onclick="showTimer()">⏱️ SHOW TIMER</a> 
                 <a href="bookmarklets.html">📚 BOOKMARKLETS</a>
                 <a href="chat.html">💬 CHAT</a> 
                 <a href="settings.html">⚙️ SETTINGS</a>
@@ -498,27 +280,6 @@
         <p>© 2025 NOTHING Gaming</p>
     </footer>
     
-    <div id="timer-widget">
-        <button class="close-btn" onclick="closeTimer()">X</button>
-        
-        <div id="timer-display">30:00</div>
-        
-        <div class="controls">
-            <button onclick="setPreset(900)">15 min</button>
-            <button onclick="setPreset(1800)">30 min</button>
-            <button onclick="setPreset(2700)">45 min</button>
-            <button onclick="setPreset(3600)">60 min</button>
-            
-            <hr style="margin: 8px 0; border-color: #ddd;">
-            
-            <button id="start-pause-btn" onclick="toggleTimer()">▶️ Start</button>
-            <button onclick="resetTimer()">🔄 Reset</button>
-        </div>
-    </div>
-
-    <div id="break-notification">
-        <strong>Break Time!</strong> Your session has ended.
-    </div>
     <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
 </body>
 </html>
