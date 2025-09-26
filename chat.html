@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTHING - Community Chat</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            color: white;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            background-color: #333;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header a {
+            text-decoration: none;
+            color: #ff5722;
+            font-weight: bold;
+        }
+
+        /* This is the container where your actual chat widget/program will go */
+        #chat-container {
+            flex-grow: 1; /* Take up all remaining vertical space */
+            width: 100%;
+            overflow: hidden;
+            /* Example: Setting a background to remind you where the chat goes */
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+        }
+
+        .chat-placeholder {
+            padding: 20px;
+            text-align: center;
+            max-width: 600px;
+            border: 2px dashed #444;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Community Chat</h2>
+        <a href="index.html">← Back to Hub</a>
+    </div>
+
+    <div id="chat-container">
+        <div class="chat-placeholder">
+            <h3>💬 Chat Program Placeholder</h3>
+            <p>To enable live conversations, you need to **embed a server-based chat widget here** (e.g., Discord or a specialized chat service).</p>
+            <p>Replace this entire `div` content with the embed code provided by your chosen chat service.</p>
+        </div>
+        
+        </div>
+</body>
+</html>
