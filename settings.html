@@ -71,15 +71,18 @@
             const titleInput = document.getElementById('title-input');
             const faviconInput = document.getElementById('favicon-input');
             const notificationToggle = document.getElementById('notification-cloak-toggle');
+            const loaderMessageInput = document.getElementById('loader-message-input'); // New Element
             
-            // --- CONSTANT FOR CLOAK TITLE ---
+            // --- CONSTANTS ---
             const CLOAKED_TITLE = '(1) Message Student/Portal';
+            const defaultLoaderMessage = 'Loading...';
 
             // Load saved settings on page load
             themeSelector.value = localStorage.getItem('hubTheme') || 'rainbow';
             titleInput.value = localStorage.getItem('hubTitle') || defaultTitle;
             faviconInput.value = localStorage.getItem('hubFavicon') || '';
             notificationToggle.checked = localStorage.getItem('notificationCloakEnabled') === 'true';
+            loaderMessageInput.value = localStorage.getItem('hubLoaderMessage') || ''; // Load New Setting
 
             // Save Theme setting
             themeSelector.addEventListener('change', (e) => {
@@ -91,7 +94,6 @@
             titleInput.addEventListener('input', (e) => {
                 const newTitle = e.target.value.trim() || defaultTitle;
                 localStorage.setItem('hubTitle', newTitle);
-                // ONLY update if notification cloak is currently OFF
                 if (!notificationToggle.checked) {
                     document.title = newTitle; 
                 }
@@ -107,22 +109,26 @@
                    favLink.href = newFavicon || "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
                 }
             });
+            
+            // Save Loader Message setting (NEW)
+            loaderMessageInput.addEventListener('input', (e) => {
+                const newMessage = e.target.value.trim() || '';
+                localStorage.setItem('hubLoaderMessage', newMessage);
+            });
 
-            // --- UPDATED LOGIC FOR INSTANT PREVIEW AND CORRECT TITLE ---
+
+            // Notification Cloak Logic
             notificationToggle.addEventListener('change', (e) => {
                 localStorage.setItem('notificationCloakEnabled', e.target.checked);
                 
                 if (e.target.checked) {
-                    // If checked, show the CORRECT cloaked title immediately
                     document.title = CLOAKED_TITLE;
                     alert('Notification Cloak is now Enabled. Look at the tab title!');
                 } else {
-                    // If unchecked, revert to the original/custom title immediately
                     document.title = ORIGINAL_TITLE; 
                     alert('Notification Cloak is now Disabled. Tab title reverted.');
                 }
             });
-            // --- END UPDATED LOGIC ---
         });
 
         // --- END: SETTINGS LOGIC ---
@@ -318,6 +324,14 @@
                 <small style="display: block; font-weight: normal; color: #aaa;">Changes title to '(1) Message Student/Portal' when you switch tabs.</small>
             </label>
             <input type="checkbox" id="notification-cloak-toggle" style="width: auto;">
+        </div>
+        
+        <h2 style="margin-top: 50px;">User Experience & Fun</h2>
+
+        <div class="setting-group">
+            <label for="loader-message-input">Set Custom Loading Message:</label>
+            <input type="text" id="loader-message-input" placeholder="e.g., Loading Fun..., Welcome Back!">
+            <small style="color: #ccc;">This message appears briefly when the page loads.</small>
         </div>
     </main>
     <footer>
