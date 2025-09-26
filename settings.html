@@ -10,7 +10,7 @@
         const savedTheme = localStorage.getItem('hubTheme');
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
         document.documentElement.className = `theme-${currentTheme}`;
-        
+
         const savedFavicon = localStorage.getItem('hubFavicon');
         const savedTitle = localStorage.getItem('hubTitle');
         const defaultTitle = 'NOTHING - Single Page Game Hub';
@@ -64,16 +64,29 @@
             const loaderMessageInput = document.getElementById('loader-message-input');
             const activateLoaderBtn = document.getElementById('activate-loader-btn');
             
+            // New Spotlight Inputs
+            const spotlightTitleInput = document.getElementById('spotlight-title-input');
+            const spotlightLinkInput = document.getElementById('spotlight-link-input');
+            const spotlightImageInput = document.getElementById('spotlight-image-input');
+            
             const CLOAKED_TITLE = '(1) Message Student/Portal';
             
-            // Load saved settings on page load
+            // 1. Load saved settings on page load
             themeSelector.value = localStorage.getItem('hubTheme') || 'rainbow';
             titleInput.value = localStorage.getItem('hubTitle') || defaultTitle;
             faviconInput.value = localStorage.getItem('hubFavicon') || '';
             notificationToggle.checked = localStorage.getItem('notificationCloakEnabled') === 'true';
             loaderMessageInput.value = localStorage.getItem('hubLoaderMessage') || '';
 
-            // Theme/Title/Favicon Logic (Unchanged)
+            // Load Spotlight settings (Defaults added here)
+            spotlightTitleInput.value = localStorage.getItem('hubSpotlightTitle') || 'Featured Game!';
+            spotlightLinkInput.value = localStorage.getItem('hubSpotlightLink') || '#';
+            spotlightImageInput.value = localStorage.getItem('hubSpotlightImage') || '';
+
+
+            // 2. Event Listeners for Saving Settings
+
+            // Theme/Title/Favicon
             themeSelector.addEventListener('change', (e) => {
                 localStorage.setItem('hubTheme', e.target.value);
                 document.documentElement.className = `theme-${e.target.value}`;
@@ -96,7 +109,7 @@
                 }
             });
 
-            // Notification Cloak Logic (Unchanged)
+            // Notification Cloak Logic
             notificationToggle.addEventListener('change', (e) => {
                 localStorage.setItem('notificationCloakEnabled', e.target.checked);
                 if (e.target.checked) {
@@ -114,23 +127,32 @@
                 localStorage.setItem('hubLoaderMessage', newMessage);
             });
 
-            // --- NEW: ACTIVATE LOADER BUTTON LOGIC ---
+            // ACTIVATE LOADER BUTTON LOGIC
             activateLoaderBtn.addEventListener('click', () => {
-                // Set the flag in localStorage to trigger the loader on the next page load
                 localStorage.setItem('showCustomLoader', 'true');
-                
-                // Alert the user and then redirect to the index page to show the loader
                 alert('Loader activated! Redirecting to home page now.');
                 window.location.href = 'index.html';
             });
-            // --- END NEW LOGIC ---
+            
+            // Spotlight Message Input Logic
+            spotlightTitleInput.addEventListener('input', (e) => {
+                localStorage.setItem('hubSpotlightTitle', e.target.value.trim());
+            });
+
+            spotlightLinkInput.addEventListener('input', (e) => {
+                localStorage.setItem('hubSpotlightLink', e.target.value.trim());
+            });
+
+            spotlightImageInput.addEventListener('input', (e) => {
+                localStorage.setItem('hubSpotlightImage', e.target.value.trim());
+            });
         });
 
         // --- END: SETTINGS LOGIC ---
     </script>
 
     <style>
-        /* CSS styles (Unchanged for design consistency) */
+        /* CSS styles (Kept consistent with previous design) */
         @keyframes rainbow-glow {
             0% { background-color: #ff0000; } 16% { background-color: #ff7f00; } 
             33% { background-color: #ffff00; } 50% { background-color: #00ff00; } 
@@ -239,9 +261,8 @@
             justify-content: space-between;
         }
 
-        /* Styling for the new Activate button */
         #activate-loader-btn {
-            background-color: #28a745; /* Green color for activation */
+            background-color: #28a745; 
             color: white;
             padding: 10px 20px;
             border: none;
@@ -322,12 +343,31 @@
             <input type="checkbox" id="notification-cloak-toggle" style="width: auto;">
         </div>
 
-        <h2 style="margin-top: 50px;">Custom Loading Screen</h2>
+        <h2>Custom Loading Screen</h2>
         <div class="setting-group">
             <label for="loader-message-input">Set Custom Loading Message:</label>
             <input type="text" id="loader-message-input" placeholder="e.g., Loading Fun..., Welcome Back!">
             <small style="color: #ccc;">This message appears briefly when the home page loads.</small>
             <button id="activate-loader-btn">✨ ACTIVATE LOADER ON NEXT HOME PAGE VISIT</button>
+        </div>
+        
+        <h2 style="margin-top: 50px;">Daily Spotlight Customization</h2>
+        <div class="setting-group">
+            <label for="spotlight-title-input">Spotlight Title/Announcement:</label>
+            <input type="text" id="spotlight-title-input" placeholder="e.g., Game of the Week! / Big Update!">
+            <small style="color: #ccc;">The main text shown in the spotlight banner.</small>
+        </div>
+
+        <div class="setting-group">
+            <label for="spotlight-link-input">Spotlight Button Link (URL):</label>
+            <input type="text" id="spotlight-link-input" placeholder="e.g., https://example.com/newgame">
+            <small style="color: #ccc;">Where the "PLAY NOW" button leads.</small>
+        </div>
+
+        <div class="setting-group">
+            <label for="spotlight-image-input">Spotlight Image URL (Optional):</label>
+            <input type="text" id="spotlight-image-input" placeholder="e.g., https://img.site.com/cool-banner.jpg">
+            <small style="color: #ccc;">A URL for a banner image. Leave blank for default color.</small>
         </div>
         </main>
     <footer>
