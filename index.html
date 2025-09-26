@@ -71,7 +71,7 @@
         // --- END: INITIAL SETUP & CLOAKING ---
 
 
-        // --- START: LOADER MESSAGE AND COUNTDOWN LOGIC ---
+        // --- START: LOADER MESSAGE AND COUNTDOWN LOGIC (Existing) ---
         function initializeLoader() {
             const loaderScreen = document.getElementById('loading-screen');
             const loaderText = document.getElementById('loader-text');
@@ -119,7 +119,7 @@
         }
         // --- END: LOADER MESSAGE AND COUNTDOWN LOGIC ---
 
-        // --- START: SPOTLIGHT LOADER LOGIC ---
+        // --- START: SPOTLIGHT LOADER LOGIC (Existing) ---
         function initializeSpotlight() {
             const spotlightTitle = localStorage.getItem('hubSpotlightTitle');
             const spotlightLink = localStorage.getItem('hubSpotlightLink');
@@ -144,16 +144,136 @@
             }
         }
         // --- END: SPOTLIGHT LOADER LOGIC ---
+        
+        
+        // ====================================================================
+        // --- START: SESSION TIMER / BREAK REMINDER LOGIC (NEW) ---
+        // ====================================================================
+
+        // --- VARIABLES ---
+        let SESSION_DURATION_SECONDS = 1800; // Default to 30 minutes
+        let TIME_REMAINING = SESSION_DURATION_SECONDS;
+        let IS_RUNNING = false;
+        const WARNING_THRESHOLD = 300; // 5 minutes (300 seconds)
+        let countdownInterval;
+
+        // Elements will be set after DOMContentLoaded
+        let displayEl, startPauseBtn, notificationEl;
+
+        /** Updates the display text (MM:SS format) and applies the warning color. */
+        function updateDisplay() {
+            if (!displayEl) return;
+            
+            const minutes = Math.floor(TIME_REMAINING / 60);
+            const seconds = Math.floor(TIME_REMAINING % 60);
+            
+            const timeString = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            displayEl.textContent = timeString;
+
+            // Apply warning color
+            if (TIME_REMAINING <= WARNING_THRESHOLD && TIME_REMAINING > 0) {
+                displayEl.classList.add('warning');
+            } else {
+                displayEl.classList.remove('warning');
+            }
+        }
+
+        /** The main countdown logic, run every second. */
+        function countdown() {
+            if (TIME_REMAINING <= 0) {
+                // Stop the timer
+                clearInterval(countdownInterval);
+                IS_RUNNING = false;
+                if (startPauseBtn) startPauseBtn.textContent = '✅ Done';
+                
+                // Trigger the non-intrusive notification
+                triggerBreakNotification();
+                return;
+            }
+
+            TIME_REMAINING -= 1;
+            updateDisplay();
+        }
+
+        /** Handles Start/Pause button clicks. */
+        window.toggleTimer = function() {
+            if (IS_RUNNING) {
+                // PAUSE
+                clearInterval(countdownInterval);
+                IS_RUNNING = false;
+                startPauseBtn.textContent = '▶️ Start';
+            } else {
+                // START/RESUME
+                if (TIME_REMAINING > 0) {
+                    IS_RUNNING = true;
+                    startPauseBtn.textContent = '⏸️ Pause';
+                    countdownInterval = setInterval(countdown, 1000); 
+                }
+            }
+        }
+        
+        /** Resets the timer to the current preset duration. */
+        window.resetTimer = function() {
+            clearInterval(countdownInterval);
+            IS_RUNNING = false;
+            TIME_REMAINING = SESSION_DURATION_SECONDS;
+            if (startPauseBtn) startPauseBtn.textContent = '▶️ Start';
+            if (displayEl) displayEl.classList.remove('warning');
+            updateDisplay();
+        }
+
+        /** Sets the timer to a new preset duration. */
+        window.setPreset = function(durationSeconds) {
+            SESSION_DURATION_SECONDS = durationSeconds;
+            resetTimer(); // Reset and apply the new duration
+        }
+
+        function triggerBreakNotification() {
+            // Note: Replace console.log with a real sound function if needed
+            console.log("DING! Break Reminder Triggered.");
+
+            // Show the notification with a fade-in effect
+            if (notificationEl) {
+                notificationEl.style.display = 'block';
+                setTimeout(() => {
+                    notificationEl.style.opacity = 1;
+                }, 10);
+
+                // Auto-dismiss the notification after 5 seconds
+                setTimeout(() => {
+                    notificationEl.style.opacity = 0;
+                    setTimeout(() => {
+                        notificationEl.style.display = 'none';
+                    }, 1000);
+                }, 5000);
+            }
+        }
+        
+        /** Initialization function for the timer */
+        function initializeTimer() {
+            displayEl = document.getElementById('timer-display');
+            startPauseBtn = document.getElementById('start-pause-btn');
+            notificationEl = document.getElementById('break-notification');
+            
+            // Set initial display
+            updateDisplay(); 
+        }
+
+        // ====================================================================
+        // --- END: SESSION TIMER / BREAK REMINDER LOGIC (NEW) ---
+        // ====================================================================
+
 
         document.addEventListener('DOMContentLoaded', () => {
             initializeLoader();
             initializeSpotlight();
+            initializeTimer(); // <-- New Timer initialization
         });
 
     </script>
 
     <style>
-        /* CSS Keyframes for the Never-Ending Rainbow Background */
+        /* CSS Keyframes for the Never-Ending Rainbow Background (Existing) */
         @keyframes rainbow-glow {
             0% { background-color: #ff0000; } 16% { background-color: #ff7f00; } 
             33% { background-color: #ffff00; } 50% { background-color: #00ff00; } 
@@ -168,7 +288,7 @@
             --accent-color: #ff5722;
         }
 
-        /* --- CORE STYLES & FIXES --- */
+        /* --- CORE STYLES & FIXES (Existing) --- */
         html { height: 100%; }
         
         body {
@@ -180,204 +300,128 @@
             background-repeat: no-repeat; 
             background-attachment: fixed; 
         }
-
+        /* ... existing theme styles ... */
         .theme-rainbow body { animation: rainbow-glow 10s infinite linear; }
         .theme-dark body { background-color: var(--dark-bg); animation: none; }
         .theme-blue body { background-color: var(--blue-bg); animation: none; }
         .theme-purple body { background-color: var(--purple-bg); animation: none; }
 
-        /* --- LOADER SCREEN STYLES --- */
+        /* --- LOADER SCREEN STYLES (Existing) --- */
         #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: var(--dark-bg); 
-            z-index: 9999; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 1;
-            transition: opacity 1s ease-out; 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--dark-bg); z-index: 9999; display: flex;
+            flex-direction: column; justify-content: center; align-items: center;
+            opacity: 1; transition: opacity 1s ease-out; 
         }
-
-        #loader-text {
-            font-size: 3em;
-            font-weight: bold;
-            color: var(--accent-color);
-            margin-bottom: 20px;
-        }
-
-        #countdown-span {
-            font-size: 5em;
-            font-weight: bold;
-            color: #ccc;
-        }
-
-        .loader-hidden {
-            opacity: 0 !important;
-            pointer-events: none; 
-        }
+        #loader-text { font-size: 3em; font-weight: bold; color: var(--accent-color); margin-bottom: 20px; }
+        #countdown-span { font-size: 5em; font-weight: bold; color: #ccc; }
+        .loader-hidden { opacity: 0 !important; pointer-events: none; }
         
-        /* --- DAILY SPOTLIGHT STYLES --- */
+        /* --- DAILY SPOTLIGHT STYLES (Existing) --- */
         #daily-spotlight {
-            width: 90%;
-            max-width: 1000px;
-            margin: 20px auto 0;
-            height: 180px; 
-            border-radius: 12px;
-            background-color: #333; 
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: flex-end; 
-            position: relative;
-            overflow: hidden;
+            width: 90%; max-width: 1000px; margin: 20px auto 0; height: 180px; 
+            border-radius: 12px; background-color: #333; background-size: cover;
+            background-position: center; background-repeat: no-repeat;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); display: flex;
+            align-items: flex-end; position: relative; overflow: hidden;
             transition: background-color 0.5s;
         }
-
         #spotlight-content {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.7); 
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            width: 100%; background: rgba(0, 0, 0, 0.7); padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        #spotlight-title {
-            margin: 0;
-            color: white;
-            font-size: 1.5em;
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
+        #spotlight-title { margin: 0; color: white; font-size: 1.5em; border-bottom: none; padding-bottom: 0; }
         #spotlight-button {
-            text-decoration: none;
-            background-color: var(--accent-color); 
-            color: white;
-            padding: 10px 20px;
+            text-decoration: none; background-color: var(--accent-color); 
+            color: white; padding: 10px 20px; border-radius: 8px;
+            font-weight: bold; transition: background-color 0.2s;
+        }
+        #spotlight-button:hover { background-color: #ff9800; }
+        
+        /* --- HUB GENERAL STYLES (Existing) --- */
+        /* ... existing header, utility-buttons, h1, main, h2, game-list, etc. styles ... */
+        header { padding: 30px 20px 20px; background-color: rgba(44, 44, 44, 0.9); text-align: center; backdrop-filter: blur(5px); position: relative; }
+        .utility-buttons { position: absolute; top: 10px; width: 95%; display: flex; justify-content: space-between; padding: 0 10px; }
+        .utility-buttons div { display: flex; }
+        .utility-buttons a { text-decoration: none; color: #fff; background-color: #555; padding: 8px 15px; border-radius: 5px; font-weight: bold; transition: background-color 0.2s; margin-left: 10px; }
+        .utility-buttons a:first-child { margin-left: 0; }
+        .utility-buttons a:hover { background-color: var(--accent-color); }
+        h1 { margin: 0; color: var(--accent-color); }
+        main { padding: 30px; min-height: 500px; max-width: 1200px; margin: 0 auto; background-color: rgba(26, 26, 26, 0.9); border-radius: 10px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); }
+        h2 { color: var(--accent-color); border-bottom: 1px solid #444; padding-bottom: 10px }
+        .game-list, .new-game-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .new-game-list { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .game-item { background-color: #333; padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; transition: transform .2s; transform: translateY(0); }
+        .game-item:hover { transform: translateY(-5px); background-color: #444 }
+        .game-item a { text-decoration: none; color: #fff; display: block; }
+        .new-game-item { background-color: #333; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, .4); transition: transform .2s, box-shadow .2s; }
+        .new-game-item:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(255, 87, 34, .3) }
+        .game-info { padding: 15px; text-align: center; }
+        .game-info strong { display: block; font-size: 1.1em; margin-bottom: 5px; }
+        .game-image-placeholder { width: 100%; height: 150px; background-color: #555; display: flex; align-items: center; justify-content: center; font-size: 1.2em; font-weight: 700; color: #ccc; }
+        footer { text-align: center; padding: 20px; background-color: rgba(44, 44, 44, 0.9); margin-top: 30px; }
+        .panic-btn-fixed { position: fixed; bottom: 20px; right: 20px; background-color: #a80000; color: #fff; padding: 10px 15px; border: 2px solid #ff0000; border-radius: 8px; cursor: pointer; font-weight: bold; z-index: 1000; transition: background-color 0.3s; }
+        .panic-btn-fixed:hover { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+
+        /* ====================================================================
+           --- SESSION TIMER STYLES (NEW) --- 
+           ==================================================================== */
+        #timer-widget {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            /* Added padding to avoid the utility buttons area */
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 2px solid var(--accent-color);
             border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 990; /* Below loader, above game content */
+            text-align: center;
+        }
+
+        #timer-display {
+            font-size: 1.8em;
             font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            transition: color 0.5s;
+        }
+        
+        .warning {
+            color: #ff4444 !important; /* Bright Red */
+        }
+
+        .controls button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin: 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
             transition: background-color 0.2s;
         }
-
-        #spotlight-button:hover {
+        
+        .controls button:hover {
             background-color: #ff9800;
         }
         
-        /* --- HUB GENERAL STYLES (Unchanged) --- */
-        header {
-            padding: 30px 20px 20px; 
-            background-color: rgba(44, 44, 44, 0.9); 
-            text-align: center;
-            backdrop-filter: blur(5px); 
-            position: relative; 
-        }
-        
-        .utility-buttons {
-            position: absolute;
-            top: 10px;
-            width: 95%; 
-            display: flex;
-            justify-content: space-between;
-            padding: 0 10px;
-        }
-        
-        .utility-buttons div { display: flex; }
-
-        .utility-buttons a {
-            text-decoration: none;
-            color: #fff;
-            background-color: #555;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.2s;
-            margin-left: 10px;
-        }
-
-        .utility-buttons a:first-child { margin-left: 0; }
-        .utility-buttons a:hover { background-color: var(--accent-color); }
-
-        h1 { margin: 0; color: var(--accent-color); }
-        main {
-            padding: 30px;
-            min-height: 500px;
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: rgba(26, 26, 26, 0.9); 
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); 
-        }
-        h2 {
-            color: var(--accent-color);
-            border-bottom: 1px solid #444;
-            padding-bottom: 10px
-        }
-        
-        .game-list, .new-game-list {
-            list-style: none;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
-        .new-game-list {
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .game-item {
-            background-color: #333;
+        /* --- Notification Popup --- */
+        #break-notification {
+            position: fixed;
+            top: 150px; /* Positioned to be clearly visible */
+            right: 20px;
+            background-color: #28a745;
+            color: white;
             padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform .2s;
-            transform: translateY(0);
-        }
-        .game-item:hover { transform: translateY(-5px); background-color: #444 }
-        
-        .game-item a { text-decoration: none; color: #fff; display: block; }
-        
-        .new-game-item {
-            background-color: #333;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, .4);
-            transition: transform .2s, box-shadow .2s;
-        }
-        .new-game-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(255, 87, 34, .3)
-        }
-        .game-info { padding: 15px; text-align: center; }
-        .game-info strong { display: block; font-size: 1.1em; margin-bottom: 5px; }
-        .game-image-placeholder {
-            width: 100%; height: 150px; background-color: #555; display: flex;
-            align-items: center; justify-content: center; font-size: 1.2em;
-            font-weight: 700; color: #ccc;
-        }
-
-        footer {
-            text-align: center; padding: 20px; background-color: rgba(44, 44, 44, 0.9);
-            margin-top: 30px;
-        }
-        
-        .panic-btn-fixed {
-            position: fixed; bottom: 20px; right: 20px; background-color: #a80000;
-            color: #fff; padding: 10px 15px; border: 2px solid #ff0000;
-            border-radius: 8px; cursor: pointer; font-weight: bold; z-index: 1000;
-            transition: background-color 0.3s;
-        }
-        .panic-btn-fixed:hover {
-            background-color: #ff0000; box-shadow: 0 0 15px #ff0000;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 991;
+            opacity: 0;
+            transition: opacity 1s;
         }
     </style>
 </head>
@@ -391,6 +435,7 @@
             <a href="javascript:void(0)" onclick="openAboutBlank()">🔒 OPEN IN BLANK</a>
             <div>
                 <a href="bookmarklets.html">📚 BOOKMARKLETS</a>
+                <a href="chat.html">💬 CHAT</a> 
                 <a href="settings.html">⚙️ SETTINGS</a>
             </div>
         </div>
@@ -428,6 +473,25 @@
         <p>© 2025 NOTHING Gaming</p>
     </footer>
     
+    <div id="timer-widget">
+        <div id="timer-display">30:00</div>
+        
+        <div class="controls">
+            <button onclick="setPreset(900)">15 min</button>
+            <button onclick="setPreset(1800)">30 min</button>
+            <button onclick="setPreset(2700)">45 min</button>
+            <button onclick="setPreset(3600)">60 min</button>
+            
+            <hr style="margin: 8px 0; border-color: #ddd;">
+            
+            <button id="start-pause-btn" onclick="toggleTimer()">▶️ Start</button>
+            <button onclick="resetTimer()">🔄 Reset</button>
+        </div>
+    </div>
+
+    <div id="break-notification">
+        <strong>Break Time!</strong> Your session has ended.
+    </div>
     <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
 </body>
 </html>
