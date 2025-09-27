@@ -1,373 +1,1290 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOTHING - Single Page Game Hub</title>
-    
-    <script>
-        // --- 1. THEME LOADER: 
-        const savedTheme = localStorage.getItem('hubTheme');
-        const currentTheme = savedTheme ? savedTheme : 'rainbow';
-        document.documentElement.className = `theme-${currentTheme}`;
 
-        // --- 2. CLOAKING/FAVICON SETUP for browser logo
-        const savedFavicon = localStorage.getItem('hubFavicon');
-        const savedTitle = localStorage.getItem('hubTitle');
-        const defaultTitle = 'NOTHING - Single Page Game Hub';
-                const faviconUrl = savedFavicon 
-            ? savedFavicon 
-            : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
-        
-        // Apply the saved title or default
-        const ORIGINAL_TITLE = savedTitle ? savedTitle : defaultTitle;
-        document.title = ORIGINAL_TITLE;
-        
-        let links = document.querySelector("link[rel~='icon']");
-        if (!link) {
-            link = document.createElement('link');
-            link.rel = 'icon';
-            document.getElementsByTagName('head')[0].appendChild(link);
-        }
-        link.href = faviconUrl:
+
+var savecode=[30,3,400,false,true,true,false,false,true,false,false];
+/**
+@SUB?
+https://www.khanacademy.org/computer-programming/avengers-sub-page/6724921496223744
+ */
+
+
+
+//{
+var loading=false;
+var load = 0;
+var rot = 0;
+var thing = 0;
+var Easter_egg=false;
+var click = false;
+var alian1sp =1;
+var alian1 =145;
+var alive=true;
+var health1 = 50;
+var alian2sp =1;
+var alian2 =445;
+var alive1=true;
+var health2 = 50;
+var alian3sp =1;
+var alian3 =275;
+var alive2=true;
+var health3 = 50;
+ 
+var leftX = 130;
+var rightX = 200;
+var timer =0;
+var starSize = [];
+    var starX = [];
+    var starY = [];
+    var starA = [];
+var backgroundc="desert";
+var desert = function(x, y){
+translate(x,y);
+
+background(8, 132, 148);
+  //{   
+   noStroke(); 
+    
+    fill(255, 255, 255);
+    // left cloud
+    ellipse(leftX, 50, 126, 90);
+    ellipse(leftX+62, 50, 70, 50);
+    ellipse(leftX-62, 50, 70, 50);
+    
+    // right cloud
+    ellipse(rightX, 90, 126, 75);
+    ellipse(rightX+62, 90, 70, 45);
+    ellipse(rightX-62, 90, 70, 45);
+    if (rightX > 690) {
+    rightX = -200;
+}
+
+if (leftX < -200) {
+    leftX = 690;
+}
+    leftX-=0.6;
+    
+    rightX+=0.7;
+    
+//} clouds 
+fill(145, 114, 29);
+  rect(0,280,width,height);
+  stroke(107, 82, 18);
+  line(166,280,30,520);
+   line(420,280,560,520);    
+
+};
+var space = function(x,y){
+translate(x,y);
+background(36, 33, 36);
+for(var a = 0; a < 500; a++) {
+        stroke(255, 255, 255, starA[a]);
+        starSize.push(random(0.5, 3));
+        starX.push(random(0, width));
+        starY.push(random(0, height));
+        starA.push(random(50, 100));
+        strokeWeight(starSize[a]);
+        point(starX[a], starY[a]);
+    }
+    //{
+fill(179, 0, 255);
+ellipse(420,120,120,120);
+fill(186, 175, 175,100);
+ellipse(410,80,50,20);
+ellipse(430,120,80,20);
+ellipse(410,140,60,20);
+//}purple
+//{
+fill(163, 160, 3);
+ellipse(50,52,220,220);
+noFill();
+stroke(150, 124, 9);
+strokeWeight(3);
+arc(60,52,220,30,-23,180);
+arc(60,52,240,40,-33,180);
+arc(60,52,260,50,-39,180);
+arc(60,52,280,60,-44,180);
+//}yellow
+//{
+fill(168, 159, 159);
+noStroke();
+ellipse(140,320,70,70);
+stroke(133, 128, 128);
+strokeWeight(2);
+ellipse(150,330,25,30);
+ellipse(130,305,10,10);
+ellipse(160,305,10,10);
+//}moon
+};
+var alian = function(x, y){
+fill(77, 75, 75);
+noStroke();
+ellipse(x+25,y-10,30,30);
+rect(x+5,y-15,40,10);
+arc(x+7,y-10,20,40,90,270);
+arc(x+44,y-10,20,40,260,450);
+};
+var barbar=true;
+var words=40;
+var ws=0;
+var x3 =0;
+var speedx3=0;
+var x2=0;
+var speedx2=0;
+var aim=true;
+var p = 0;
+var speed3 = 4;
+var ammos =true;
+var ob = 50;
+var ob2 = 0;
+var speedob = 1;
+var speedob2 = 1;
+var scenes = 0;
+var f = createFont("monospace");
+var y1 =336;
+var y = 0;
+var speed =0;
+var dim2 =0;
+var dim3 =0;
+var dim4 =0;
+var dim5 =0;
+var x = -3;
+var playing =true;
+var speed2 = 1;
+var keys = [];
+var bar =400;
+var barspeed =0;
+keyPressed = function () {
+    keys[keyCode] = true;
+};
+keyReleased = function () {
+    keys[keyCode] = false;
+};
+var player = {
+    x: 280,
+    y: 280,
+    w: 50,
+    h: 70,
+    vx: 5,
+    health: 10,
+    color: color(94, 198, 219),
+    direction: 0
+};
+var font =createFont("Arial Black Italic");
+
+//}vars
+draw= function() {
+    mouseClicked = function() {
+click=true;
+};
+if(timer<12){
+    background(0, 0, 0);
+    for(var a = 0; a < 500; a++) {
+        stroke(255, 255, 255, starA[a]);
+        starSize.push(random(0.5, 3));
+        starX.push(random(0, width));
+        starY.push(random(0, height));
+        starA.push(random(50, 100));
+        strokeWeight(starSize[a]);
+        point(starX[a], starY[a]);
+    }
+}
+    //{
+    if(x<2){
+        thing=+3;
+    }
+    if(x>100){
+        thing=0;
+    }
+     x3=x3+1;
+    fill(255, 251, 0);
+ textFont(font,x);
+ textAlign(CENTER);
+text("STAR",300,200);
+text("WARS",300,300);
+
+//}intro
+   if(x3>110) 
+    { 
+        textAlign(LEFT);
+  timer=timer+1;
+if(scenes===0){
+    background(0, 0, 0);
+    for(var a = 0; a < 500; a++) {
+        stroke(255, 255, 255, starA[a]);
+        starSize.push(random(0.5, 3));
+        starX.push(random(0, width));
+        starY.push(random(0, height));
+        starA.push(random(50, 100));
+        strokeWeight(starSize[a]);
+        point(starX[a], starY[a]);
+    }
+   
+ fill(166, 146, 166);
+ textSize(60);
+ textFont(font,65);
+ fill(255, 242, 0);
+ text("STAR WARS",100,122);
+    if(y>600) 
+    {speed= -0;}
+    
+    noStroke();
+    
+    fill(74, 74, 68);
+    rect(230,170,150,70);
+    fill(0, 0, 0);
+    textSize(40);
+    text("FIGHT",235,222);
+    bar=400;
+    savecode[2]=savecode[2];
+    
+    alive=true;
+    alive1=true;
+    alive2=true;
+    player.x=random(1,550);
+    words=40;
+
+
+  
+
+
+if(click&&mouseX>230&&mouseY>170&&mouseX<380&&mouseY<240&&scenes===0){
+scenes=3;
+playing=true;
+alian1=random(1,570);
+alian2=random(1,550);
+alian3=random(1,560);
+
+}
+       noStroke();
+    fill(153, 12, 12,1);
+    rect(0, 100, y, 30);
+
+ fill(74, 74, 68);
+    rect(230,270,150,70);
+    rect(400,270,150,70);
+    fill(0, 0, 0);
+    text("How",255,322);
+    
+if(click&&mouseX>230&&mouseY>270&&mouseX<380&&mouseY<340&&scenes===0){
+scenes=1;
+}
+
+if(click&&mouseX>400&&mouseY>270&&mouseX<550&&mouseY<350&&scenes===0){
+scenes=1.7;
+}
+   fill(242, 255, 0);
+   textSize(30);
+    text("Credits "+savecode[0],0,490);
+    fill(0, 0, 0);
+text("Save",90,400);
+text("code",90,433);
+   text("achiev-",410,302);
+   text("ements",410,330);
+
+    if(click&&mouseX>60&&mouseY>370&&mouseX<210&&mouseY<440&&scenes===0){
+println("put this into the var labled savecode on line 3\n"+"["+savecode+"];");
+}//generate save code
+    if(click&&mouseX>230&&mouseY>370&&mouseX<380&&mouseY<440&&scenes===0){
+scenes=2;
+}//open shop
+ if(click&&mouseX>400&&mouseY>370&&mouseX<550&&mouseY<440&&scenes===0){
+scenes=4;
+}//open paint shop
+}//home scene
+if(scenes===1){
+   background(0, 0, 0);
+for(var a = 0; a < 500; a++) {
+        stroke(255, 255, 255, starA[a]);
+        starSize.push(random(1.5, 4));
+        starX.push(random(0, width));
+        starY.push(random(0, height));
+        starA.push(random(50, 100));
+        strokeWeight(starSize[a]);
+        point(starX[a], starY[a]);
+    }
+    fill(227, 247, 8);
+    textSize(23);
+ text("Use your left & right arrow keys to move.\nUp arrow key to shoot.\nThe longer you hold down the more ammo you\nuse.\nShoot the Tie-Fighters on your screen.\nGet new ships and more ammo in the $hop.\nWhen you buy a ship you get a black\nbar at the bottom of your screen\ntelling you some info like this . ⬇",5,27);
+ textSize(17);
+ text("game over = how many credits you'l get when your gas\n reaches zero\nFighter = how many credits you'l get when you blow up\n a Tie fighter\ngas speed = how fast your gas will run out ",5,310);
+ 
+textSize(30);
+ fill(41, 36, 36);
+ rect(20,412,120,70);
+ rect(450,412,120,70);
+ fill(0, 0, 0);
+ text("BACK",26,462);
+  text("Next",470,462);
+  if(click&&mouseX>450&&mouseY>412&&mouseX<570&&mouseY<482&&scenes<3){
+scenes=1.5;
+}
+}//how/???      #1
+if(scenes===1.5){
+    if(backgroundc==="space"){
+       space(0,0);
+   }
+   if(backgroundc==="desert"){
+       desert(0,0);
+   }
+    stroke(0, 0, 0);
+    noFill();
+    rect(330,10,400,22);
+    rect(535,155,50,52);
+    noStroke();
+    noFill();
+    stroke(255, 0, 0);
+    ellipse(460,20,280,50);
+    ellipse(560,180,70,80); 
+    textFont(font,25);
+    text("⬆",440,80);
+    text("⬅",67,42);
+    text("↗",490,202);
+    fill(0, 0, 0);
+text("⬇",290,352);
+    fill(0, 0, 0);
+text("gas tank:\nthis is your *timer*\nyou could say",350,102);  text("home button:\nclick this to\nleave the fight",110,32);  
+text("ammo:\nhow many bullets\nyou have left",390,212);  
+text("ship: your ship will be here",10,322);  
+noFill();
+    ellipse(30,20,52,52);
+    
+    fill(0, 0, 0);
+      noStroke();
+    rect(330,10,100,22);
       
+    rect(16,15,30,25);
+     rect(17,0,10,25);
+     triangle(30,0,10,15,50,15);
+    textSize(30);
+    fill(69, 52, 52);
 
-        // A. Panic Button: Redirects immediately
-        function panicHide() {
-            window.location.replace("https://www.wikipedia.org/");
-        }
+ rect(20,412,120,70);
+    fill(0, 0, 0);
+     text("Exit",40,462);
+     textFont(f,20);
+     text("50",550,202);
+}//how/???    #2
+if(scenes===2){
+    noStroke();
+    if(savecode[1]===2){
+        dim2=150;
+    }
+    if(savecode[1]===3){
+        dim3=150;
+    }
+    if(savecode[1]===4){
+        dim4=150;
+    }
+    if(savecode[1]===5){
+        dim5=150;
+    }
+    background(71, 61, 61);
+    textFont(font,60);
+  textSize(45);
+  fill(0, 0, 0);
+    text("$hop",250,50);
+ text("1.Podracer            0\n2.Speeder bike     200\n3.Speeder             550\n4.X-Wing               720\n5.                          1000",30,142);
+ textSize(35);
+ 
+ text("Melenium Falcon",80,390);
+ textSize(35);
+ text("50 more ammo for 45c",160,470);
+ textSize(42);
+ text("Credits left  "+savecode[0],100,90);
+ fill(41, 36, 36);
+ rect(20,412,120,70);
+ fill(0, 0, 0);
+ textSize(35);
+ text("BACK",25,462);
+ fill(255, 0, 0,150);
+ rect(80,125,460,10);
+ fill(255, 0, 0,dim2);
+ rect(80,185,490,10);
+ fill(255, 0, 0,dim3);
+ rect(80,245,490,10);
+ fill(255, 0, 0,dim4);
+ rect(80,315,480,10);
+ fill(255, 0, 0,dim5);
+ rect(80,375,500,10);
+ savecode[4]=true;
+}//shop
+//{
+
+if(click&&mouseX>70&&mouseY>160&&mouseX<250&&mouseY<230&&savecode[0]>199&&scenes===2&&backgroundc==="desert"){
+    savecode[0]=savecode[0]-200;
+    dim2=150;
+    savecode[1]=2;
+    println("$20 game over\n$20 Fighter\ngas speed 0.7 ");
+}//second ship
+
+if(click&&mouseX>70&&mouseY>220&&mouseX<250&&mouseY<290&&savecode[0]>549&&scenes===2&&backgroundc==="desert"){
+
+    savecode[0]=savecode[0]-550;
+    dim3=150;
+    savecode[1]=3;
+    println("$30 game over\n$20 Fighter\ngas speed 0.7 ");
+}//third ship
+
+if(click&&mouseX>70&&mouseY>290&&mouseX<250&&mouseY<360&&savecode[0]>719&&scenes===2){
+
+    savecode[0]=savecode[0]-720;
+    dim4=150;
+    savecode[1]=4;
+    println("$40 game over\n$25 Fighter\ngas speed 0.5 ");
+}//forth ship
+
+if(click&&mouseX>70&&mouseY>350&&mouseX<250&&mouseY<420&&savecode[0]>999&&scenes===2){
+
+    savecode[0]=savecode[0]-1000;
+    dim5=150;
+    savecode[1]=5;
+    println("$70 game over\n$30 Fighter\ngas speed 0.6 ");
+}//fith ship
+
+if(click&&mouseX>160&&mouseY>440&&mouseX<590&&mouseY<475&&savecode[0]>44&&scenes===2){
+
+    savecode[0]=savecode[0]-45;
+    savecode[2]=savecode[2]+50;
+    savecode[8]=true;
+}//ammo
+if(mouseX>160&&mouseY>430&&mouseX<590&&mouseY<475&&scenes===2){
+
+fill(204, 194, 194);
+rect(mouseX-100,mouseY-70,250,60,20);
+triangle(mouseX,mouseY-10,mouseX+30,mouseY-10,mouseX+15,mouseY);
+fill(0, 0, 0);
+textSize(15);
+text("This is the only way to get\n ammo",mouseX-90,mouseY-55);
+text("You currently have "+savecode[2]+" ammo",mouseX-90,mouseY-17);
+
+}//ammo
+//}buying a ship & ammo in shop
+if(scenes===4){
+    noStroke();
+    background(74, 54, 54);
+    textFont(font);
+    fill(41, 36, 36);
+ rect(20,412,120,70);
+ fill(0, 0, 0);
+ textSize(35);
+ text("BACK",25,462);
+ text("Credits \n  "+savecode[0],50,50);
+ text("Backgrounds",200,162);
+fill(38, 35, 35);
+rect(240,220,140,50);
+rect(240,290,140,50);
+fill(0, 0, 0);
+  text("Space          100c",250,260);
+   text("Desert          20c",245,325);
+   if(backgroundc==="space"){
+       textSize(20);
+       text("(selected)",120,260);
+   }
+   if(backgroundc==="desert"){
+        textSize(20);
+       text("(selected)",120,320);   
+       }
+       text("*note to buy the space background\nyou must have the X-Wing or Falcon",180,400);
+       if(click&&mouseX>40&&mouseX<380&&mouseY>220&&mouseY<270&&backgroundc==="desert"&&savecode[0]>99&&savecode[1]===4||savecode[1]===5){
+           loading=true;
+           backgroundc="space";
+           savecode[0]=savecode[0]-100;
+       }
+       if(click&&mouseX>40&&mouseX<380&&mouseY>290&&mouseY<340&&backgroundc==="space"&&savecode[0]>19){
+           loading=true;
+           backgroundc="desert";
+           savecode[0]=savecode[0]-20;
+       }
+if(loading){ 
+    background(0, 0, 0);
+    for(var a = 0; a < 500; a++){ stroke(255, 255, 255, starA[a]); starSize.push(random(0.5, 3)); starX.push(random(0, width)); starY.push(random(0, height)); starA.push(random(50, 100)); strokeWeight(starSize[a]); point(starX[a], starY[a]); }
+    
+pushMatrix();
+translate(300, 250); 
+rotate(rot); 
+fill(255, 255, 255);
+stroke(255, 230, 0);
+strokeWeight(5);
+noFill();
+arc(0,0,200,200,0,load);
+rot = rot + 10;
+load=load+4;
+popMatrix();
+if(load>360){
+    scenes=4;
+    loading=false;
+    load=0;
+    } 
+    fill(255, 230, 0);
+    text("Updating background",180,380); }
+}//background shop
+if(scenes===3){
+    noStroke();
+    if(backgroundc==="desert"){
         
-        // B. About:Blank Cloak: Opens the hub in a new, clean tab
-        function openAboutBlank() {
-            const currentUrl = window.location.href;
-            const blank = window.open('about:blank', '_blank');
-            if (blank) {
-                blank.document.write(`
-                    <!DOCTYPE html>
+       desert(0,0);
+    }
+    if(backgroundc==="space"){
+       space(0,0);
+    }
+    if(alive===false&&alive1===false&&alive2===false){
+        scenes=0;
+    }
+  
+if(alian1<1&&alive===true){
+    alian1sp=+3;
+}
+if(alian1>560&&alive===true){
+    alian1sp=-3;
+}
+if(alian2<1&&alive1===true){
+    alian2sp=+3;
+}
+if(alian2>560&&alive1===true){
+    alian2sp=-2;
+}
+if(alian3<1&&alive2===true){
+    alian3sp=+2;
+}
+if(alian3>560&&alive2===true){
+    alian3sp=-4;
+}
+if(alive===true){
+      alian(alian1,285);
+ 
+}//trader#1
+if(alive1===true){
 
-
-                    <html>
-                    <head>
-                        <title>${document.title}</title>
-                        <style>body { margin: 0; overflow: hidden; } iframe { border: none; width: 100vw; height: 100vh; }</style>
-                    </head>
-                    <body>
-                        <iframe src="${currentUrl}"></iframe>
-                    </body>
-                    </html>
-                `);
-                blank.document.close();
-            }
-        }
-
-        // CLocking
-        const noticiations = localStorage.getItem('notificationCloakEnabled') === 'true';
-        const CLOAKED_TITLE = '(1) Message Student/Portal';
-        
-        function applyCloak() {
-            if (NOTIFICATION_CLOAK_ENABLED) { 
-                document.title = CLOAKED_TITLE; 
-            }
-        }
-
-        function removeCloak() {
-            if (NOTIFICATION_CLOAK_ENABLED) { 
-                document.title = ORIGINAL_TITLE; 
-            }
-        }
-
-        if (NOTIFICATION_CLOAK_Disabled) {
-            window.addEventListener('blur', applyCloak); 
-            window.addEventListener('focus', removeCloak);
-        }
-
-        // --- 5. LOADER LOGIC: Controls the countdown and splash screen ---
-        function initializeLoader() {
-            const loaderScreen = document.getElementById('loading-screen');
-            const shouldShowLoader = localStorage.getItem('showCustomLoader') === 'true';
-
-            if (!shouldShowLoader || !loaderScreen) {
-                if (loaderScreen) {
-                    loaderScreen.style.display = 'none';
-                }
-                return; 
-            }
-            
-            // Logic to show the custom message and start the countdown...
-            localStorage.removeItem('showCustomLoader');
-            const loaderText = document.getElementById('loader-text');
-            const countdownSpan = document.getElementById('countdown-span');
-            const customMessage = localStorage.getItem('hubLoaderMessage') || 'Loading Game Hub';
-            loaderText.textContent = customMessage;
-            
-            let count = 3; 
-            countdownSpan.textContent = count; 
-
-            const timer = setInterval(() => {
-                count--;
-                countdownSpan.textContent = count;
-
-                if (count <= 0) {
-                    clearInterval(timer);
-                    countdownSpan.style.display = 'none'; 
-                    loaderText.textContent = 'Launching!';
-
-                    setTimeout(() => {
-                        if (loaderScreen) {
-                            loaderScreen.classList.add('loader-hidden');
-                        }
-                    }, 500); 
-                }
-            }, 1000);
-        }
-
+      alian(alian2,285);
+ 
+}//trader#2
+if(alive2===true){
+      alian(alian3,285);
+}//trader#3
+   noStroke();   
+   textFont(f,20);
+if(alive===false){
       
-        function initializeSpotlight() {
-            const spotlightTitle = localStorage.getItem('hubSpotlightTitle');
-            const spotlightLink = localStorage.getItem('hubSpotlightLink');
-            const spotlightImage = localStorage.getItem('hubSpotlightImage');
-            
-            const spotlightElement = document.getElementById('daily-spotlight');
-            const titleElement = document.getElementById('spotlight-title');
-            const buttonElement = document.getElementById('spotlight-button');
+      fill(20, 19, 18);
+      rect(alian1,280,25,10);
+      textSize(20);
+     text("🔥",alian1,280);
+ 
+}//trader#1
+if(alive1===false){
+      
+      fill(13, 12, 13);
+      rect(alian2,280,25,10);
+    textSize(20);
+     text("🔥",alian2,280);
+     
+ 
+}//trader#2
+if(alive2===false){
+      
+      fill(0, 0, 0);
+      rect(alian3,280,25,10);
+      textSize(20);
+     text("🔥",alian3,280);
+      
+}//trader#3
+  
+  if(click&&mouseX>100&&mouseX<180&&mouseY>285&&mouseY<355&&Easter_egg===false&&backgroundc==="space"){
+      Easter_egg=true;//keeps people from getting a lot of money
+      savecode[0]=savecode[0]+300;
+      image(getImage("creatures/Winston"), 103,285,72,72);
+      savecode[10]=true;
+  }
+  
+ noStroke();
+fill(0, 0, 0);
+   rect(20,30,30,25);
+   triangle(60,30,35,10,10,30);
+   rect(20,10,10,25);
+    if(savecode[2]<1&&keyCode === UP){
+        fill(0, 0, 0);
+        textSize(70);
+        textFont(font,70);
+        text("NO AMMO!",110,202);
+    }
+   if(click&&mouseX>20&&mouseY>20&&mouseX<55&&mouseY<45&&scenes===3&&playing===true){
+scenes=0;
 
-            if (spotlightElement) {
-                // Apply background image or color
-                if (spotlightImage) {
-                    spotlightElement.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('${spotlightImage}')`;
-                } else {
-                    spotlightElement.style.backgroundColor = 'var(--accent-color)';
-                }
-                // Apply content
-                titleElement.textContent = spotlightTitle || 'Featured Game of the Day!';
-                buttonElement.href = spotlightLink || '#';
-            }
-        }
-
-       
-        function filterGames() {
-            const input = document.getElementById('game-search');
-            if (!input) return; 
-            const filter = input.value.toUpperCase();
-            const featuredList = document.getElementById('featured-game-list');
-            const newList = document.getElementById('new-game-list')
-            const applyFilter = (listElement) => {
-                const items = listElement.getElementsByTagName('li');
-                for (let i = 0; i < items.length; i++) {
-                    // Check text content within the entire list item
-                    let content = items[i].textContent || items[i].innerText;
-                    
-                    if (content.toUpperCase().indexOf(filter) > -1) {
-                        items[i].style.display = ""; // Show
-                    } else {
-                        items[i].style.display = "none"; // Hide
-                    }
-                }
-            }
-
-            applyFilter(featuredList);
-            applyFilter(newList);
-        }
+}
+if(savecode[2]>0){
+    ammos=true;
+}
+  noStroke();
+  textFont(f);
+  
+    if(keys[LEFT] || keys[65]&&playing===true) {
         
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeLoader();
-            initializeSpotlight();
-
-           //search filters
-            const searchInput = document.getElementById('game-search');
-            if (searchInput) {
-                searchInput.addEventListener('keyup', filterGames);
-            }
-        });
-
-    </script>
+        player.x = constrain(player.x - player.vx, 0, width - player.w);
+        player.direction = -1;
+    }
+    if(keys[RIGHT] || keys[68]&&playing===true) {
+        
+        player.x = constrain(player.x + player.vx, 0, width - player.w);
+        player.direction = 1;
+    } 
+  
+  if(savecode[1]===1){
+    //{
+    if (savecode[2]===0){
+        ammos=false;
+    }
+    if (keyIsPressed && keyCode === UP&&ammos===true&&savecode[2]>0) {
+    savecode[2]=savecode[2]-2;
     
-    <style>// for rainbow color
-        @keyframes rainbow-glow {
-            0% { background-color: #ff0000; } 16% { background-color: #ff7f00; } 
-            33% { background-color: #ffff00; } 50% { background-color: #00ff00; } 
-            66% { background-color: #0000ff; } 83% { background-color: #4b0082; } 
-            100% { background-color: #ff0000; } 
-        }
-        
-        /* CSS Variables for color management */
-        :root {
-            --dark-bg: #1a1a1a;
-            --blue-bg: #007bff;
-            --purple-bg: #6f42c1;
-            --accent-color: #ff5722;
-        }
-
-        /* Core Body & Theme Styles */
-        html { height: 100%; }
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            color: #fff;
-            min-height: 100%; 
-            background-color: var(--dark-bg); 
-            background-repeat: no-repeat; 
-            background-attachment: fixed; 
-        }
-
-        /* Theme-specific body background applications */
-        .theme-rainbow body { animation: rainbow-glow 10s infinite linear; }
-        .theme-dark body { background-color: var(--dark-bg); animation: none; }
-        .theme-blue body { background-color: var(--blue-bg); animation: none; }
-        .theme-purple body { background-color: var(--purple-bg); animation: none; }
-
-        /* Loader Screen Styles */
-        #loading-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: var(--dark-bg); z-index: 9999; display: flex;
-            flex-direction: column; justify-content: center; align-items: center;
-            opacity: 1; transition: opacity 1s ease-out; 
-        }
-        .loader-hidden { opacity: 0 !important; pointer-events: none; }
-        
-        /* Spotilight for heading
-        #daily-spotlight {
-            width: 90%; max-width: 1000px; margin: 20px auto 0; height: 180px; 
-            border-radius: 12px; background-color: #333; background-size: cover;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); display: flex;
-            align-items: flex-end; position: relative; overflow: hidden;
-        }
-        #spotlight-content {
-            width: 100%; background: rgba(0, 0, 0, 0.7); padding: 15px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        #spotlight-title { margin: 0; color: white; font-size: 1.5em; border-bottom: none; padding-bottom: 0; }
-        #spotlight-button {
-            text-decoration: none; background-color: var(--accent-color); 
-            color: white; padding: 10px 20px; border-radius: 8px;
-            font-weight: bold; transition: background-color 0.2s;
-        }
-        
-        /* Header, Main Content, and Utility Buttons Layout */
-        header { padding: 30px 20px 20px; background-color: rgba(44, 44, 44, 0.9); text-align: center; backdrop-filter: blur(5px); position: relative; }
-        .utility-buttons { position: absolute; top: 10px; width: 95%; display: flex; justify-content: space-between; padding: 0 10px; }
-        .utility-buttons div { display: flex; }
-        .utility-buttons a { text-decoration: none; color: #fff; background-color: #555; padding: 8px 15px; border-radius: 5px; font-weight: bold; transition: background-color 0.2s; margin-left: 10px; }
-        h1 { margin: 0; color: var(--accent-color); }
-        main { padding: 30px; min-height: 500px; max-width: 1200px; margin: 0 auto; background-color: rgba(26, 26, 26, 0.9); border-radius: 10px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); }
-        h2, h3 { color: var(--accent-color); border-bottom: 1px solid #444; padding-bottom: 10px }
-        
-        /* Game List Styles */
-        .game-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .new-game-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; } 
-        .game-item { background-color: #333; padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; transition: transform .2s; transform: translateY(0); }
-        .game-item:hover { transform: translateY(-5px); background-color: #444 }
-        
-        /* Search Bar Styles */
-        #game-search {
-            width: 100%; padding: 15px 20px; margin-bottom: 30px; 
-            font-size: 1.1em; border: 2px solid var(--accent-color); 
-            border-radius: 8px; background-color: #2c2c2c; color: #fff;
-            box-sizing: border-box; transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        #game-search:focus {
-            border-color: #fff; box-shadow: 0 0 10px rgba(255, 87, 34, 0.5); outline: none;
-        }
-
-        /* Panic Button Fixed Position */
-        .panic-btn-fixed { position: fixed; bottom: 20px; right: 20px; background-color: #a80000; color: #fff; padding: 10px 15px; border: 2px solid #ff0000; border-radius: 8px; cursor: pointer; font-weight: bold; z-index: 1000; transition: background-color 0.3s; }
-        .panic-btn-fixed:hover { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
-    </style>
-</head>
-
-<body>
-    <div id="loading-screen">
-        <span id="loader-text">Loading...</span>
-        <span id="countdown-span"></span>
-    </div>
-
-    <header>
-        <div class="utility-buttons">
-            <a href="javascript:void(0)" onclick="openAboutBlank()">🔒 OPEN IN BLANK</a>
-            <div>
-                <a href="bookmarklets.html">📚 BOOKMARKLETS</a> 
-                <a href="chat.html">💬 CHAT</a> 
-                <a href="settings.html">⚙️ SETTINGS</a>
-            </div>
-        </div>
-        <h1>NOTHING</h1>
-        <p>Your portal to endless gaming fun.</p>
-
-        <div id="daily-spotlight">
-            <div id="spotlight-content">
-                <h2 id="spotlight-title">Featured Game of the Day!</h2>
-                <a id="spotlight-button" href="#" target="_blank">🕹️ PLAY NOW</a>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <p style="margin-top: 0;">Discover thousands of free online games, from action-packed adventures to brain-teasing puzzles. Start exploring the top picks below!</p>
-        
-        <input type="text" id="game-search" placeholder="Quick Search for Games..." title="Type to search for games">
-
-        <h3>Featured Games</h3>
-        <ul class="game-list" id="featured-game-list">
-            <li class="game-item"><a href="super-jumper-page.html" class="game-item-content">🎮 Super Jumper</a></li>
-            <li class="game-item"><a href="nitro-racer-page.html" class="game-item-content">🏎️ Nitro Racer</a></li>
-            <li class="game-item">⚔️ Dungeon Master</li>
-            <li class="game-item">🚀 Rocket Shooter</li>
-            <li class="game-item">🧠 Quiz Master</li>
-        </ul>
-        //GAME LISTS//
-        <h2 style="margin-top: 50px;">New Games & Communities - Freshly Added!</h2>
-        <ul class="new-game-list" id="new-game-list">
-            <li class="new-game-item"><a href="https://quackprep.com" target="_blank"><div class="game-image-placeholder">Quack Prep Test</div><div class="game-info"><strong>Quack Prep Test</strong><small>Quiz / Strategy</small></div></a></li>
-            <li class="new-game-item"><a href="https://discord.gg" target="_blank"><div class="game-image-placeholder">Discord Community</div><div class="game-info"><strong>NOTHING Community</strong><small>Social / Hub</small></div></a></li>
-            <li class="new-game-item"><a href="https://growden.io" target="_blank"><div class="game-image-placeholder">Growden.io</div><div class="game-info"><strong>Multiplayer / Survival</strong><small>Multiplayer / Survival</small></div></a></li>
-            <li class="new-game-item"><a href="https://armedforces.io/" target="_blank"><div class="game-image-placeholder">ArmedForces.io</div><div class="game-info"><strong>ArmedForces.io</strong><small>Action / Shooter</small></div></a></li>
-        </ul>
-    </main>
-
-    <footer>
-        <p>© 2025 NOTHING Gaming</p>
-    </footer>
+      
+    stroke(173, 7, 167);
+    strokeWeight(5);
+    line(random(player.x-100,player.x+150),y1+100,random(player.x,player.x+50),y1-55);
     
-    <button class="panic-btn-fixed" onclick="panicHide()"<PANIC</button>
-
-    <script src="https://cdn.commoninja.com/sdk/latest/commonninja.js" defer></script>
-    <div class="commonninja_component pid-064f5a63-311c-47d7-b5cf-d90e348a87a7"></div>
-
-</body>
-</html>  <h2 style="margin-top: 50px;">New Games & Communities - Freshly Added!</h2>
-        <ul class="new-game-list" id="new-game-list">
-            <li class="new-game-item"><a href="https://quackprep.com" target="_blank"><div class="game-image-placeholder">Quack Prep Test</div><div class="game-info"><strong>Quack Prep Test</strong><small>Quiz / Strategy</small></div></a></li>
-            <li class="new-game-item"><a href="https://discord.gg" target="_blank"><div class="game-image-placeholder">Discord Community</div><div class="game-info"><strong>NOTHING Community</strong><small>Social / Hub</small></div></a></li>
-            <li class="new-game-item"><a href="https://growden.io" target="_blank"><div class="game-image-placeholder">Growden.io</div><div class="game-info"><strong>Multiplayer / Survival</strong><small>Multiplayer / Survival</small></div></a></li>
-            <li class="new-game-item"><a href="https://armedforces.io/" target="_blank"><div class="game-image-placeholder">ArmedForces.io</div><div class="game-info"><strong>ArmedForces.io</strong><small>Action / Shooter</small></div></a></li>
-        </ul>
-    </main>
-
-    <footer>
-        <p>© 2025 NOTHING Gaming</p>
-    </footer>
+    strokeWeight(2);
     
-    <button class="panic-btn-fixed" onclick="panicHide()"<PANIC</button>
-
-    <script src="https://cdn.commoninja.com/sdk/latest/commonninja.js" defer></script>
-    <div class="commonninja_component pid-064f5a63-311c-47d7-b5cf-d90e348a87a7"></div>
-
-</body>  <h2 style="margin-top: 50px;">New Games & Communities - Freshly Added!</h2>
-        <ul class="new-game-list" id="new-game-list">
-            <li class="new-game-item"><a href="https://quackprep.com" target="_blank"><div class="game-image-placeholder">Quack Prep Test</div><div class="game-info"><strong>Quack Prep Test</strong><small>Quiz / Strategy</small></div></a></li>
-            <li class="new-game-item"><a href="https://discord.gg" target="_blank"><div class="game-image-placeholder">Discord Community</div><div class="game-info"><strong>NOTHING Community</strong><small>Social / Hub</small></div></a></li>
-            <li class="new-game-item"><a href="https://growden.io" target="_blank"><div class="game-image-placeholder">Growden.io</div><div class="game-info"><strong>Multiplayer / Survival</strong><small>Multiplayer / Survival</small></div></a></li>
-            <li class="new-game-item"><a href="https://armedforces.io/" target="_blank"><div class="game-image-placeholder">ArmedForces.io</div><div class="game-info"><strong>ArmedForces.io</strong><small>Action / Shooter</small></div></a></li>
-        </ul>
-    </main>
-
-    <footer>
-        <p>© 2025 NOTHING Gaming</p>
-    </footer>
+    }
     
-    <button class="panic-btn-fixed" onclick="panicHide()"<PANIC</button>
+      if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian1-10&&player.x<alian1+10&&alive===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+20;
+          alive=false;
+          savecode[5]=true;
 
-    <script src="https://cdn.commoninja.com/sdk/latest/commonninja.js" defer></script>
-    <div class="commonninja_component pid-064f5a63-311c-47d7-b5cf-d90e348a87a7"></div>
+      }
+      
+       if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian2-10&&player.x<alian2+10&&alive1===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+20;
+          alive1=false;
+          savecode[5]=true;
+      }
+      
+      if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian3-10&&player.x<alian3+10&&alive2===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+20;
+          alive2=false;
+          savecode[5]=true;
+      }
+      
+ if(bar>300&&barbar===true) 
+    {barspeed= -0.9;//9
+    
+    }
+    if(bar<2) {
+        scenes=0;
+        savecode[0]=savecode[0]+10;
+   ammos=true;
+    }
+   noStroke();
+    fill(0, 0, 0);
+    rect(300,20,bar,20);
+    fill(255, 0, 0);
+     textSize(14.5);
+    text("fuel",300,35);
+    stroke(0, 0, 0);
+    strokeWeight(2);
+    noFill();
+    rect(300,19,299,21);
+    fill(0, 0, 0);
+    text("Ammo",550,75);
+    stroke(0, 0, 0);
+    noFill();
+    rect(545,59,43,61);
+    text(savecode[2],560,100);
+    
+ noStroke();
+   //guns
+     fill(74, 70, 74);
+    rect(player.x-205,y1+20,100,160,20);
+    rect(player.x+165,y1+20,100,160,20);
+     fill(148, 136, 27);
+    rect(player.x-175,y1-40,40,100);
+    rect(player.x-205,y1-40,10,100);
+    rect(player.x-115,y1-40,10,100);
+    
+     rect(player.x+195,y1-40,40,100);
+    rect(player.x+165,y1-40,10,100);
+    rect(player.x+255,y1-40,10,100);
+    fill(0, 68, 255);
+    rect(player.x-210,player.y+110,110,50,20);
+    rect(player.x+160,player.y+110,110,50,20);
 
-</body>
+stroke(173, 7, 167);
+noFill();
+strokeWeight(5);
+beginShape();
+vertex(player.x-100,player.y+140);
+vertex(player.x-30,random(player.y+110,player.y+170));
+vertex(player.x+40,random(player.y+110,player.y+170));
+vertex(player.x+110,random(player.y+110,player.y+170));
+vertex(player.x+160,player.y+140);
+endShape();
+beginShape();
+vertex(player.x-100,player.y+140);
+vertex(player.x-30,random(player.y+110,player.y+170));
+vertex(player.x+40,random(player.y+110,player.y+170));
+vertex(player.x+110,random(player.y+110,player.y+170));
+vertex(player.x+160,player.y+140);
+endShape();
+
+stroke(0, 0, 0);
+line(player.x-110,player.y+170,player.x-50,player.y+250);
+line(player.x+170,player.y+170,player.x+110,player.y+250);
+
+
+     noStroke();
+     fill(97, 97, 97);
+    rect(player.x-110,player.y+120,20,40);
+    rect(player.x+150,player.y+120,20,40);
+textFont(f);
+fill(0, 0, 0);
+textSize(17);
+if(aim===true){
+     text("(+)",player.x+12,y1-50);
+}
+      
+//} player
+  }//done
+  if(savecode[1]===2){
+   //{
+    if (savecode[2]===0){
+        ammos=false;
+    }
+    if (keyIsPressed && keyCode === UP&&ammos===true&&savecode[2]>0) {
+        savecode[2]=savecode[2]-2;
+    
+     stroke(255, 0, 0);
+    strokeWeight(5);
+    line(player.x+35,y1-55,player.x+35,y1+75);
+    line(player.x+20,y1-55,player.x+20,y1+75);
+    noStroke();
+    strokeWeight(1);
+    
+    }
+    
+    if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian1-15&&player.x<alian1+15&&alive===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+20;
+          alive=false;
+          savecode[5]=true;
+      }
+      
+       if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian2-15&&player.x<alian2+15&&alive1===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+20;
+          alive1=false;
+          savecode[5]=true;
+      }
+    
+    if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian3-15&&player.x<alian3+15&&alive2===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+20;
+          alive2=false;
+          savecode[5]=true;
+      }
+    
+    
+if(bar>300) 
+    {barspeed= -0.7;//7
+    
+    }
+    if(bar<2) {
+        scenes=0;
+        savecode[0]=savecode[0]+20;
+        ammos=true;
+    }
+    
+    fill(0, 0, 0);
+    rect(300,20,bar,20);
+    fill(255, 0, 0);
+     textSize(14.5);
+    text("fuel",300,35);
+    stroke(0, 0, 0);
+    noFill();
+    rect(300,19,299,21);
+     fill(0, 0, 0);
+    text("Ammo",550,75);
+    stroke(0, 0, 0);
+    noFill();
+    rect(545,59,43,61);
+    text(savecode[2],560,100);
+ noStroke();
+  
+   //guns
+   fill(0, 0, 0);
+   rect(player.x+15,player.y+120,10,50,20);
+    rect(player.x+30,player.y+120,10,50,20);
+     fill(20, 19, 20);
+    rect(player.x-5,y1-10,10,150,20);
+    rect(player.x+50,y1-10,10,150,20);
+    fill(84, 34, 3);
+    arc(player.x+28,player.y+230,80,150,180,360);
+    quad(player.x,player.y+70,player.x,player.y+100,player.x-30,player.y+80,player.x-10,player.y+20);
+    quad(player.x+55,player.y+70,player.x+55,player.y+100,player.x+85,player.y+80,player.x+68,player.y+20);
+     fill(33, 32, 31);
+    arc(player.x+28,player.y+230,60,90,180,360);
+    
+    
+
+    
+     noStroke();
+     fill(0, 0, 0);
+    
+textFont(f);
+textSize(13);
+if(aim===true){
+     text("(+)",player.x+17,y1-50);
+}
+      
+//} player
+  }//done
+  if(savecode[1]===3){ 
+   //{
+    if (savecode[2]===0){
+        ammos=false;
+    }
+     if (keyIsPressed && keyCode === UP&&ammos===true&&savecode[2]>0) {
+        savecode[2]=savecode[2]-2;
+    
+     fill(255, 179, 0);
+    rect(player.x+30,random(player.y,player.y+50),3,7);
+    
+    noStroke();
+    strokeWeight(1);
+    
+    }
+    
+    if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian1-15&&player.x<alian1+15&&alive===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+20;
+          alive=false;
+          savecode[5]=true;
+      }
+      
+       if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian2-15&&player.x<alian2+15&&alive1===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+20;
+          alive1=false;
+          savecode[5]=true;
+      }
+      
+      if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian3-10&&player.x<alian3+10&&alive2===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+20;
+          alive2=false;
+          savecode[5]=true;
+      }
+if(bar>300) 
+    {barspeed= -0.7;
+    
+    }
+    if(bar<2) {
+        scenes=0;
+        savecode[0]=savecode[0]+30;
+        ammos=true;
+    }
+    fill(0, 0, 0);
+    rect(300,20,bar,20);
+    fill(255, 0, 0);
+     textSize(14.5);
+    text("fuel",300,35);
+    stroke(0, 0, 0);
+    strokeWeight(2);
+    noFill();
+    rect(300,19,299,21);
+     fill(0, 0, 0);
+    text("Ammo",550,75);
+    stroke(0, 0, 0);
+    noFill();
+    rect(545,59,43,61);
+    text(savecode[2],560,100);
+ noStroke();
+     fill(97, 13, 4);
+    rect(player.x-65,player.y+90,190,220,90);
+    stroke(255, 106, 0);
+    strokeWeight(5);
+    fill(0, 0, 0);
+    arc(player.x-63,player.y+210,90,90,-90,90);
+    arc(player.x+123,player.y+210,90,90,90,270);
+    
+        noStroke();
+      fill(20, 19, 20);
+    rect(player.x+25,y1+0,13,90,20);
+    fill(99, 95, 95);
+    rect(player.x+10,player.y+120,40,60);
+    stroke(54, 54, 54);
+    strokeWeight(2);
+    rect(player.x+10,player.y+180,40,10);
+    strokeWeight(7);
+    stroke(54, 50, 50);
+    point(player.x+15,player.y+130);
+    point(player.x+30,player.y+130);
+    point(player.x+45,player.y+130);
+    
+    point(player.x+15,player.y+150);
+    point(player.x+30,player.y+150);
+    point(player.x+45,player.y+150);
+    
+    point(player.x+15,player.y+170);
+    point(player.x+30,player.y+170);
+    point(player.x+45,player.y+170);
+    
+     noStroke();
+     fill(0, 0, 0);
+    
+textFont(f);
+textSize(13);
+if(aim===true){
+    text("(+)",player.x+17,y1-50);
+}
+     
+     
+      
+//} player
+  }//done
+  if(savecode[1]===4){
+   //{
+   if (savecode[2]===0){
+        ammos=false;
+    }
+   
+     if (keyIsPressed && keyCode === UP&&ammos===true&&savecode[2]>0) {
+        savecode[2]=savecode[2]-2;
+    stroke(255, 0, 0);
+    strokeWeight(5);
+    line(player.x+40,y1-55,player.x+190,y1+30);
+    line(player.x+17,y1-55,player.x-140,y1+30);
+        line(player.x+17,y1-55,player.x-153,y1+40);
+    line(player.x+40,y1-55,player.x+203,y1+40);
+    noStroke();
+    strokeWeight(1);
+     
+    
+    }
+    
+    if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian1-20&&player.x<alian1+20&&alive===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+25;
+          alive=false;
+          savecode[5]=true;
+      }
+      
+       if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian2-20&&player.x<alian2+20&&alive1===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+25;
+          alive1=false;
+          savecode[5]=true;
+      }
+      
+      if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian3-10&&player.x<alian3+10&&alive2===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+25;
+          alive2=false;
+          savecode[5]=true;
+      }
+if(bar>300) 
+    {barspeed= -0.5;//5
+    
+    }
+    if(bar<2) {
+        scenes=0;
+        savecode[0]=savecode[0]+40;
+        ammos=true;
+    }
+    textSize(14.5);
+    fill(0, 0, 0);
+    rect(300,20,bar,20);
+    fill(255, 0, 0);
+    text("fuel",300,35);
+    stroke(0, 0, 0);
+    noFill();
+    rect(300,19,299,21);
+     fill(0, 0, 0);
+    text("Ammo",550,75);
+    stroke(0, 0, 0);
+    noFill();
+    rect(545,59,43,61);
+    text(savecode[2],560,100);
+ noStroke();
+//nose
+strokeWeight(5);
+fill(130, 120, 120);
+quad(player.x+20,y1-40,player.x+40,y1-40,player.x+73,y1+120,player.x-10,y1+120);
+fill(43, 40, 40);
+quad(player.x+20,y1-20,player.x+40,y1-20,player.x+53,y1+70,player.x+10,y1+70);
+stroke(130, 120, 120);
+line(player.x+30,player.y+100,player.x+20,player.y+40);
+line(player.x+30,player.y+100,player.x+40,player.y+40);
+fill(130, 120, 120);
+rect(player.x+10,player.y+90,40,10);
+// wings
+stroke(110, 102, 102);
+fill(130, 120, 120);
+quad(player.x-190,y1+120,player.x-190,y1+90,player.x,y1+90,player.x,y1+190);
+quad(player.x+240,y1+120,player.x+240,y1+90,player.x+63,y1+90,player.x+63,y1+190);
+   //guns
+
+fill(161, 150, 150);
+stroke(87, 84, 87);
+strokeWeight(2);
+rect(player.x-160,player.y+150,20,60,20);
+rect(player.x-155,player.y+90,10,80);
+rect(player.x+190,player.y+150,20,60,20);
+rect(player.x+195,player.y+90,10,80);
+
+strokeWeight(5);
+stroke(110, 102, 102);
+fill(130, 120, 120);
+quad(player.x-200,y1+140,player.x-200,y1+110,player.x,y1+90,player.x,y1+190);
+quad(player.x+250,y1+140,player.x+250,y1+110,player.x+63,y1+90,player.x+63,y1+190);
+noStroke();
+fill(130, 120, 120);
+rect(player.x-10,player.y+170,83,50);
+stroke(79, 75, 75);
+strokeWeight(5);
+rect(player.x-20,player.y+150,40,80,20);   
+rect(player.x+40,player.y+150,40,80,20);   
+fill(255, 0, 0,100);
+noStroke();
+quad(player.x-120,player.y+165,player.x-90,player.y+162,player.x-90,player.y+215,player.x-120,player.y+210);
+quad(player.x+170,player.y+165,player.x+140,player.y+162,player.x+140,player.y+215,player.x+170,player.y+210);
+textFont(f);
+textSize(13);
+//guns
+fill(161, 150, 150);
+noStroke();
+
+rect(player.x-150,player.y+150,20,60,20);
+rect(player.x-145,player.y+80,10,80);
+rect(player.x+180,player.y+150,20,60,20);
+rect(player.x+185,player.y+80,10,80);
+if(aim===true){
+    fill(0, 0, 0);
+     text("(+)",player.x+17,y1-50);
+} 
+      
+//} player
+  }//done
+  if(savecode[1]===5){
+   //{
+   //{
+   if (savecode[2]===0){
+        ammos=false;
+    }
+   
+if (keyIsPressed && keyCode === UP&&ammos===true&&savecode[2]>0) {
+        savecode[2]=savecode[2]-1;
+    stroke(255, 0, 0);
+    strokeWeight(5);
+    line(player.x+58,y1-55,player.x+58,y1+40);
+    noStroke();
+    strokeWeight(1);
+     
+    
+    }
+    
+if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian1-50&&player.x<alian1-10&&alive===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+30;
+          alive=false;
+          savecode[5]=true;
+      }
+      
+    if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian2-50&&player.x<alian2-10&&alive1===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+30;
+          alive1=false;
+          savecode[5]=true;
+      }
+      
+      if (keyIsPressed && keyCode === UP&&ammos===true&&playing===true&&player.x>alian3-50&&player.x<alian3-10&&alive2===true&&savecode[2]>0){
+          savecode[0]=savecode[0]+30;
+          alive2=false;
+          savecode[5]=true;
+      }
+//} shoot      
+if(bar>300) 
+    {barspeed= -0.6;//6
+    
+    }
+    if(bar<2) {
+        scenes=0;
+        savecode[0]=savecode[0]+70;
+        ammos=true;
+    }
+    textSize(14.5);
+    fill(0, 0, 0);
+    rect(300,20,bar,20);
+    fill(255, 0, 0);
+    text("fuel",300,35);
+    stroke(0, 0, 0);
+    noFill();
+    rect(300,19,299,21);
+     fill(0, 0, 0);
+    text("Ammo",550,75);
+    stroke(0, 0, 0);
+    noFill();
+    rect(545,59,43,61);
+    text(savecode[2],560,100);
+ noStroke();
+  
+  
+  
+   //guns
+     fill(20, 19, 20);
+    rect(player.x+52,y1+20,12,50);
+   
+    
+    // wings
+    noStroke();
+fill(135, 124, 124);
+ellipse(player.x+55,player.y+190,200,200);    
+quad(player.x+35,player.y+90,player.x-35,player.y+160,player.x-5,player.y+30,player.x+35,player.y+30);
+
+quad(player.x+85,player.y+90,player.x+145,player.y+160,player.x+125,player.y+30,player.x+85,player.y+30);
+rect(player.x+135,player.y+120,30,40);
+arc(player.x+150,player.y+120,30,30,180,360);
+fill(13, 13, 13);
+rect(player.x+140,player.y+110,5,10);
+rect(player.x+148,player.y+105,5,15);
+rect(player.x+155,player.y+110,5,10);
+stroke(117, 115, 115);
+noFill();
+ellipse(player.x+55,player.y+180,140,140);
+ellipse(player.x+55,player.y+180,60,60);
+textFont(f);
+textSize(13);
+fill(0, 0, 0);
+if(aim===true){
+     text("(+)",player.x+45,y1-50);
+      
+}
+      
+//} player
+  }//done
+ 
+
+}//game
+if(scenes===1.7){
+ 
+   background(0, 0, 0);
+    for(var a = 0; a < 500; a++) {
+        stroke(255, 255, 255, starA[a]);
+        starSize.push(random(0.5, 3));
+        starX.push(random(0, width));
+        starY.push(random(0, height));
+        starA.push(random(50, 100));
+        strokeWeight(starSize[a]);
+        point(starX[a], starY[a]);
+    }
+    textSize(50);
+    fill(225, 245, 10);
+    text("Achievements",102,52);
+fill(128, 115, 115);
+   noStroke();
+rect(20,102,152,92,10);
+rect(220,102,152,92,10);
+rect(420,102,152,92,10);
+rect(20,252,152,92,10);
+rect(220,252,152,92,10);
+rect(420,252,152,92,10);
+rect(220,402,152,92,10);
+rect(420,402,152,92,10);
+
+fill(0, 0, 0);
+textSize(30);
+text("RICH!",50,150);
+text("What's ",230,130);
+text("for sale",230,160);
+textSize(20);
+text("Just getting ",430,130);
+text("started",430,155);
+textSize(25);
+text("Star Wars!",25,290);
+text("Awesome",235,300);
+text("Detective",230,440);
+textSize(30);
+text("More ",440,280);
+text("ammo!",435,305);
+text("Devoted",430,435);
+textSize(13);
+text("(reach c2000)",40,185);
+text("(visit the $hop)",240,185);
+text("(shoot an Fighter)",435,185);
+text("(get the Falcon)",40,335);
+text("(buy more ammo)",430,335);
+textSize(11.5);
+text("(get all achievements)",225,335);
+text("(play for ten minutes)",425,485);
+text("(Find the easter egg)",225,485);
+fill(89, 84, 84);
+ rect(20,412,120,70);
+ fill(0, 0, 0);
+ textSize(35);
+ text("BACK",25,462);
+if(savecode[0]>1999){
+  savecode[3]=true;  
+  
+}
+if(dim5===150){
+    savecode[6]=true;
+}
+if(savecode[3]===true&&savecode[4]===true&&savecode[5]===true&&savecode[6]===true&&savecode[8]===true&&savecode[9]&&savecode[10]===true){
+    savecode[7]=true;
+}
+
+if(savecode[3]===true){
+    textSize(80);
+    text("✔",68,160);
+}
+if(savecode[4]===true){
+    textSize(80);
+    text("✔",268,160);
+}
+if(savecode[5]===true){
+    textSize(80);
+    text("✔",468,160);
+}
+if(savecode[6]===true){
+    textSize(80);
+    text("✔",68,310);
+}
+if(savecode[7]===true){
+    textSize(80);
+    text("✔",268,310);
+}
+if(savecode[8]===true){
+    textSize(80);
+    text("✔",465,310);
+}
+if(savecode[9]===true){
+    textSize(80);
+    text("✔",468,461);
+}
+if(savecode[10]===true){
+    textSize(80);
+    text("✔",262,461);
+}
+
+}//achievements
+if(timer>36201){
+  savecode[9]=true;  
+}// acheve play for ten min
+if(click&&mouseX>20&&mouseY>410&&mouseX<140&&mouseY<480&&scenes<3){
+scenes=0;
+}//back button
+if(click&&mouseX>20&&mouseY>410&&mouseX<140&&mouseY<480&&scenes===4){
+scenes=0;
+}//back button
+
+   cursor("none");
+stroke(255, 255, 255);
+    fill(255, 0, 0);
+    strokeWeight(1);
+    beginShape();
+    vertex(mouseX,mouseY);
+    vertex(mouseX+15,mouseY+15);
+    vertex(mouseX+7,mouseY+15);
+    vertex(mouseX+2,mouseY+22);
+    vertex(mouseX,mouseY);
+    endShape();
+
+
+
+   
+    
+}
+alian1=alian1+alian1sp;
+alian2=alian2+alian2sp;
+alian3=alian3+alian3sp;
+bar= bar +barspeed;
+x=x+thing;
+ x2 = x2 + speedx2;
+ click=false;
+};
