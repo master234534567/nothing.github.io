@@ -8,20 +8,48 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>">
     
     <script>
+        // --- THEME LOADER ---
         const savedTheme = localStorage.getItem('hubTheme');
         const currentTheme = savedTheme ? savedTheme : 'rainbow';
         document.documentElement.className = `theme-${currentTheme}`;
+        
+        // --- NEW: QUICK SEARCH BAR LOGIC ---
+        function filterGames() {
+            const input = document.getElementById('game-search');
+            if (!input) return; 
+            
+            const filter = input.value.toUpperCase();
+            const gameList = document.getElementById('io-game-list');
+            const gameItems = gameList.getElementsByTagName('li');
+
+            // Iterate through all list items and check their content
+            for (let i = 0; i < gameItems.length; i++) {
+                // Check the text content of the entire <li> element (which contains the strong name and small description)
+                let content = gameItems[i].textContent || gameItems[i].innerText;
+                
+                if (content.toUpperCase().indexOf(filter) > -1) {
+                    gameItems[i].style.display = ""; // Show the item
+                } else {
+                    gameItems[i].style.display = "none"; // Hide the item
+                }
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Attach the filter function to the search input event
+            const searchInput = document.getElementById('game-search');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', filterGames);
+            }
+        });
     </script>
 
     <style>
         /* CSS Keyframes for the Never-Ending Rainbow Background */
         @keyframes rainbow-glow {
-            0% { background-color: #ff0000; } 
-            16% { background-color: #ff7f00; } 
-            33% { background-color: #ffff00; } 
-            50% { background-color: #00ff00; } 
-            66% { background-color: #0000ff; } 
-            83% { background-color: #4b0082; } 
+            0% { background-color: #ff0000; } 16% { background-color: #ff7f00; } 
+            33% { background-color: #ffff00; } 50% { background-color: #00ff00; } 
+            66% { background-color: #0000ff; } 83% { background-color: #4b0082; } 
             100% { background-color: #ff0000; } 
         }
         
@@ -30,6 +58,7 @@
             --dark-bg: #1a1a1a;
             --blue-bg: #007bff;
             --purple-bg: #6f42c1;
+            --accent-color: #ff5722; /* Defined for consistency */
         }
 
         /* General Styles: Base setup for body */
@@ -39,6 +68,9 @@
             color: #fff;
             text-align: center;
             padding: 50px;
+            /* Allow vertical scrolling for the content */
+            overflow-y: auto; 
+            min-height: 100vh;
         }
 
         /* THEME CLASSES: Applied to the <html> tag */
@@ -60,15 +92,15 @@
         }
 
         h1 {
-            color: #ff5722;
+            color: var(--accent-color);
             margin-bottom: 30px;
         }
         .back-link {
             display: inline-block;
             margin-bottom: 30px;
-            color: #ff5722;
+            color: var(--accent-color);
             text-decoration: none;
-            border: 1px solid #ff5722;
+            border: 1px solid var(--accent-color);
             padding: 10px 20px;
             border-radius: 5px;
             transition: background-color 0.2s;
@@ -77,7 +109,7 @@
             background-color: rgba(255, 87, 34, 0.1);
         }
         
-        /* New Game List Styles (Same as main hub for consistency) */
+        /* Container for content */
         .game-list-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -85,6 +117,7 @@
             border-radius: 10px;
             padding: 20px;
         }
+        /* Game List Styles */
         .new-game-list {
             list-style: none;
             padding: 0;
@@ -129,6 +162,26 @@
             font-weight: 700;
             color: #ccc;
         }
+
+        /* --- NEW SEARCH BAR STYLES --- */
+        #game-search {
+            width: 90%; 
+            max-width: 600px;
+            padding: 15px 20px; 
+            margin-bottom: 30px; 
+            font-size: 1.1em;
+            border: 2px solid var(--accent-color); 
+            border-radius: 8px; 
+            background-color: #2c2c2c; 
+            color: #fff;
+            box-sizing: border-box; 
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        #game-search:focus {
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255, 87, 34, 0.5);
+            outline: none;
+        }
     </style>
 </head>
 <body>
@@ -136,9 +189,11 @@
     <a href="index.html" class="back-link">← Back to NOTHING Hub</a>
     <h1>🎮 Super Jumper Games (IO Hub)</h1>
     <p>Dive into the best fast-paced action and shooter .io games!</p>
+    
+    <input type="text" id="game-search" placeholder="Quick Search for games in this category..." title="Type to filter games">
 
     <div class="game-list-container">
-        <ul class="new-game-list">
+        <ul class="new-game-list" id="io-game-list">
             <li class="new-game-item"><a href="https://deadshot.io" target="_blank"><div class="game-image-placeholder">DeadShot.io</div><div class="game-info"><strong>DeadShot.io</strong><small>3D Shooter</small></div></a></li>
             <li class="new-game-item"><a href="https://sandstrick.io" target="_blank"><div class="game-image-placeholder">Sandstrick.io</div><div class="game-info"><strong>Sandstrick.io</strong><small>Platformer</small></div></a></li>
             <li class="new-game-item"><a href="https://voxiom.io" target="_blank"><div class="game-image-placeholder">Voxiom.io</div><div class="game-info"><strong>Voxiom.io</strong><small>Voxel Shooter/Building</small></div></a></li>
