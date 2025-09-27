@@ -3,178 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOTHING - Super Jumper Games</title>
+    <title>Super Jumper - NOTHING Games</title>
     
     <script>
-        // Check for saved theme (color selector)
-        const savedTheme = localStorage.getItem('hubTheme');
-        const currentTheme = savedTheme ? savedTheme : 'rainbow';
-        document.documentElement.className = `theme-${currentTheme}`;
-
-        // Check for saved cloak settings (defaults to Bear/NOTHING)
+        // --- CLOAKING SCRIPT (Kept for consistency) ---
         const savedFavicon = localStorage.getItem('hubFavicon');
-        const savedTitle = localStorage.getItem('hubTitle');
+        const savedTitle = localStorage.getItem('hubTitle') || 'Super Jumper - NOTHING Games';
         
-        // Define page-specific defaults in case no cloak is set
-        const defaultTitle = 'NOTHING - Super Jumper Games';
-        const faviconUrl = savedFavicon 
-            ? savedFavicon 
-            : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>";
-        
-        // Dynamically set the page title
-        document.title = savedTitle ? savedTitle : defaultTitle;
-        
-        // Dynamically create or update the favicon link
         let link = document.querySelector("link[rel~='icon']");
         if (!link) {
             link = document.createElement('link');
             link.rel = 'icon';
             document.getElementsByTagName('head')[0].appendChild(link);
         }
-        link.href = faviconUrl;
+        link.href = savedFavicon 
+            ? savedFavicon 
+            : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>";
         
-        // Panic Hide function (Redirects to a neutral external site)
+        document.title = savedTitle;
+
         function panicHide() {
             window.location.replace("https://www.wikipedia.org/");
         }
+
+        // --- GAME SEARCH LOGIC ---
+        // This function will redirect the user to a game page if a full name is typed.
+        function searchAndGo() {
+            const input = document.getElementById('game-search');
+            const filter = input.value.toUpperCase().trim();
+            
+            // Define the games currently available on your hub for quick search/redirect
+            const games = {
+                "SUPER JUMPER": "super-jumper-page.html",
+                "NITRO RACER": "nitro-racer-page.html",
+                // NOTE: For 'Dungeon Master' and 'Rocket Shooter', you must create 
+                // dedicated pages (e.g., 'dungeon-master-page.html') for this to work.
+                // Assuming they are simple links for now:
+                "DUNGEON MASTER": "dungeon-master-page.html",
+                "ROCKET SHOOTER": "rocket-shooter-page.html"
+            };
+
+            for (const name in games) {
+                if (name === filter) {
+                    window.location.href = games[name];
+                    return; 
+                }
+            }
+
+            // Optional: If no match is found, clear the input or show a message.
+            if (filter.length > 0) {
+                 alert(`Game "${filter}" not found. You must type the full name.`);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('game-search');
+            if (searchInput) {
+                // We use 'change' or 'keydown' with Enter to trigger the redirection.
+                searchInput.addEventListener('change', searchAndGo); 
+                searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault(); // Prevent default form submission if it were a form
+                        searchAndGo();
+                    }
+                });
+            }
+        });
     </script>
 
     <style>
-        /* CSS Keyframes for the Never-Ending Rainbow Background */
-        @keyframes rainbow-glow {
-            0% { background-color: #ff0000; } 
-            16% { background-color: #ff7f00; } 
-            33% { background-color: #ffff00; } 
-            50% { background-color: #00ff00; } 
-            66% { background-color: #0000ff; } 
-            83% { background-color: #4b0082; } 
-            100% { background-color: #ff0000; } 
-        }
-        
-        /* Variables for Solid Colors */
         :root {
             --dark-bg: #1a1a1a;
-            --blue-bg: #007bff;
-            --purple-bg: #6f42c1;
+            --accent-color: #ff5722;
         }
 
-        /* General Styles: Base setup for body */
-        body {
-            font-family: sans-serif;
+        body, html {
             margin: 0;
-            color: #fff;
-            text-align: center;
-            padding: 50px;
-        }
-
-        /* THEME CLASSES: Applied to the <html> tag */
-        .theme-rainbow body {
-            background-color: #1a1a1a;
-            animation: rainbow-glow 10s infinite linear; 
-        }
-        .theme-dark body {
+            padding: 0;
+            width: 100%;
+            height: 100%;
             background-color: var(--dark-bg);
-            animation: none;
-        }
-        .theme-blue body {
-            background-color: var(--blue-bg);
-            animation: none;
-        }
-        .theme-purple body {
-            background-color: var(--purple-bg);
-            animation: none;
-        }
-
-        h1 {
-            color: #ff5722;
-            margin-bottom: 30px;
-        }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 30px;
-            color: #ff5722;
-            text-decoration: none;
-            border: 1px solid #ff5722;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.2s;
-        }
-        .back-link:hover {
-            background-color: rgba(255, 87, 34, 0.1);
+            color: #fff;
+            font-family: sans-serif;
+            overflow: hidden; /* Keep the game page clean */
         }
         
-        /* New Game List Styles (Same as main hub for consistency) */
-        .game-list-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: rgba(26, 26, 26, 0.9); 
-            border-radius: 10px;
-            padding: 20px;
-        }
-        .new-game-list {
-            list-style: none;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
-        }
-        .new-game-item {
-            background-color: #333;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, .4);
-            transition: transform .2s, box-shadow .2s;
-        }
-        .new-game-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(255, 87, 34, .3);
-        }
-        .new-game-item a {
-            text-decoration: none;
-            color: #fff;
-            display: block;
-        }
-        .game-info {
-            padding: 15px;
-            text-align: center;
-        }
-        .game-info strong {
-            display: block;
-            font-size: 1.1em;
-            margin-bottom: 5px;
-        }
-        .game-image-placeholder {
+        /* Container for the game embed */
+        #game-container {
             width: 100%;
-            height: 150px;
-            background-color: #555;
+            height: calc(100% - 70px); /* Adjust height to make space for the utility bar */
+            position: absolute;
+            top: 70px;
+        }
+        
+        /* Iframe for the game content */
+        #game-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Utility Bar at the top */
+        #utility-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-color: rgba(44, 44, 44, 0.95);
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.2em;
-            font-weight: 700;
-            color: #ccc;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Search Bar Style */
+        #game-search {
+            flex-grow: 1;
+            padding: 10px 15px;
+            margin: 0 15px;
+            font-size: 1em;
+            border: 2px solid var(--accent-color);
+            border-radius: 5px;
+            background-color: #2c2c2c;
+            color: #fff;
+            max-width: 400px;
+            transition: border-color 0.3s;
+        }
+        #game-search:focus {
+            border-color: #fff;
+            outline: none;
+        }
+
+        /* Button Styles */
+        .utility-button {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        .back-button {
+            background-color: #555; 
+            margin-right: 15px;
+        }
+        .back-button:hover {
+            background-color: #777;
+        }
+        .panic-btn-fixed {
+            background-color: #a80000;
+            border: 2px solid #ff0000;
+        }
+        .panic-btn-fixed:hover {
+            background-color: #ff0000;
+            box-shadow: 0 0 10px #ff0000;
         }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back-link">← Back to NOTHING Hub</a>
-    <h1>🎮 Super Jumper Games (IO Hub)</h1>
-    <p>Dive into the best fast-paced action and shooter .io games!</p>
+    <div id="utility-bar">
+        <a href="index.html" class="utility-button back-button">
+            ← Back to Hub
+        </a>
 
-    <div class="game-list-container">
-        <ul class="new-game-list">
-            <li class="new-game-item"><a href="https://deadshot.io" target="_blank"><div class="game-image-placeholder">DeadShot.io</div><div class="game-info"><strong>DeadShot.io</strong><small>3D Shooter</small></div></a></li>
-            <li class="new-game-item"><a href="https://sandstrick.io" target="_blank"><div class="game-image-placeholder">Sandstrick.io</div><div class="game-info"><strong>Sandstrick.io</strong><small>Platformer</small></div></a></li>
-            <li class="new-game-item"><a href="https://voxiom.io" target="_blank"><div class="game-image-placeholder">Voxiom.io</div><div class="game-info"><strong>Voxiom.io</strong><small>Voxel Shooter/Building</small></div></a></li>
-            <li class="new-game-item"><a href="https://ninja.io" target="_blank"><div class="game-image-placeholder">Ninja.io</div><div class="game-info"><strong>Ninja.io</strong><small>2D Multiplayer Action</small></div></a></li>
-            <li class="new-game-item"><a href="https://battleboats.io" target="_blank"><div class="game-image-placeholder">Battleboats.io</div><div class="game-info"><strong>Battleboats.io</strong><small>Naval Combat</small></div></a></li>
-            <li class="new-game-item"><a href="https://repuls.io" target="_blank"><div class="game-image-placeholder">Repuls.io</div><div class="game-info"><strong>Repuls.io</strong><small>Sci-Fi Shooter</small></div></a></li>
-            <li class="new-game-item"><a href="https://astroe.io" target="_blank"><div class="game-image-placeholder">AstroE.io</div><div class="game-info"><strong>AstroE.io</strong><small>Space/Survival</small></div></a></li>
-            <li class="new-game-item"><a href="https://kour.io" target="_blank"><div class="game-image-placeholder">Kour.io</div><div class="game-info"><strong>Kour.io</strong><small>Fast-Paced Shooter</small></div></a></li>
-            <li class="new-game-item"><a href="https://slowroads.io" target="_blank"><div class="game-image-placeholder">Slowroads.io</div><div class="game-info"><strong>Slowroads.io</strong><small>Relaxing Driving Simulator</small></div></a></li>
-        </ul>
+        <input type="text" id="game-search" placeholder="Jump to a game (e.g., Nitro Racer)" title="Type the full name of a game to launch it">
+        
+        <button class="utility-button panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
+    </div>
+
+    <div id="game-container">
+        <iframe id="game-iframe" 
+            src="https://www.example.com/super-jumper-embed" 
+            title="Super Jumper Game">
+        </iframe>
     </div>
 
 </body>
