@@ -133,10 +133,47 @@
             }
         }
         // --- END: SPOTLIGHT LOADER LOGIC ---
+
+        // --- START: QUICK SEARCH BAR LOGIC ---
+        function filterGames() {
+            const input = document.getElementById('game-search');
+            // Check if the element exists before accessing its value
+            if (!input) return; 
+            
+            const filter = input.value.toUpperCase();
+            const featuredList = document.getElementById('featured-game-list');
+            const featuredItems = featuredList.getElementsByTagName('li');
+            const newList = document.getElementById('new-game-list');
+            const newItems = newList.getElementsByTagName('li');
+
+            // Function to iterate and filter a list
+            const applyFilter = (items) => {
+                for (let i = 0; i < items.length; i++) {
+                    // Check the text content of the link or the item itself
+                    let content = items[i].textContent || items[i].innerText;
+                    
+                    if (content.toUpperCase().indexOf(filter) > -1) {
+                        items[i].style.display = ""; // Show
+                    } else {
+                        items[i].style.display = "none"; // Hide
+                    }
+                }
+            }
+
+            applyFilter(featuredItems);
+            applyFilter(newItems);
+        }
+        // --- END: QUICK SEARCH BAR LOGIC ---
         
         document.addEventListener('DOMContentLoaded', () => {
             initializeLoader();
             initializeSpotlight();
+
+            // Attach the filter function to the search input event
+            const searchInput = document.getElementById('game-search');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', filterGames);
+            }
         });
 
     </script>
@@ -216,8 +253,10 @@
         .utility-buttons a:hover { background-color: var(--accent-color); }
         h1 { margin: 0; color: var(--accent-color); }
         main { padding: 30px; min-height: 500px; max-width: 1200px; margin: 0 auto; background-color: rgba(26, 26, 26, 0.9); border-radius: 10px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); }
-        h2 { color: var(--accent-color); border-bottom: 1px solid #444; padding-bottom: 10px }
-        .game-list, .new-game-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        h2, h3 { color: var(--accent-color); border-bottom: 1px solid #444; padding-bottom: 10px }
+        
+        /* --- GAME LIST STYLES --- */
+        .game-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
         .new-game-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; } 
         .game-item { background-color: #333; padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; transition: transform .2s; transform: translateY(0); }
         .game-item:hover { transform: translateY(-5px); background-color: #444 }
@@ -227,6 +266,26 @@
         .game-info { padding: 15px; text-align: center; }
         .game-info strong { display: block; font-size: 1.1em; margin-bottom: 5px; }
         .game-image-placeholder { width: 100%; height: 150px; background-color: #555; display: flex; align-items: center; justify-content: center; font-size: 1.2em; font-weight: 700; color: #ccc; }
+        
+        /* --- SEARCH BAR STYLES --- */
+        #game-search {
+            width: 100%; 
+            padding: 15px 20px; 
+            margin-bottom: 30px; 
+            font-size: 1.1em;
+            border: 2px solid var(--accent-color); 
+            border-radius: 8px; 
+            background-color: #2c2c2c; 
+            color: #fff;
+            box-sizing: border-box; 
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        #game-search:focus {
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255, 87, 34, 0.5);
+            outline: none;
+        }
+
         footer { text-align: center; padding: 20px; background-color: rgba(44, 44, 44, 0.9); margin-top: 30px; }
         .panic-btn-fixed { position: fixed; bottom: 20px; right: 20px; background-color: #a80000; color: #fff; padding: 10px 15px; border: 2px solid #ff0000; border-radius: 8px; cursor: pointer; font-weight: bold; z-index: 1000; transition: background-color 0.3s; }
         .panic-btn-fixed:hover { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
@@ -259,8 +318,10 @@
     <main>
         <p style="margin-top: 0;">Discover thousands of free online games, from action-packed adventures to brain-teasing puzzles. Start exploring the top picks below!</p>
         
+        <input type="text" id="game-search" placeholder="Quick Search for Games..." title="Type to search for games">
+
         <h3>Featured Games</h3>
-        <ul class="game-list">
+        <ul class="game-list" id="featured-game-list">
             <li class="game-item"><a href="super-jumper-page.html" class="game-item-content">🎮 Super Jumper</a></li>
             <li class="game-item"><a href="nitro-racer-page.html" class="game-item-content">🏎️ Nitro Racer</a></li>
             <li class="game-item">⚔️ Dungeon Master</li>
@@ -269,7 +330,7 @@
         </ul>
         
         <h2 style="margin-top: 50px;">New Games & Communities - Freshly Added!</h2>
-        <ul class="new-game-list">
+        <ul class="new-game-list" id="new-game-list">
             <li class="new-game-item"><a href="https://quackprep.com" target="_blank"><div class="game-image-placeholder">Quack Prep Test</div><div class="game-info"><strong>Quack Prep Test</strong><small>Quiz / Strategy</small></div></a></li>
             <li class="new-game-item"><a href="https://discord.gg" target="_blank"><div class="game-image-placeholder">Discord Community</div><div class="game-info"><strong>NOTHING Community</strong><small>Social / Hub</small></div></a></li>
             <li class="new-game-item"><a href="https://growden.io" target="_blank"><div class="game-image-placeholder">Growden.io</div><div class="game-info"><strong>Multiplayer / Survival</strong><small>Multiplayer / Survival</small></div></a></li>
@@ -281,5 +342,8 @@
     </footer>
     
     <button class="panic-btn-fixed" onclick="panicHide()">🚨 PANIC</button>
-</body>
+
+    <script src="https://cdn.commoninja.com/sdk/latest/commonninja.js" defer></script>
+    <div class="commonninja_component pid-064f5a63-311c-47d7-b5cf-d90e348a87a7"></div>
+    </body>
 </html>
